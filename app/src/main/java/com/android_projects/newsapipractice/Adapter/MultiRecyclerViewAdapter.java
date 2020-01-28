@@ -37,13 +37,20 @@ public class MultiRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         return null;
     }
 
-    public MultiRecyclerViewAdapter(Context context){
+    public MultiRecyclerViewAdapter(Context context, List<?extends BaseModel> list){
         this.context=context;
+        anyTypeItems = list; //initialize anyTypeItems
     }
 
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
         holder.bind(anyTypeItems.get(position));
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        //Remember to override getItemViewType if using MultiTypeRecyclerView
+        return anyTypeItems.get(position).getViewType();
     }
 
     @Override
@@ -55,17 +62,24 @@ public class MultiRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         private TextView titleTv, descriptionTv;
         private ImageView articleImgView;
 
+        /**
+         * Set the article data
+         * **/
+
         public ArticleHolder(@NonNull View itemView, int viewType) {
             super(itemView);
 
+            titleTv = itemView.findViewById(R.id.article_title);
+            descriptionTv = itemView.findViewById(R.id.article_description);
+            articleImgView = itemView.findViewById(R.id.article_image_view);
             //Can perform recyclerView onclick here
         }
 
         @Override
         public void bind(Article object) {
-            newsBinding.articleDescription.setText(object.getDescription());
-            newsBinding.articleTitle.setText(object.getTitle());
-            Glide.with(context).load(object.getUrlToImage()).into(newsBinding.articleImageView);
+            descriptionTv.setText(object.getDescription());
+            titleTv.setText(object.getTitle());
+            Glide.with(context).load(object.getUrlToImage()).into(articleImgView);
         }
     }
 }

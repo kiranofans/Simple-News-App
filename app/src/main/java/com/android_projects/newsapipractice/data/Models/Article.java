@@ -1,9 +1,11 @@
 package com.android_projects.newsapipractice.data.Models;
 
+import com.android_projects.newsapipractice.Adapter.BaseModel;
+import com.android_projects.newsapipractice.Adapter.Constants;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Article {
+public class Article implements BaseModel {
     @SerializedName("source")
     @Expose
     private Source source;
@@ -93,4 +95,8 @@ public class Article {
         this.content = content;
     }
 
+    @Override
+    public int getViewType() {
+        return Constants.ViewType.ARTICLE_TYPE;
+    }
 }

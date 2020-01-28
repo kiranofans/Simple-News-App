@@ -1,6 +1,7 @@
 package com.android_projects.newsapipractice.data.Repository;
 
 import android.app.Application;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.lifecycle.MutableLiveData;
@@ -47,7 +48,7 @@ public class NewsArticleRepository {
 
         RetrofitApiService apiService = Retrofit2Client.getRetrofitService();
 
-        Call<NewsArticleMod> callEverything = apiService.getEverything(API_KEY,
+        Call<NewsArticleMod> callEverything = apiService.getEverything("bitcoin",API_KEY,
                 20,"publishedAt");
 
         callEverything.enqueue(new Callback<NewsArticleMod>() {
@@ -57,13 +58,16 @@ public class NewsArticleRepository {
 
                 if(newsArticles!= null){
                     //Use NewsArticleMod to get all articles,then assign the articles to List<Article>
-                    /**So I'm api calling through the NewsArticleMod
+                    /**
+                     * So I'm api calling through the NewsArticleMod
                      * class and put the article data into Article typed List**/
                     articleList = newsArticles.getArticles();
 
                     //Convert the data source to mutable live data
                     mutableLiveData.setValue(articleList);
                 }
+                Log.d("CHECK NULL", response.body()+" is null");
+
             }
 
             @Override

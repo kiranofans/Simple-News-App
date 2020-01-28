@@ -13,7 +13,7 @@ import static com.android_projects.newsapipractice.network.APIConstants.ENDPOINT
 public interface RetrofitApiService {
 
     @GET(ENDPOINT_EVERYTHING)
-    Call<NewsArticleMod> getEverything(@Query("apiKey") String api_key,
+    Call<NewsArticleMod> getEverything(@Query("q") String q , @Query("apiKey") String api_key,
                                 @Query("pageSize") int pageSize,
                                 @Query("sortBy") String sort_by);
 }
