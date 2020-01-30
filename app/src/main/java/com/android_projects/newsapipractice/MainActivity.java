@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Bundle;
 
@@ -22,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
 
     private NewsArticleViewModel viewModel;
 
-    private RecyclerView recyclerView;
     private MultiRecyclerViewAdapter recyclerViewAdapter;
 
     @Override
@@ -33,14 +33,22 @@ public class MainActivity extends AppCompatActivity {
         //ViewModel
         viewModel = ViewModelProviders.of(this).get(NewsArticleViewModel.class);
 
-        getNewArticles();
+        getNewArticles();//first api call
+        swipeToRefreshListener(); //Pull to refresh the page
     }
 
+    private void swipeToRefreshListener(){
+        mainBinding.swipeRefreshLayout.setOnRefreshListener(() ->{
+            getNewArticles();
+        });
+    }
 
     private void getNewArticles(){
+        mainBinding.swipeRefreshLayout.setRefreshing(true);
         viewModel.getArticles().observe(this, new Observer<List<Article>>() {
             @Override
             public void onChanged(List<Article> articles) {
+                mainBinding.swipeRefreshLayout.setRefreshing(false);
                 setRecyclerView(articles);
             }
         });
