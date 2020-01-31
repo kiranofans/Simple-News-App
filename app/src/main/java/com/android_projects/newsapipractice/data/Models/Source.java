@@ -3,7 +3,9 @@ package com.android_projects.newsapipractice.data.Models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Source {
+import java.io.Serializable;
+
+public class Source implements Serializable {
 
     @SerializedName("id")
     @Expose

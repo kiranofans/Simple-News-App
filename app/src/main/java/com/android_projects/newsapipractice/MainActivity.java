@@ -1,5 +1,6 @@
 package com.android_projects.newsapipractice;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
@@ -16,6 +17,7 @@ import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.ActivityMainBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,6 +26,10 @@ public class MainActivity extends AppCompatActivity {
     private NewsArticleViewModel viewModel;
 
     private MultiRecyclerViewAdapter recyclerViewAdapter;
+    private int currentPageNum = 1;
+    private List<Article> articleList = new ArrayList<>();
+
+    private boolean isLoading=false;//To determine if load the data or not
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,34 +39,65 @@ public class MainActivity extends AppCompatActivity {
         //ViewModel
         viewModel = ViewModelProviders.of(this).get(NewsArticleViewModel.class);
 
-        getNewArticles();//first api call
+        getNewArticles(currentPageNum);//first api call
         swipeToRefreshListener(); //Pull to refresh the page
     }
 
     private void swipeToRefreshListener(){
         mainBinding.swipeRefreshLayout.setOnRefreshListener(() ->{
-            getNewArticles();
+            currentPageNum=1;
+            getNewArticles(currentPageNum);
         });
     }
 
-    private void getNewArticles(){
+    private void getNewArticles(int page){
         mainBinding.swipeRefreshLayout.setRefreshing(true);
-        viewModel.getArticles().observe(this, new Observer<List<Article>>() {
+        viewModel.getArticles(page).observe(this, new Observer<List<Article>>() {
             @Override
             public void onChanged(List<Article> articles) {
+                isLoading = false;
+                articleList.addAll(articles);
                 mainBinding.swipeRefreshLayout.setRefreshing(false);
-                setRecyclerView(articles);
+                setRecyclerView();
             }
         });
     }
 
-    private void setRecyclerView(List<Article> articlesList){
+    private void setRecyclerView(){
         //recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        recyclerViewAdapter = new MultiRecyclerViewAdapter(this,articlesList);
+        recyclerViewAdapter = new MultiRecyclerViewAdapter(this,articleList);
 
         mainBinding.recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         mainBinding.recyclerView.setItemAnimator(new DefaultItemAnimator());
         mainBinding.recyclerView.setAdapter(recyclerViewAdapter);
+
+        mainBinding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                LinearLayoutManager layoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
+
+                int visibleItemCount = layoutManager.getChildCount();
+                int totalItemCount = layoutManager.getItemCount();
+                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+                if (!isLoading) {//true
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                            && firstVisibleItemPosition >= 0
+                            && totalItemCount >= 20) {
+                        currentPageNum++;
+                        getNewArticles(currentPageNum);
+                        isLoading = true;//make the isLoading true again, so it is false
+                    }
+                }
+
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
         recyclerViewAdapter.notifyDataSetChanged();
     }
 }

@@ -18,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_ARTICLE;
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_IMG_URL;
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_SOURCE_ID;
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_SOURCE_NAME;
@@ -45,11 +46,13 @@ public class ArticleActivity extends AppCompatActivity {
     }
 
     private void getStringExtra(){
-        String title = getIntent().getExtras().getString(EXTRA_KEY_TITLE);
-        String imgURL = getIntent().getExtras().getString(EXTRA_KEY_IMG_URL);
+//        String title = getIntent().getExtras().getString(EXTRA_KEY_TITLE);
+//        String imgURL = getIntent().getExtras().getString(EXTRA_KEY_IMG_URL);
 
-        mBinding.articleTvContentTitle.setText(title);
-        Glide.with(this).load(imgURL).into(mBinding.articleImgViewContent);
+        Article object = (Article) getIntent().getSerializableExtra(EXTRA_KEY_ARTICLE);
+
+        mBinding.articleTvContentTitle.setText(object.getTitle());
+        Glide.with(this).load(object.getUrlToImage()).into(mBinding.articleImgViewContent);
 
     }
 

@@ -44,12 +44,12 @@ public class NewsArticleRepository {
     /**
      * Performing Api calls here
      * */
-    public MutableLiveData<List<Article>> getMutableLiveData(Call<NewsArticleMod> callEverything) {
+    public MutableLiveData<List<Article>> getMutableLiveData(Call<NewsArticleMod> callEverything, int page) {
 
         RetrofitApiService apiService = Retrofit2Client.getRetrofitService();
 
-        callEverything = apiService.getEverything("bitcoin",API_KEY,
-                20,"publishedAt");
+        callEverything = apiService.getEverything("Bearer "+API_KEY,"bitcoin",
+                20,"publishedAt",page);
 
         callEverything.enqueue(new Callback<NewsArticleMod>() {
             @Override

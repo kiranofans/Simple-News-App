@@ -7,9 +7,10 @@ import com.android_projects.newsapipractice.Adapter.Constants;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class NewsArticleMod implements BaseModel {
+public class NewsArticleMod implements BaseModel, Serializable {
 
     @SerializedName("status")
     @Expose

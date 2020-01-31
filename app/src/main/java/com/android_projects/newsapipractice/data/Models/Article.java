@@ -5,7 +5,9 @@ import com.android_projects.newsapipractice.Adapter.Constants;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Article implements BaseModel {
+import java.io.Serializable;
+
+public class Article implements BaseModel, Serializable {
     @SerializedName("source")
     @Expose
     private Source source;

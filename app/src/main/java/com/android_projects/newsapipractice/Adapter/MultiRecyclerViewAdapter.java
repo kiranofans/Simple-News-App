@@ -3,6 +3,7 @@ package com.android_projects.newsapipractice.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,40 +18,36 @@ import com.android_projects.newsapipractice.ArticleActivity;
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.data.Models.Source;
+import com.android_projects.newsapipractice.databinding.ActivityArticleBinding;
 import com.android_projects.newsapipractice.databinding.ListNewsBinding;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_ARTICLE;
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_IMG_URL;
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_SOURCE_ARRAY;
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_SOURCE_ID;
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_SOURCE_NAME;
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_TITLE;
 
-public class MultiRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+public class MultiRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> implements View.OnClickListener {
 
-    private List<?extends BaseModel> anyTypeItems;
-    private ListNewsBinding newsBinding;
+    private List<? extends BaseModel> anyTypeItems;
 
     private Context context;
+    private OnItemClickListener listener;
 
     @NonNull
     @Override
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v;
-        switch (viewType){
-            case Constants.ViewType.ARTICLE_TYPE:
-                v= LayoutInflater.from(parent.getContext()).inflate(R.layout.list_news,
-                        parent, false);
-                return new ArticleHolder(v,viewType);
-        }
-        return null;
+        ListNewsBinding newsBinding = ListNewsBinding.inflate(LayoutInflater.from(context), parent, false);
+        return new ArticleHolder(newsBinding);
     }
 
-    public MultiRecyclerViewAdapter(Context context, List<?extends BaseModel> list){
-        this.context=context;
+    public MultiRecyclerViewAdapter(Context context, List<? extends BaseModel> list) {
+        this.context = context;
         anyTypeItems = list; //initialize anyTypeItems
     }
 
@@ -70,69 +67,62 @@ public class MultiRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         return anyTypeItems.size();
     }
 
-    public class ArticleHolder extends BaseViewHolder<Article>{
-        private TextView titleTv, descriptionTv;
-        private ImageView articleImgView;
-        private Button readMoreBtn;
+    @Override
+    public void onClick(View view) {
 
-        private Source sources;
-        private Object sourceID;
-        private String sourceName;
-        private Intent articleIntent;
+    }
 
-        private String imgURL;
+    //An interface way to create OnItemClick events
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
 
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    public class ArticleHolder extends BaseViewHolder<Article> implements View.OnClickListener {
+        ListNewsBinding binding;
         /**
          * Set the article data
-         * **/
+         **/
 
-        public ArticleHolder(@NonNull View itemView, int viewType) {
-            super(itemView);
-
-            titleTv = itemView.findViewById(R.id.article_title);
-            descriptionTv = itemView.findViewById(R.id.article_description);
-            articleImgView = itemView.findViewById(R.id.article_image_view);
-            //articleContentImgView = itemView.findViewById(R.id.article_img_view_content);
-            readMoreBtn = itemView.findViewById(R.id.btn_read_more);
-
+        public ArticleHolder(ListNewsBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
             //Can perform recyclerView onclick here
         }
 
         @Override
         public void bind(Article object) {
-            descriptionTv.setText(object.getDescription());
-            titleTv.setText(object.getTitle());
-
-            imgURL = object.getUrlToImage();
-            sources = object.getSource();
-            sourceID = sources.getId();
-            sourceName = sources.getName();
-
-            setReadMoreBtn(imgURL);
-
-            Glide.with(context).load(imgURL).into(articleImgView);
+            binding.articleDescription.setText(object.getDescription());
+            binding.articleTitle.setText(object.getTitle());
+            setReadMoreBtn(object);
+            Glide.with(context).load(object.getUrlToImage()).into(binding.articleImageView);
         }
 
-        private void setReadMoreBtn(String imgURL){
-            readMoreBtn.setOnLongClickListener(new View.OnLongClickListener() {
+        private void setReadMoreBtn(Article object) {
+            binding.btnReadMore.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onLongClick(View view) {
+                public void onClick(View view) {
                     int position = getAdapterPosition();
-                    if(position != RecyclerView.NO_POSITION){
-                        articleIntent = new Intent(context, ArticleActivity.class);
+                    if (position != RecyclerView.NO_POSITION) {
+                        Log.d("TAG", position + " clicked");
+                        Intent articleIntent = new Intent(context, ArticleActivity.class);
+                        articleIntent.putExtra(EXTRA_KEY_ARTICLE, object);
 
-                        //Send extra with bundle
-                        Bundle bundle = new Bundle();
-                        bundle.putString(EXTRA_KEY_IMG_URL,imgURL);
-                        bundle.putString(EXTRA_KEY_TITLE,titleTv.getText().toString());
-                        bundle.putString(EXTRA_KEY_SOURCE_ID,sourceID.toString());
-                        bundle.putString(EXTRA_KEY_SOURCE_NAME,sourceName);
-
-                        context.startActivity(articleIntent.putExtras(bundle));
+                        context.startActivity(articleIntent);
                     }
-                    return false;
                 }
             });
+        }
+
+        @Override
+        public void onClick(View view) {
+            int pos = getAdapterPosition();
+            if (pos != RecyclerView.NO_POSITION) {
+
+            }
         }
     }
 }

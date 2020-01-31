@@ -26,8 +26,8 @@ public class NewsArticleViewModel extends AndroidViewModel {
         repository = new NewsArticleRepository(application);
     }
 
-    public LiveData<List<Article>> getArticles(){
-        return repository.getMutableLiveData(callEverything);
+    public LiveData<List<Article>> getArticles(int page){
+        return repository.getMutableLiveData(callEverything,page);
     }
 
 }
