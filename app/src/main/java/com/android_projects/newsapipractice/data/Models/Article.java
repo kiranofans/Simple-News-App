@@ -31,6 +31,7 @@ public class Article implements BaseModel {
     @Expose
     private String content;
 
+    public Article(){}
     public Source getSource() {
         return source;
     }

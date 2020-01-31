@@ -13,6 +13,10 @@ import com.android_projects.newsapipractice.network.HttpHelper;
 import com.android_projects.newsapipractice.network.HttpRequestClient;
 import com.bumptech.glide.Glide;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_IMG_URL;
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_TITLE;
 import static com.android_projects.newsapipractice.network.APIConstants.API_KEY;
@@ -24,7 +28,7 @@ public class ArticleActivity extends AppCompatActivity {
     private ActivityArticleBinding mBinding;
 
     private NewsArticleMod newsArticleMod;
-    private Article articleMod;
+    private Article articleMod,articleMod1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +37,6 @@ public class ArticleActivity extends AppCompatActivity {
 
         getStringExtra();
 
-        newsArticleMod = new NewsArticleMod();
         articleMod = new Article();
 
     }
@@ -60,9 +63,30 @@ public class ArticleActivity extends AppCompatActivity {
             super.onPostExecute(result);
             HttpHelper.fromJson(result, Article.class);
 
-            mBinding.articleAuthorTv.setText(articleMod.getAuthor());
-            mBinding.articleTvDate.setText(articleMod.getPublishedAt());
-            mBinding.articleTvContent.setText(articleMod.getContent());
+            JSONObject jsonObj = new JSONObject();
+            JSONArray jsonArray = new JSONArray();
+
+            try {
+                jsonArray = jsonObj.getJSONArray("articles");
+
+                for(int i = 0; i<jsonArray.length();i++){
+                    JSONObject arrayObj= jsonArray.getJSONObject(i);
+
+                    String author = arrayObj.getString("author");
+                    String publishDate = arrayObj.getString("publishedAt");
+                    String content = arrayObj.getString("content");
+
+                   //newsArticleMod = new NewsArticleMod(articleMod);
+                    mBinding.articleAuthorTv.setText(author);
+                    mBinding.articleTvDate.setText(publishDate);
+                    mBinding.articleTvContent.setText(content);
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
         }
     }
 

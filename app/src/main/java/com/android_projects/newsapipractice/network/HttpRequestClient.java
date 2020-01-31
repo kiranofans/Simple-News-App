@@ -45,13 +45,13 @@ public class HttpRequestClient {
             Log.d(LOG_TAG, "Response from "+url+" "+costStr+": "+result);
 
         }catch(SocketTimeoutException e){
-            return "RC: "+ API_RC_UNKNOWN_HOST;
+            return "\"RC\": "+ API_RC_UNKNOWN_HOST;
         }catch (UnknownHostException e){
-            return "RC: "+ API_RC_UNKNOWN_HOST;
+            return "\"RC\":"+ API_RC_UNKNOWN_HOST;
         }catch (IOException e){
-            return "RC: "+ API_RC_UNKNOWN_ERROR;
+            return "\"RC\":"+ API_RC_UNKNOWN_ERROR;
         }catch (Exception e){
-            return "RC: "+API_RC_UNKNOWN_ERROR;
+            return "\"RC\":"+API_RC_UNKNOWN_ERROR;
         }
         return result;
     }

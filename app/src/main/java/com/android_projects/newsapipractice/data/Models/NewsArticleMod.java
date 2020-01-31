@@ -21,6 +21,13 @@ public class NewsArticleMod implements BaseModel {
     @Expose
     private List<Article> articles = null;
 
+    public NewsArticleMod(){}
+    public NewsArticleMod(Article article){
+        article.getAuthor();
+        article.getContent();
+        article.getPublishedAt();
+    }
+
     public String getStatus() {
         return status;
     }
