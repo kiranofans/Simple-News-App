@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil;
 
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.data.Models.NewsArticleMod;
+import com.android_projects.newsapipractice.data.Models.Source;
 import com.android_projects.newsapipractice.databinding.ActivityArticleBinding;
 import com.android_projects.newsapipractice.network.HttpHelper;
 import com.android_projects.newsapipractice.network.HttpRequestClient;
@@ -18,6 +19,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_IMG_URL;
+import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_SOURCE_ID;
+import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_SOURCE_NAME;
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_TITLE;
 import static com.android_projects.newsapipractice.network.APIConstants.API_KEY;
 import static com.android_projects.newsapipractice.network.APIConstants.BASE_URL;
@@ -47,6 +50,7 @@ public class ArticleActivity extends AppCompatActivity {
 
         mBinding.articleTvContentTitle.setText(title);
         Glide.with(this).load(imgURL).into(mBinding.articleImgViewContent);
+
     }
 
     class AsyncTaskLoadArticle extends AsyncTask<Void, Void, String> {
@@ -61,6 +65,9 @@ public class ArticleActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
+
+            String sourceID = getIntent().getExtras().getString(EXTRA_KEY_SOURCE_ID);
+            String sourceName = getIntent().getExtras().getString(EXTRA_KEY_SOURCE_NAME);
             HttpHelper.fromJson(result, Article.class);
 
             JSONObject jsonObj = new JSONObject();
@@ -75,18 +82,21 @@ public class ArticleActivity extends AppCompatActivity {
                     String author = arrayObj.getString("author");
                     String publishDate = arrayObj.getString("publishedAt");
                     String content = arrayObj.getString("content");
+                    JSONObject source = arrayObj.getJSONObject("source");
+                    Object sourceIdObj = source.get("id");
+                    String sourceNameObj = source.getString("name");
 
-                   //newsArticleMod = new NewsArticleMod(articleMod);
-                    mBinding.articleAuthorTv.setText(author);
-                    mBinding.articleTvDate.setText(publishDate);
-                    mBinding.articleTvContent.setText(content);
+                    if(sourceID.equals(sourceIdObj) && sourceName.equals(sourceNameObj)){
+                        //newsArticleMod = new NewsArticleMod(articleMod);
+                        mBinding.articleAuthorTv.setText(author);
+                        mBinding.articleTvDate.setText(publishDate);
+                        mBinding.articleTvContent.setText(content);
+                    }
                 }
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
-
         }
     }
 

@@ -2,7 +2,6 @@ package com.android_projects.newsapipractice.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,16 +15,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android_projects.newsapipractice.ArticleActivity;
 import com.android_projects.newsapipractice.R;
-import com.android_projects.newsapipractice.data.AppConstants;
 import com.android_projects.newsapipractice.data.Models.Article;
+import com.android_projects.newsapipractice.data.Models.Source;
 import com.android_projects.newsapipractice.databinding.ListNewsBinding;
 import com.bumptech.glide.Glide;
 
-import org.w3c.dom.Text;
-
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_IMG_URL;
+import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_SOURCE_ARRAY;
+import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_SOURCE_ID;
+import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_SOURCE_NAME;
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_TITLE;
 
 public class MultiRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
@@ -74,6 +75,9 @@ public class MultiRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         private ImageView articleImgView;
         private Button readMoreBtn;
 
+        private Source sources;
+        private Object sourceID;
+        private String sourceName;
         private Intent articleIntent;
 
         private String imgURL;
@@ -91,7 +95,6 @@ public class MultiRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             //articleContentImgView = itemView.findViewById(R.id.article_img_view_content);
             readMoreBtn = itemView.findViewById(R.id.btn_read_more);
 
-
             //Can perform recyclerView onclick here
         }
 
@@ -101,6 +104,9 @@ public class MultiRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             titleTv.setText(object.getTitle());
 
             imgURL = object.getUrlToImage();
+            sources = object.getSource();
+            sourceID = sources.getId();
+            sourceName = sources.getName();
 
             setReadMoreBtn(imgURL);
 
@@ -119,6 +125,8 @@ public class MultiRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         Bundle bundle = new Bundle();
                         bundle.putString(EXTRA_KEY_IMG_URL,imgURL);
                         bundle.putString(EXTRA_KEY_TITLE,titleTv.getText().toString());
+                        bundle.putString(EXTRA_KEY_SOURCE_ID,sourceID.toString());
+                        bundle.putString(EXTRA_KEY_SOURCE_NAME,sourceName);
 
                         context.startActivity(articleIntent.putExtras(bundle));
                     }
