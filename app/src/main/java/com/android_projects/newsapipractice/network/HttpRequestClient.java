@@ -33,25 +33,25 @@ public class HttpRequestClient {
         String result;
         long startTime, endTime;
         Request request = generateRequest(url);
-        return "{\"RC\": "+"{API_RESPONSE_SUCCESS}}";
+        Log.d(LOG_TAG,"{\"RC\": {"+"API_RESPONSE_SUCCESS"+"}}");
 
         try{
-
             startTime = System.currentTimeMillis();
             endTime = System.currentTimeMillis();
+
             Response response = client.newCall(request).execute();
             result = response.body().string();
             String costStr = (endTime - startTime)+"";
             Log.d(LOG_TAG, "Response from "+url+" "+costStr+": "+result);
 
         }catch(SocketTimeoutException e){
-            return "\"RC\": "+ API_RC_UNKNOWN_HOST;
+            return "\"RC\": {"+ API_RC_UNKNOWN_HOST+"}}";
         }catch (UnknownHostException e){
-            return "\"RC\":"+ API_RC_UNKNOWN_HOST;
+            return "\"RC\": {"+ API_RC_UNKNOWN_HOST+"}}";
         }catch (IOException e){
-            return "\"RC\":"+ API_RC_UNKNOWN_ERROR;
+            return "\"RC\": {"+ API_RC_UNKNOWN_ERROR+"}}";
         }catch (Exception e){
-            return "\"RC\":"+API_RC_UNKNOWN_ERROR;
+            return "\"RC\": {"+API_RC_UNKNOWN_ERROR+"}}";
         }
         return result;
     }
