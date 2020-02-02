@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private int currentPageNum = 1;
     private List<Article> articleList = new ArrayList<>();
 
-    private boolean isLoading=false;//To determine if load the data or not
+    public static boolean isLoading=false;//To determine if load the data or not
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

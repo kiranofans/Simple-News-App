@@ -25,6 +25,7 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.android_projects.newsapipractice.MainActivity.isLoading;
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_ARTICLE;
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_IMG_URL;
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_SOURCE_ARRAY;
@@ -32,12 +33,9 @@ import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_S
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_SOURCE_NAME;
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_TITLE;
 
-public class MultiRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> implements View.OnClickListener {
-
+public class MultiRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private List<? extends BaseModel> anyTypeItems;
-
     private Context context;
-    private OnItemClickListener listener;
 
     @NonNull
     @Override
@@ -67,21 +65,7 @@ public class MultiRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         return anyTypeItems.size();
     }
 
-    @Override
-    public void onClick(View view) {
-
-    }
-
-    //An interface way to create OnItemClick events
-    public interface OnItemClickListener {
-        void onItemClick(int position);
-    }
-
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.listener = listener;
-    }
-
-    public class ArticleHolder extends BaseViewHolder<Article> implements View.OnClickListener {
+    public class ArticleHolder extends BaseViewHolder<Article>{
         ListNewsBinding binding;
         /**
          * Set the article data
@@ -98,6 +82,7 @@ public class MultiRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             binding.articleDescription.setText(object.getDescription());
             binding.articleTitle.setText(object.getTitle());
             setReadMoreBtn(object);
+            showFooter();
             Glide.with(context).load(object.getUrlToImage()).into(binding.articleImageView);
         }
 
@@ -117,11 +102,12 @@ public class MultiRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             });
         }
 
-        @Override
-        public void onClick(View view) {
-            int pos = getAdapterPosition();
-            if (pos != RecyclerView.NO_POSITION) {
-
+        private void showFooter(){
+            if(isLoading){
+                binding.recyclerViewFooter.loadMoreProgressBar
+                        .setVisibility(View.VISIBLE);
+            }else{
+                binding.recyclerViewFooter.loadMoreProgressBar.setVisibility(View.GONE);
             }
         }
     }

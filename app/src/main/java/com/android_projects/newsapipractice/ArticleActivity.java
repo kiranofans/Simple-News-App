@@ -2,13 +2,14 @@ package com.android_projects.newsapipractice;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.data.Models.NewsArticleMod;
-import com.android_projects.newsapipractice.data.Models.Source;
 import com.android_projects.newsapipractice.databinding.ActivityArticleBinding;
 import com.android_projects.newsapipractice.network.HttpHelper;
 import com.android_projects.newsapipractice.network.HttpRequestClient;
@@ -19,10 +20,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_ARTICLE;
-import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_IMG_URL;
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_SOURCE_ID;
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_SOURCE_NAME;
-import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_TITLE;
 import static com.android_projects.newsapipractice.network.APIConstants.API_KEY;
 import static com.android_projects.newsapipractice.network.APIConstants.BASE_URL;
 import static com.android_projects.newsapipractice.network.APIConstants.ENDPOINT_EVERYTHING;
@@ -39,19 +38,26 @@ public class ArticleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_article);
 
-        getStringExtra();
+        getObjectExtra();
 
         articleMod = new Article();
 
     }
 
-    private void getStringExtra(){
-//        String title = getIntent().getExtras().getString(EXTRA_KEY_TITLE);
-//        String imgURL = getIntent().getExtras().getString(EXTRA_KEY_IMG_URL);
-
+    private void getObjectExtra(){
         Article object = (Article) getIntent().getSerializableExtra(EXTRA_KEY_ARTICLE);
 
         mBinding.articleTvContentTitle.setText(object.getTitle());
+        mBinding.articleAuthorTv.setText(object.getAuthor());
+        mBinding.articleTvContent.setText(object.getContent());
+        mBinding.articleTvDate.setText(object.getPublishedAt());
+
+        SpannableStringBuilder strBuilder = new SpannableStringBuilder();
+        int buildLength = strBuilder.length();
+        strBuilder.append(object.getUrl());
+        //strBuilder.setSpan(new StyleSpan());
+        mBinding.articleTvSourceLink.setText("Source: "+object.getUrl());
+
         Glide.with(this).load(object.getUrlToImage()).into(mBinding.articleImgViewContent);
 
     }
@@ -90,7 +96,6 @@ public class ArticleActivity extends AppCompatActivity {
                     String sourceNameObj = source.getString("name");
 
                     if(sourceID.equals(sourceIdObj) && sourceName.equals(sourceNameObj)){
-                        //newsArticleMod = new NewsArticleMod(articleMod);
                         mBinding.articleAuthorTv.setText(author);
                         mBinding.articleTvDate.setText(publishDate);
                         mBinding.articleTvContent.setText(content);

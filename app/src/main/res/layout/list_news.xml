@@ -51,5 +51,9 @@
                 android:text="Read More"/>
         </RelativeLayout>
 
+        <include android:id="@+id/recycler_view_footer"
+            layout="@layout/load_more_layout"
+            android:visibility="gone"/>
+
     </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>
