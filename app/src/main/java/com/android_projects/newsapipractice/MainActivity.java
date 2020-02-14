@@ -4,29 +4,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.android_projects.newsapipractice.Adapter.MultiRecyclerViewAdapter;
 import com.android_projects.newsapipractice.Fragments.HomeFragment;
+import com.android_projects.newsapipractice.Fragments.SecondFragment;
+import com.android_projects.newsapipractice.Fragments.ThirdFragment;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
-import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.ActivityMainBinding;
-import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
     private ActivityMainBinding mainBinding;
@@ -62,8 +51,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 fragment = new HomeFragment();
             break;
             case R.id.nav_2:
+                fragment = new SecondFragment();
             break;
             case R.id.nav_3:
+                fragment = new ThirdFragment();
             break;
 
         }

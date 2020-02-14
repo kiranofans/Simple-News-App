@@ -10,11 +10,11 @@ import retrofit2.http.Query;
 
 import static com.android_projects.newsapipractice.network.APIConstants.ENDPOINT_EVERYTHING;
 
-
 public interface RetrofitApiService {
+    String ENDPOINT_EVERYTHING ="/v2/everything";
 
     @GET(ENDPOINT_EVERYTHING)
-    Call<NewsArticleMod> getEverything(@Header("Authorization")String authorization,
+    Call<NewsArticleMod> getEverything(@Header("Authorization")String authorization, @Query("language") String language,
                                        @Query("q") String q, @Query("pageSize") int pageSize,
                                 @Query("sortBy") String sort_by, @Query("page")int pageNumber);
 }

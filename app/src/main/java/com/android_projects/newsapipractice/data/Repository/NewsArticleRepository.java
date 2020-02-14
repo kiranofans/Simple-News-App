@@ -28,6 +28,10 @@ public class NewsArticleRepository {
      * data model for the app, which provides simple data modification & retrieval APIs
      **/
 
+    private final String LANGUAGE_ENGLISH="en";
+    private final String LANGUAGE_SPANISH = "es";
+    private final String LANGUAGE_FRENCH = "fr";
+
     //Source data
     private List<Article> articleList = new ArrayList<>();
 
@@ -48,7 +52,7 @@ public class NewsArticleRepository {
 
         RetrofitApiService apiService = Retrofit2Client.getRetrofitService();
 
-        callEverything = apiService.getEverything("Bearer "+API_KEY,"bitcoin",
+        callEverything = apiService.getEverything("Bearer "+API_KEY,LANGUAGE_ENGLISH,"bitcoin",
                 20,"publishedAt",page);
 
         callEverything.enqueue(new Callback<NewsArticleMod>() {
