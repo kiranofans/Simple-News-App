@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/nav_home"
+        android:enabled="true"
+        android:title="Home"
+        app:showAsAction="ifRoom"
+        android:icon="@mipmap/ic_nav_home"/>
+    <item android:id="@+id/nav_2"
+        android:enabled="true"
+        android:title="tab2"
+        app:showAsAction="ifRoom"
+        android:icon="@android:drawable/ic_dialog_dialer"/>
+    <item android:id="@+id/nav_3"
+    android:enabled="true"
+    android:title="tab3"
+    app:showAsAction="ifRoom"
+    android:icon="@android:drawable/ic_dialog_email"/>
+</menu>

@@ -2,36 +2,23 @@ package com.android_projects.newsapipractice.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android_projects.newsapipractice.ArticleActivity;
-import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.data.Models.Article;
-import com.android_projects.newsapipractice.data.Models.Source;
-import com.android_projects.newsapipractice.databinding.ActivityArticleBinding;
 import com.android_projects.newsapipractice.databinding.ListNewsBinding;
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.android_projects.newsapipractice.MainActivity.isLoading;
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_ARTICLE;
-import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_IMG_URL;
-import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_SOURCE_ARRAY;
-import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_SOURCE_ID;
-import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_SOURCE_NAME;
-import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_TITLE;
 
 public class MultiRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private List<? extends BaseModel> anyTypeItems;
@@ -65,8 +52,9 @@ public class MultiRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         return anyTypeItems.size();
     }
 
-    public class ArticleHolder extends BaseViewHolder<Article>{
+    public class ArticleHolder extends BaseViewHolder<Article> {
         ListNewsBinding binding;
+
         /**
          * Set the article data
          **/
@@ -102,11 +90,10 @@ public class MultiRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             });
         }
 
-        private void showFooter(){
-            if(isLoading){
-                binding.recyclerViewFooter.loadMoreProgressBar
-                        .setVisibility(View.VISIBLE);
-            }else{
+        private void showFooter() {
+            if (isLoading) {
+                binding.recyclerViewFooter.loadMoreProgressBar.setVisibility(View.VISIBLE);
+            } else {
                 binding.recyclerViewFooter.loadMoreProgressBar.setVisibility(View.GONE);
             }
         }
