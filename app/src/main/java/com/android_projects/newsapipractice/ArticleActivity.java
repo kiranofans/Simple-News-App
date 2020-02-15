@@ -34,13 +34,16 @@ public class ArticleActivity extends AppCompatActivity {
 
     private void configureToolbar(Article articleObj){
         getSupportActionBar().setTitle(articleObj.getTitle());
-        getSupportActionBar().setSubtitle(articleObj.getAuthor());
+        if(isAuthorProvided(articleObj)){
+            getSupportActionBar().setSubtitle(articleObj.getAuthor());
+        }else{
+            getSupportActionBar().setSubtitle("Author Not Provided");
+        }
     }
+
     private void getObjectExtra(){
         Article object = (Article) getIntent().getSerializableExtra(EXTRA_KEY_ARTICLE);
 
-        mBinding.articleTvContentTitle.setText(object.getTitle());
-        mBinding.articleAuthorTv.setText(object.getAuthor());
         mBinding.articleTvContent.setText(object.getContent());
         mBinding.articleTvDate.setText(object.getPublishedAt());
 
@@ -61,4 +64,10 @@ public class ArticleActivity extends AppCompatActivity {
 
     }
 
+    private boolean isAuthorProvided(Article obj){
+        if(obj.getAuthor()!=null || obj.getAuthor() != ""){
+            return true;
+        }
+        return false;
+    }
 }

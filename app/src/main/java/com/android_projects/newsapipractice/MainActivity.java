@@ -20,14 +20,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
     private ActivityMainBinding mainBinding;
 
-    private NewsArticleViewModel viewModel;
-
-    /*private MultiRecyclerViewAdapter recyclerViewAdapter;
-    private int currentPageNum = 1;
-    private List<Article> articleList = new ArrayList<>();*/
-
-    private BottomNavigationView bottomNavigation;
-
     public static boolean isLoading=false;//To determine if load the data or not
 
     @Override
@@ -37,10 +29,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         //loading default fragment
         setFragments(new HomeFragment());
-
-        //ViewModel
-        viewModel = ViewModelProviders.of(this).get(NewsArticleViewModel.class);
         mainBinding.mainBottomNavigation.setOnNavigationItemSelectedListener(this);
+
     }
 
     @Override
@@ -59,6 +49,16 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         }
         return setFragments(fragment);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.setting:
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private boolean setFragments(Fragment fragment){
