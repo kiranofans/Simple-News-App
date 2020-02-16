@@ -104,8 +104,7 @@ public class HomeFragment extends Fragment {
                 int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
                 if (!isLoading) {//true
                     if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
-                            && firstVisibleItemPosition >= 0
-                            && totalItemCount >= 20) {
+                            && firstVisibleItemPosition >= 0 && totalItemCount >= 20) {
                         currentPageNum++;
                         getNewArticles(currentPageNum);
                         isLoading = true;//make the isLoading true again, so it is false
