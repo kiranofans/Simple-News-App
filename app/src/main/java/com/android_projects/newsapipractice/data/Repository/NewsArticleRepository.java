@@ -53,7 +53,7 @@ public class NewsArticleRepository {
         RetrofitApiService apiService = Retrofit2Client.getRetrofitService();
 
         callEverything = apiService.getEverything("Bearer "+API_KEY,LANGUAGE_ENGLISH,"bitcoin",
-                20,"publishedAt",page);
+                2,"publishedAt",page);
 
         callEverything.enqueue(new Callback<NewsArticleMod>() {
             @Override

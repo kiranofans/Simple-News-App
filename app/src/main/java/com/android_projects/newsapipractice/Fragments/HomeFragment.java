@@ -18,13 +18,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android_projects.newsapipractice.Adapter.MultiRecyclerViewAdapter;
-import com.android_projects.newsapipractice.MainActivity;
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.ViewModels.HomeViewModel;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
-import com.android_projects.newsapipractice.databinding.ActivityArticleBinding;
-import com.android_projects.newsapipractice.databinding.ActivityMainBinding;
 import com.android_projects.newsapipractice.databinding.FragmentHomeBinding;
 
 import java.util.ArrayList;
@@ -57,29 +54,32 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         viewModel = ViewModelProviders.of(this).get(NewsArticleViewModel.class);
 
-        getNewArticles(currentPageNum);//load news data the very first time
+        setRecyclerView();
+        loadPage(currentPageNum);//load news data the very first time
         swipeToRefreshListener();
+        //onScrollListener();
     }
+
     private void swipeToRefreshListener(){
         homeBinding.swipeRefreshLayout.setOnRefreshListener(() ->{
             currentPageNum=1;
-            getNewArticles(currentPageNum);
+            loadPage(currentPageNum);
         });
     }
 
-    private void getNewArticles(int page){
-        homeBinding.swipeRefreshLayout.setRefreshing(true);
+    private void loadPage(int page){
+       homeBinding.swipeRefreshLayout.setRefreshing(true);
         viewModel.getArticles(page).observe(this, new Observer<List<Article>>() {
             @Override
             public void onChanged(List<Article> articles) {
                 isLoading = false;
                 articleList.addAll(articles);
                 homeBinding.swipeRefreshLayout.setRefreshing(false);
-                setRecyclerView();
+                onScrollListener();
             }
         });
     }
@@ -91,7 +91,9 @@ public class HomeFragment extends Fragment {
         homeBinding.recyclerView.setLayoutManager(new LinearLayoutManager(v.getContext()));
         homeBinding.recyclerView.setItemAnimator(new DefaultItemAnimator());
         homeBinding.recyclerView.setAdapter(recyclerViewAdapter);
+    }
 
+    private void onScrollListener(){
         homeBinding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -104,9 +106,9 @@ public class HomeFragment extends Fragment {
                 int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
                 if (!isLoading) {//true
                     if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
-                            && firstVisibleItemPosition >= 0 && totalItemCount >= 20) {
+                            && firstVisibleItemPosition >= 0 && totalItemCount >= 2) {
                         currentPageNum++;
-                        getNewArticles(currentPageNum);
+                        loadPage(currentPageNum);
                         isLoading = true;//make the isLoading true again, so it is false
                     }
                 }
