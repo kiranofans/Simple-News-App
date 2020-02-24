@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.data.Models.NewsArticleMod;
+import com.android_projects.newsapipractice.data.OnDataReceivedCallback;
 import com.android_projects.newsapipractice.network.Retrofit2Client;
 import com.android_projects.newsapipractice.network.RetrofitApiService;
 
@@ -27,7 +28,7 @@ public class NewsArticleRepository {
      * A data store for all of the application. It's the complete
      * data model for the app, which provides simple data modification & retrieval APIs
      **/
-
+    private final String TAG = NewsArticleRepository.class.getSimpleName();
     private final String LANGUAGE_ENGLISH="en";
     private final String LANGUAGE_SPANISH = "es";
     private final String LANGUAGE_FRENCH = "fr";
@@ -48,12 +49,12 @@ public class NewsArticleRepository {
     /**
      * Performing Api calls here
      * */
-    public MutableLiveData<List<Article>> getMutableLiveData(Call<NewsArticleMod> callEverything, int page) {
+    public MutableLiveData<List<Article>> getMutableLiveData(Call<NewsArticleMod> callEverything, int page,
+                                                             OnDataReceivedCallback dataReceivedCallback) {
 
         RetrofitApiService apiService = Retrofit2Client.getRetrofitService();
-
         callEverything = apiService.getEverything("Bearer "+API_KEY,LANGUAGE_ENGLISH,"bitcoin",
-                2,"publishedAt",page);
+                20,"publishedAt",page);
 
         callEverything.enqueue(new Callback<NewsArticleMod>() {
             @Override
@@ -65,10 +66,13 @@ public class NewsArticleRepository {
                     /**
                      * I'm api calling through the NewsArticleMod
                      * class and put the article data into Article typed List**/
-                    articleList = newsArticles.getArticles();
+                    //articleList = newsArticles.getArticles();
 
+                    //Callback to return data to live data
+                    Log.d(TAG, "onResponse: ");
+                    dataReceivedCallback.onDataReceived(newsArticles.getArticles());
                     //Convert the data source to mutable live data
-                    mutableLiveData.setValue(articleList);
+                    //mutableLiveData.setValue(articleList);
                 }
                 Log.d("CHECK NULL", response.body()+" is null");
 

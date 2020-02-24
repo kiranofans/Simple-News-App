@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,8 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
-    private FragmentHomeBinding homeBinding;
+    private final String TAG = HomeFragment.class.getSimpleName();
 
+    private FragmentHomeBinding homeBinding;
     private NewsArticleViewModel viewModel;
 
     private MultiRecyclerViewAdapter recyclerViewAdapter;
@@ -59,29 +61,35 @@ public class HomeFragment extends Fragment {
         viewModel = ViewModelProviders.of(this).get(NewsArticleViewModel.class);
 
         setRecyclerView();
+        setViewModel();
         loadPage(currentPageNum);//load news data the very first time
         swipeToRefreshListener();
-        //onScrollListener();
+        onScrollListener();
     }
 
     private void swipeToRefreshListener(){
         homeBinding.swipeRefreshLayout.setOnRefreshListener(() ->{
             currentPageNum=1;
+            recyclerViewAdapter.clear();
             loadPage(currentPageNum);
         });
     }
 
-    private void loadPage(int page){
-       homeBinding.swipeRefreshLayout.setRefreshing(true);
-        viewModel.getArticles(page).observe(this, new Observer<List<Article>>() {
+    private void setViewModel(){
+        viewModel.getArticleLiveData().observe(this, new Observer<List<Article>>() {
             @Override
             public void onChanged(List<Article> articles) {
                 isLoading = false;
                 articleList.addAll(articles);
+                Log.d(TAG,"onChanged: "+articleList.size());
                 homeBinding.swipeRefreshLayout.setRefreshing(false);
-                onScrollListener();
-            }
+                recyclerViewAdapter.notifyDataSetChanged();            }
         });
+    }
+    private void loadPage(int page){
+        Log.d(TAG,"API called "+page);
+       homeBinding.swipeRefreshLayout.setRefreshing(true);
+       viewModel.getArticles(page);
     }
 
     private void setRecyclerView(){

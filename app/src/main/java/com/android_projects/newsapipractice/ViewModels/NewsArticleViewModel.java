@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.data.Models.NewsArticleMod;
@@ -16,8 +17,9 @@ import retrofit2.Call;
 
 public class NewsArticleViewModel extends AndroidViewModel {
     private NewsArticleRepository repository;
-
     private Call<NewsArticleMod> callEverything;
+
+    private MutableLiveData<List<Article>> articleLiveData = new MutableLiveData<>();
 
     public NewsArticleViewModel(@NonNull Application application) {
         super(application);
@@ -26,8 +28,12 @@ public class NewsArticleViewModel extends AndroidViewModel {
         repository = new NewsArticleRepository(application);
     }
 
-    public LiveData<List<Article>> getArticles(int page){
-        return repository.getMutableLiveData(callEverything,page);
+    public void getArticles(int page){
+        repository.getMutableLiveData(callEverything,page, data->articleLiveData.setValue(data));
+    }
+
+    public MutableLiveData<List<Article>> getArticleLiveData(){
+        return articleLiveData;
     }
 
 }

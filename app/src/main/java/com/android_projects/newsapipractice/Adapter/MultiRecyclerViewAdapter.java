@@ -52,6 +52,11 @@ public class MultiRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         return anyTypeItems.size();
     }
 
+    public void clear(){
+        anyTypeItems.clear();
+        notifyDataSetChanged();
+    }
+
     public class ArticleHolder extends BaseViewHolder<Article> {
         ListNewsBinding binding;
 
@@ -63,6 +68,11 @@ public class MultiRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             super(binding.getRoot());
             this.binding = binding;
             //Can perform recyclerView onclick here
+        }
+
+        @Override
+        protected void clearListData() {
+
         }
 
         @Override
