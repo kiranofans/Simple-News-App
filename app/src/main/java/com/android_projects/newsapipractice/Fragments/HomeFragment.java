@@ -61,7 +61,7 @@ public class HomeFragment extends Fragment {
         viewModel = ViewModelProviders.of(this).get(NewsArticleViewModel.class);
 
         setRecyclerView();
-        setViewModel();
+        setObserver();
         loadPage(currentPageNum);//load news data the very first time
         swipeToRefreshListener();
         onScrollListener();
@@ -75,7 +75,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void setViewModel(){
+    private void setObserver(){
         viewModel.getArticleLiveData().observe(this, new Observer<List<Article>>() {
             @Override
             public void onChanged(List<Article> articles) {

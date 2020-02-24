@@ -34,7 +34,7 @@ public class NewsArticleRepository {
     private final String LANGUAGE_FRENCH = "fr";
 
     //Source data
-    private List<Article> articleList = new ArrayList<>();
+    //private List<Article> articleList = new ArrayList<>();
 
     //Use mutableLiveData to fetch, sync, and persisting from different data sources
     private MutableLiveData<List<Article>> mutableLiveData = new MutableLiveData<>();
