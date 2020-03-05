@@ -14,7 +14,7 @@ import com.android_projects.newsapipractice.Fragments.SecondFragment;
 import com.android_projects.newsapipractice.Fragments.ThirdFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public abstract class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,12 +36,10 @@ public abstract class BaseActivity extends AppCompatActivity {
                         case R.id.nav_3:
                             fragment = new ThirdFragment();
                             break;
-
                     }
                     return setFragments(fragment);
                 }
             };
-
 
     public boolean setFragments(Fragment fragment) {
         if (fragment != null) {
