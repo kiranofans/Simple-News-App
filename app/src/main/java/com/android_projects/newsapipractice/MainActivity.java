@@ -17,7 +17,7 @@ import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends BaseActivity{
     private ActivityMainBinding mainBinding;
 
     public static boolean isLoading=false;//To determine if load the data or not
@@ -29,26 +29,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         //loading default fragment
         setFragments(new HomeFragment());
-        mainBinding.mainBottomNavigation.setOnNavigationItemSelectedListener(this);
-
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        Fragment fragment = null;
-        switch(item.getItemId()){
-            case R.id.nav_home:
-                fragment = new HomeFragment();
-            break;
-            case R.id.nav_2:
-                fragment = new SecondFragment();
-            break;
-            case R.id.nav_3:
-                fragment = new ThirdFragment();
-            break;
-
-        }
-        return setFragments(fragment);
+        mainBinding.mainBottomNavigation.setOnNavigationItemSelectedListener(mNavItemSelectedListener);
     }
 
     @Override
@@ -59,15 +40,5 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private boolean setFragments(Fragment fragment){
-        if(fragment!=null){
-            FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.main_fragment_container,fragment,"Bottom Nav Fragments");
-            fragTrans.commit();
-            return true;
-        }
-        return false;
     }
 }

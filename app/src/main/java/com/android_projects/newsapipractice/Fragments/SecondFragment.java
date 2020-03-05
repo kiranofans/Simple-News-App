@@ -1,7 +1,5 @@
 package com.android_projects.newsapipractice.Fragments;
 
-import androidx.lifecycle.ViewModelProviders;
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -24,7 +22,7 @@ public class SecondFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.second_fragment, container, false);
+        return inflater.inflate(R.layout.fragment_second, container, false);
     }
 
     @Override

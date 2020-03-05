@@ -16,7 +16,7 @@ import com.bumptech.glide.Glide;
 
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_ARTICLE;
 
-public class ArticleActivity extends AppCompatActivity {
+public class ArticleActivity extends BaseActivity {
 
     private ActivityArticleBinding mBinding;
 
