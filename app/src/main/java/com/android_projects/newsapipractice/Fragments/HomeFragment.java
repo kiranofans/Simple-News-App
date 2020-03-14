@@ -89,7 +89,7 @@ public class HomeFragment extends Fragment {
     private void loadPage(int page){
         Log.d(TAG,"API called "+page);
        homeBinding.swipeRefreshLayout.setRefreshing(true);
-       viewModel.getArticles(page);
+       viewModel.getArticlesList(page);
     }
 
     private void setRecyclerView(){

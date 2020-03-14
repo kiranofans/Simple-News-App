@@ -8,11 +8,10 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.data.Models.NewsArticleMod;
-import com.android_projects.newsapipractice.data.OnDataReceivedCallback;
+import com.android_projects.newsapipractice.data.OnArticleDataReceivedCallback;
 import com.android_projects.newsapipractice.network.Retrofit2Client;
 import com.android_projects.newsapipractice.network.RetrofitApiService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -50,7 +49,7 @@ public class NewsArticleRepository {
      * Performing Api calls here
      * */
     public MutableLiveData<List<Article>> getMutableLiveData(Call<NewsArticleMod> callEverything, int page,
-                                                             OnDataReceivedCallback dataReceivedCallback) {
+                                                             OnArticleDataReceivedCallback dataReceivedCallback) {
 
         RetrofitApiService apiService = Retrofit2Client.getRetrofitService();
         callEverything = apiService.getEverything("Bearer "+API_KEY,LANGUAGE_ENGLISH,"bitcoin",

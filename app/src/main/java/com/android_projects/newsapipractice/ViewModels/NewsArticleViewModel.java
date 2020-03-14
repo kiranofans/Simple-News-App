@@ -28,7 +28,7 @@ public class NewsArticleViewModel extends AndroidViewModel {
         repository = new NewsArticleRepository(application);
     }
 
-    public void getArticles(int page){
+    public void getArticlesList(int page){
         repository.getMutableLiveData(callEverything,page, data->articleLiveData.setValue(data));
     }
 

@@ -4,6 +4,6 @@ import com.android_projects.newsapipractice.data.Models.Article;
 
 import java.util.List;
 
-public interface OnDataReceivedCallback {
+public interface OnArticleDataReceivedCallback {
     void onDataReceived(List<Article> articles);
 }
