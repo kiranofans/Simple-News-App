@@ -36,7 +36,7 @@ public class NewsArticleRepository {
     private MutableLiveData<List<Article>> mutableLiveData = new MutableLiveData<>();
 
     private Application _application;
-    private SortByTypes sortByTypes;
+
     private String domains = "foxnews.com,wsj.com,nytimes.com,ctvnews.ca,bbc.co.uk,techcrunch.com,engadget.com";
 
     public NewsArticleRepository(Application application) {
@@ -46,10 +46,6 @@ public class NewsArticleRepository {
 
     private RetrofitApiService apiService = Retrofit2Client.getRetrofitService();
 
-    public enum SortByTypes{
-        PUBLISHED_AT,POPULARITY,RELEVANCY
-    }
-
     /**
      * Performing Api calls here
      * */
@@ -57,8 +53,7 @@ public class NewsArticleRepository {
                                                              OnArticleDataReceivedCallback dataReceivedCallback) {
 
         callEverything = apiService.getEverything("Bearer "+API_KEY,LANGUAGE_ENGLISH,
-                domains,
-                50,sortBy,page);
+                domains,50,sortBy,page);
 
         callEverything.enqueue(new Callback<NewsArticleMod>() {
             @Override
@@ -90,20 +85,4 @@ public class NewsArticleRepository {
         return mutableLiveData; //Return the data source as mutable live data
     }
 
-/*    public String getSortByType(){
-        String sortBy="";
-        switch (sortByTypes){
-            case PUBLISHED_AT:
-                sortBy=SORT_BY_PUBLISHED_AT;
-            break;
-
-            case POPULARITY:
-                sortBy=SORT_BY_POPULARITY;
-            break;
-            case RELEVANCY:
-                sortBy=SORT_BY_RELEVANCY;
-            break;
-        }
-        return sortBy;
-    }*/
 }
