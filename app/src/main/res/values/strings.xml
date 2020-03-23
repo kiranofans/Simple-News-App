@@ -7,11 +7,11 @@
     <!--Toolbar title-->
     <string name="title_popular_news">Popular Articles</string>
     <string name="title_local_news">Local News</string>
-    <string name="title_latest_news">Latest News</string>
+    <string name="title_latest_news">World Latest News</string>
     <string name="title_category">Categories &amp; More</string>
 
     <!--Bottom menu strings-->
-    <string name="bottom_nav_top_headlines">Top Headlines</string>
+    <string name="bottom_nav_top_headlines">News Home</string>
     <string name="bottom_nav_popular_articles">Popular Articles</string>
     <string name="bottom_nav_local_news">Local News</string>
     <string name="bottom_nav_more">More</string>
