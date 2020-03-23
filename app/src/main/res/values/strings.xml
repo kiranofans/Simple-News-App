@@ -16,6 +16,9 @@
     <string name="bottom_nav_local_news">Local News</string>
     <string name="bottom_nav_more">More</string>
 
+    <!--Article Activity-->
+    <string name="button_continue_reading">Go to source page</string>
+
     <!--No content layout-->
     <string name="no_result_found">No result found</string>
     <string name="please_refresh">Network problem, please tap refresh</string>
