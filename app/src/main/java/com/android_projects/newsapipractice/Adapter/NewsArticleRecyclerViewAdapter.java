@@ -20,7 +20,7 @@ import java.util.List;
 import static com.android_projects.newsapipractice.MainActivity.isLoading;
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_ARTICLE;
 
-public class MultiRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+public class NewsArticleRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private List<? extends BaseModel> anyTypeItems;
     private Context context;
 
@@ -31,7 +31,7 @@ public class MultiRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         return new ArticleHolder(newsBinding);
     }
 
-    public MultiRecyclerViewAdapter(Context context, List<? extends BaseModel> list) {
+    public NewsArticleRecyclerViewAdapter(Context context, List<? extends BaseModel> list) {
         this.context = context;
         anyTypeItems = list; //initialize anyTypeItems
     }

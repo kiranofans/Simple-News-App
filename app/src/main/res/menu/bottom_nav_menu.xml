@@ -3,17 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/nav_home"
         android:enabled="true"
-        android:title="Home"
+        android:title="@string/bottom_nav_top_headlines"
         app:showAsAction="ifRoom"
         android:icon="@mipmap/ic_nav_home"/>
-    <item android:id="@+id/nav_2"
+    <item android:id="@+id/nav_popular"
         android:enabled="true"
-        android:title="tab2"
+        android:title="@string/bottom_nav_popular_articles"
         app:showAsAction="ifRoom"
-        android:icon="@android:drawable/ic_dialog_dialer"/>
-    <item android:id="@+id/nav_3"
+        android:icon="@mipmap/ic_popular"/>
+    <item android:id="@+id/nav_local"
+        android:enabled="true"
+        android:title="@string/bottom_nav_local_news"
+        app:showAsAction="ifRoom"
+        android:icon="@mipmap/ic_local_news"/>
+
+    <item android:id="@+id/nav_categories"
     android:enabled="true"
-    android:title="tab3"
+    android:title="@string/bottom_nav_more"
     app:showAsAction="ifRoom"
-    android:icon="@android:drawable/ic_dialog_email"/>
+    android:icon="@mipmap/ic_category"/>
 </menu>

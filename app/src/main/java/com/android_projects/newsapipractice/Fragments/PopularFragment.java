@@ -1,10 +1,6 @@
 package com.android_projects.newsapipractice.Fragments;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,97 +13,103 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import com.android_projects.newsapipractice.Adapter.NewsArticleRecyclerViewAdapter;
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
-import com.android_projects.newsapipractice.databinding.FragmentHomeBinding;
+import com.android_projects.newsapipractice.databinding.FragmentPopularBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment {
-    private final String TAG = HomeFragment.class.getSimpleName();
+public class PopularFragment extends Fragment {
+    private  final String TAG = PopularFragment.class.getSimpleName();
 
-    private FragmentHomeBinding homeBinding;
-    private NewsArticleViewModel viewModel;
     private View v;
-
-    private NewsArticleRecyclerViewAdapter recyclerViewAdapter;
     private LinearLayoutManager layoutManager;
 
-    private int currentPageNum = 1;
-    private List<Article> articleList = new ArrayList<>();
+    private FragmentPopularBinding popBinding;
+    private NewsArticleViewModel newsViewModel;
 
-    public boolean isLoading = false;//To determine if load the data or not
+    private NewsArticleRecyclerViewAdapter recyclerViewAdapter;
+    private int currentPageNum=1;
+    private List<Article> popularArticleList = new ArrayList<>();
 
-    private final String SORT_BY_PUBLISHED_AT="publishedAt";
-    private final String SORT_BY_RELEVANCY="relevancy";
+    public boolean isLoading = false;
+    private final String SORT_BY_POPULARITY="popularity";
 
-    public static HomeFragment newInstance() {
-        return new HomeFragment();
+    public static PopularFragment newInstance() {
+        return new PopularFragment();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        homeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home,
-                container, false);
-        return v=homeBinding.getRoot();
+        popBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_popular,container,false);
+        return v = popBinding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view=v, savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(NewsArticleViewModel.class);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(view.getContext().getString(R.string.title_latest_news));
+        super.onViewCreated(view, savedInstanceState);
+        newsViewModel= ViewModelProviders.of(this).get(NewsArticleViewModel.class);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(v.getContext().getString(R.string.title_popular_news));
 
-        setRecyclerView(view);
-        setObserver();
-        loadPage(currentPageNum);//load news data the very first time
+        setPopularRecyclerView();
+        setPopObserver();
+        loadPage(currentPageNum);
         swipeToRefreshListener();
         onScrollListener();
     }
 
-    private void swipeToRefreshListener() {
-        homeBinding.swipeRefreshLayout.setOnRefreshListener(() -> {
-            currentPageNum = 1;
+    private void setPopularRecyclerView(){
+        recyclerViewAdapter = new NewsArticleRecyclerViewAdapter(v.getContext(),popularArticleList);
+        layoutManager=new LinearLayoutManager(v.getContext());
+
+        popBinding.mainPopularRecyclerView.setLayoutManager(layoutManager);
+        popBinding.mainPopularRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        popBinding.mainPopularRecyclerView.setAdapter(recyclerViewAdapter);
+    }
+
+    private void swipeToRefreshListener(){
+        popBinding.swipeRefreshLayout.setOnRefreshListener(()->{
+            currentPageNum=1;
             recyclerViewAdapter.clear();
             loadPage(currentPageNum);
         });
     }
 
-    private void setObserver() {
-        viewModel.getArticleLiveData().observe(this, new Observer<List<Article>>() {
+    private void loadPage(int pageNum){
+        Log.d(TAG, "API called " + pageNum);
+        popBinding.swipeRefreshLayout.setRefreshing(true);
+        newsViewModel.getArticlesList(pageNum,SORT_BY_POPULARITY);
+    }
+
+    private void setPopObserver(){
+        newsViewModel.getArticleLiveData().observe(this, new Observer<List<Article>>() {
             @Override
             public void onChanged(List<Article> articles) {
-                isLoading = false;
-                articleList.addAll(articles);
-                Log.d(TAG, "onChanged: " + articleList.size());
-                homeBinding.swipeRefreshLayout.setRefreshing(false);
+                isLoading=false;
+                popularArticleList.addAll(articles);
+                popBinding.swipeRefreshLayout.setRefreshing(false);
                 recyclerViewAdapter.notifyDataSetChanged();
             }
         });
     }
-
-    private void loadPage(int page) {
-        Log.d(TAG, "API called " + page);
-        homeBinding.swipeRefreshLayout.setRefreshing(true);
-        viewModel.getArticlesList(page,SORT_BY_PUBLISHED_AT);
-    }
-
-    private void setRecyclerView(View v) {
-        //recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        recyclerViewAdapter = new NewsArticleRecyclerViewAdapter(v.getContext(), articleList);
-        layoutManager=new LinearLayoutManager(v.getContext());
-
-        homeBinding.mainHomeRecyclerView.setLayoutManager(layoutManager);
-        homeBinding.mainHomeRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        homeBinding.mainHomeRecyclerView.setAdapter(recyclerViewAdapter);
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        //mViewModel = ViewModelProviders.of(this).get(SecondViewModel.class);
+        // TODO: Use the ViewModel
     }
 
     private void onScrollListener() {
-        homeBinding.mainHomeRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        popBinding.mainPopularRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);

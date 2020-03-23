@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
@@ -13,7 +13,7 @@
             tools:context=".MainActivity">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/main_home_recycler_view"
+                android:id="@+id/main_popular_recycler_view"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:padding="6dp"
@@ -24,7 +24,5 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
 </layout>

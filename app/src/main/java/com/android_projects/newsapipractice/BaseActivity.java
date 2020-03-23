@@ -10,8 +10,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.android_projects.newsapipractice.Fragments.HomeFragment;
-import com.android_projects.newsapipractice.Fragments.SecondFragment;
-import com.android_projects.newsapipractice.Fragments.ThirdFragment;
+import com.android_projects.newsapipractice.Fragments.LocalFragment;
+import com.android_projects.newsapipractice.Fragments.PopularFragment;
+import com.android_projects.newsapipractice.Fragments.CategoriesFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class BaseActivity extends AppCompatActivity {
@@ -30,11 +31,14 @@ public class BaseActivity extends AppCompatActivity {
                         case R.id.nav_home:
                             fragment = new HomeFragment();
                             break;
-                        case R.id.nav_2:
-                            fragment = new SecondFragment();
+                        case R.id.nav_popular:
+                            fragment = new PopularFragment();
                             break;
-                        case R.id.nav_3:
-                            fragment = new ThirdFragment();
+                        case R.id.nav_local:
+                            fragment = new LocalFragment();
+                            break;
+                        case R.id.nav_categories:
+                            fragment = new CategoriesFragment();
                             break;
                     }
                     return setFragments(fragment);

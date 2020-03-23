@@ -32,28 +32,33 @@ public class NewsArticleRepository {
     private final String LANGUAGE_SPANISH = "es";
     private final String LANGUAGE_FRENCH = "fr";
 
-    //Source data
-    //private List<Article> articleList = new ArrayList<>();
-
     //Use mutableLiveData to fetch, sync, and persisting from different data sources
     private MutableLiveData<List<Article>> mutableLiveData = new MutableLiveData<>();
 
     private Application _application;
+    private SortByTypes sortByTypes;
+    private String domains = "foxnews.com,wsj.com,nytimes.com,ctvnews.ca,bbc.co.uk,techcrunch.com,engadget.com";
 
     public NewsArticleRepository(Application application) {
         //Initialize application context for the view model
         _application = application;
     }
 
+    private RetrofitApiService apiService = Retrofit2Client.getRetrofitService();
+
+    public enum SortByTypes{
+        PUBLISHED_AT,POPULARITY,RELEVANCY
+    }
+
     /**
      * Performing Api calls here
      * */
-    public MutableLiveData<List<Article>> getMutableLiveData(Call<NewsArticleMod> callEverything, int page,
+    public MutableLiveData<List<Article>> getMutableLiveData(Call<NewsArticleMod> callEverything, int page,String sortBy,
                                                              OnArticleDataReceivedCallback dataReceivedCallback) {
 
-        RetrofitApiService apiService = Retrofit2Client.getRetrofitService();
-        callEverything = apiService.getEverything("Bearer "+API_KEY,LANGUAGE_ENGLISH,"bitcoin",
-                20,"publishedAt",page);
+        callEverything = apiService.getEverything("Bearer "+API_KEY,LANGUAGE_ENGLISH,
+                domains,
+                50,sortBy,page);
 
         callEverything.enqueue(new Callback<NewsArticleMod>() {
             @Override
@@ -71,7 +76,6 @@ public class NewsArticleRepository {
                     Log.d(TAG, "onResponse: ");
                     dataReceivedCallback.onDataReceived(newsArticles.getArticles());
                     //Convert the data source to mutable live data
-                    //mutableLiveData.setValue(articleList);
                 }
                 Log.d("CHECK NULL", response.body()+" is null");
 
@@ -85,4 +89,21 @@ public class NewsArticleRepository {
 
         return mutableLiveData; //Return the data source as mutable live data
     }
+
+/*    public String getSortByType(){
+        String sortBy="";
+        switch (sortByTypes){
+            case PUBLISHED_AT:
+                sortBy=SORT_BY_PUBLISHED_AT;
+            break;
+
+            case POPULARITY:
+                sortBy=SORT_BY_POPULARITY;
+            break;
+            case RELEVANCY:
+                sortBy=SORT_BY_RELEVANCY;
+            break;
+        }
+        return sortBy;
+    }*/
 }
