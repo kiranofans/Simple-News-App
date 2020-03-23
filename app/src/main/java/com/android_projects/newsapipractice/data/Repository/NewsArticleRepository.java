@@ -12,7 +12,9 @@ import com.android_projects.newsapipractice.data.OnArticleDataReceivedCallback;
 import com.android_projects.newsapipractice.network.Retrofit2Client;
 import com.android_projects.newsapipractice.network.RetrofitApiService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,6 +41,9 @@ public class NewsArticleRepository {
 
     private String domains = "foxnews.com,wsj.com,nytimes.com,ctvnews.ca,bbc.co.uk,techcrunch.com,engadget.com";
 
+    //String type params map
+    private Map<String,String> requestPramsMap = new HashMap<String,String>();
+
     public NewsArticleRepository(Application application) {
         //Initialize application context for the view model
         _application = application;
@@ -52,8 +57,13 @@ public class NewsArticleRepository {
     public MutableLiveData<List<Article>> getMutableLiveData(Call<NewsArticleMod> callEverything, int page,String sortBy,
                                                              OnArticleDataReceivedCallback dataReceivedCallback) {
 
-        callEverything = apiService.getEverything("Bearer "+API_KEY,LANGUAGE_ENGLISH,
-                domains,50,sortBy,page);
+        //Api Request Parameter Map
+        requestPramsMap.put("sortBy",sortBy);
+        requestPramsMap.put("domains",domains);
+        requestPramsMap.put("language",LANGUAGE_ENGLISH);
+
+        callEverything = apiService.getEverything("Bearer "+API_KEY,requestPramsMap,50,page);
+        //callEverything=apiService.getEverything("Bearer "+API_KEY,)
 
         callEverything.enqueue(new Callback<NewsArticleMod>() {
             @Override
@@ -61,12 +71,6 @@ public class NewsArticleRepository {
                 NewsArticleMod newsArticles= response.body();
 
                 if(newsArticles!= null){
-                    //Use NewsArticleMod to get all articles,then assign the articles to List<Article>
-                    /**
-                     * I'm api calling through the NewsArticleMod
-                     * class and put the article data into Article typed List**/
-                    //articleList = newsArticles.getArticles();
-
                     //Callback to return data to live data
                     Log.d(TAG, "onResponse: ");
                     dataReceivedCallback.onDataReceived(newsArticles.getArticles());
