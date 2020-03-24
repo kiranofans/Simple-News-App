@@ -21,9 +21,22 @@
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              app:layout_constraintTop_toTopOf="parent"
-             app:layout_constraintBottom_toTopOf="@+id/article_tv_date"
+             app:layout_constraintBottom_toTopOf="@+id/article_tv_title"
              android:src="@android:drawable/ic_menu_report_image" />
          <androidx.appcompat.widget.AppCompatTextView
+             android:id="@+id/article_tv_title"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_margin="12dp"
+             android:textColor="@android:color/black"
+             android:textSize="25sp"
+             android:textStyle="bold"
+             app:layout_constraintTop_toBottomOf="@+id/article_img_view_content"
+             app:layout_constraintBottom_toTopOf="@+id/article_tv_content"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintVertical_chainStyle="packed"
+             android:text="@string/app_name"/>
+<!--         <androidx.appcompat.widget.AppCompatTextView
              android:id="@+id/article_tv_date"
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
@@ -33,14 +46,14 @@
              app:layout_constraintBottom_toTopOf="@+id/article_tv_content"
              app:layout_constraintEnd_toEndOf="parent"
              app:layout_constraintVertical_chainStyle="packed"
-             android:text="Published At: 2019-01-01 00:00:00" />
+             android:text="Published At: 2019-01-01 00:00:00" />-->
              <androidx.appcompat.widget.AppCompatTextView
                  android:id="@+id/article_tv_content"
                  android:layout_width="match_parent"
                  android:layout_margin="12dp"
                  android:textColor="@android:color/black"
-                 android:textSize="25sp"
-                 app:layout_constraintTop_toBottomOf="@+id/article_tv_date"
+                 android:textSize="22sp"
+                 app:layout_constraintTop_toBottomOf="@+id/article_tv_title"
                  android:layout_height="wrap_content"
                  android:text="content"/>
          <androidx.appcompat.widget.AppCompatButton

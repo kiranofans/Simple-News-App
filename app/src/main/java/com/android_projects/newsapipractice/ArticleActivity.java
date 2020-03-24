@@ -33,9 +33,13 @@ public class ArticleActivity extends BaseActivity {
     }
 
     private void configureToolbar(Article articleObj){
-        getSupportActionBar().setTitle(articleObj.getTitle());
+        //Set the back arrow button
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        getSupportActionBar().setTitle(articleObj.getSource().getName());
         if(isAuthorProvided(articleObj)){
-            getSupportActionBar().setSubtitle(articleObj.getAuthor());
+            getSupportActionBar().setSubtitle("Author: "+articleObj.getAuthor());
         }else{
             getSupportActionBar().setSubtitle("Author Not Provided");
         }
@@ -45,9 +49,10 @@ public class ArticleActivity extends BaseActivity {
         Article object = (Article) getIntent().getSerializableExtra(EXTRA_KEY_ARTICLE);
 
         mBinding.articleTvContent.setText(object.getContent());
-        mBinding.articleTvDate.setText(object.getPublishedAt());
+        mBinding.articleTvTitle.setText(object.getTitle());
 
         configureToolbar(object);
+        Glide.with(this).load(object.getUrlToImage()).into(mBinding.articleImgViewContent);
 
         SpannableStringBuilder strBuilder = new SpannableStringBuilder();
         int buildLength = strBuilder.length();
@@ -59,9 +64,6 @@ public class ArticleActivity extends BaseActivity {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(object.getUrl())));
             }
         });
-
-        Glide.with(this).load(object.getUrlToImage()).into(mBinding.articleImgViewContent);
-
     }
 
     private boolean isAuthorProvided(Article obj){
@@ -69,5 +71,11 @@ public class ArticleActivity extends BaseActivity {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();//set the back arrow onClick event
+        return true;
     }
 }
