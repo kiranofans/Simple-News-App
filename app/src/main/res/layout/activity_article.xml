@@ -63,7 +63,7 @@
              android:layout_margin="12dp"
              android:background="@android:color/transparent"
              app:layout_constraintEnd_toEndOf="parent"
-             android:textColor="@color/colorPrimary"
+             android:textColor="@color/colorAccent"
              app:layout_constraintTop_toBottomOf="@+id/article_tv_content"
              android:text="@string/button_continue_reading"/>
      </androidx.constraintlayout.widget.ConstraintLayout>

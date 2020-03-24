@@ -24,13 +24,16 @@ public class MainActivity extends BaseActivity{
         mainBinding.mainBottomNavigation.setOnNavigationItemSelectedListener(mNavItemSelectedListener);
     }
 
-    @Override
+/*    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
-            case R.id.setting:
+            case R.id.top_setting:
                 break;
-
+            case R.id.top_setting_language:
+                break;
+            case R.id.top_setting_category:
+                break;
         }
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 }

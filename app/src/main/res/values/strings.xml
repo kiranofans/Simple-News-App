@@ -16,6 +16,11 @@
     <string name="bottom_nav_local_news">Local News</string>
     <string name="bottom_nav_more">More</string>
 
+    <!--Top Setting menu strings-->
+    <string name="top_mene_setting">General Settings</string>
+    <string name="top_menu_languages">Languages</string>
+    <string name="top_menu_categories">Categories</string>
+
     <!--Article Activity-->
     <string name="button_continue_reading">Go to source page</string>
 

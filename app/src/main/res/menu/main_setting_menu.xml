@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:title="Setting"
-        android:id="@+id/setting"
+    <item android:title="@string/top_mene_setting"
+        android:id="@+id/top_setting"
         android:enabled="true"
-        android:orderInCategory="0"
-        app:showAsAction="always"/>
-    <item android:title="Language"
-        android:id="@+id/setting_language"
+        android:orderInCategory="0"/>
+    <item android:title="@string/top_menu_languages"
+        android:id="@+id/top_setting_language"
         android:icon="@android:drawable/ic_menu_sort_alphabetically"
+        android:orderInCategory="1"
         app:showAsAction="never"/>
 
-    <item android:title="Category"
-        android:id="@+id/setting_category"
+    <item android:title="@string/top_menu_categories"
+        android:id="@+id/top_setting_category"
+        android:orderInCategory="2"
         app:showAsAction="never"/>
 </menu>

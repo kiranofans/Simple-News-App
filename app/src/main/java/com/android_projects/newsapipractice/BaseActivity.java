@@ -1,6 +1,7 @@
 package com.android_projects.newsapipractice;
 
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,25 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_setting_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.top_setting:
+                return true;
+            case R.id.top_setting_language:
+                return true;
+            case R.id.top_setting_category:
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public BottomNavigationView.OnNavigationItemSelectedListener mNavItemSelectedListener = new
