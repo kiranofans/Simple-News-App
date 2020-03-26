@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Service;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -27,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android_projects.newsapipractice.Adapter.NewsArticleRecyclerViewAdapter;
+import com.android_projects.newsapipractice.PaginationListener;
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
@@ -35,6 +37,7 @@ import com.android_projects.newsapipractice.databinding.FragmentLocalBinding;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class LocalFragment extends Fragment implements LocationListener {
     private final String TAG = LocalFragment.class.getSimpleName();
@@ -49,11 +52,12 @@ public class LocalFragment extends Fragment implements LocationListener {
     private final String SORT_BY_PUBLISHED_AT="publishedAt";
     private int currentPageNum=1;
     private boolean isLoading=false;
+    private boolean isLastPage=false;
 
     private NewsArticleRecyclerViewAdapter recViewAdapter;
     private LinearLayoutManager layoutManager;
 
-    private List<Article> localNewsList;
+    private List<Article> localNewsList=new ArrayList<>();
     public LocalFragment() {
         // Required empty public constructor
     }
@@ -71,7 +75,6 @@ public class LocalFragment extends Fragment implements LocationListener {
         localNewsViewModel = ViewModelProviders.of(this).get(NewsArticleViewModel.class);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(view.getContext().getString(R.string.title_local_news));
 
-        localNewsList=new ArrayList<>();
         setRecyclerView(view);
         setObserver();
         loadPage(currentPageNum);
@@ -107,27 +110,22 @@ public class LocalFragment extends Fragment implements LocationListener {
     }
 
     private void onScrollListener(){
-        localBinding.mainLocalRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        localBinding.mainLocalRecyclerView.addOnScrollListener(new PaginationListener(layoutManager) {
             @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                int visibleItemCount = layoutManager.getChildCount();
-                int totalItemCount = layoutManager.getItemCount();
-                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
-                if(!isLoading){
-                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
-                            && firstVisibleItemPosition >= 0 && totalItemCount >= 2) {
-                        currentPageNum++;
-                        loadPage(currentPageNum);
-                        isLoading = true;//make the isLoading true again, so it is false
-                    }
-                }
+            protected void loadMoreItems() {
+                isLoading = true;//make the isLoading true again, so it is false
+                currentPageNum++;
+                loadPage(currentPageNum);
             }
 
             @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
+            public boolean isLastPage() {
+                return false;
+            }
+
+            @Override
+            public boolean isLoading() {
+                return false;
             }
         });
         recViewAdapter.notifyDataSetChanged();
@@ -155,8 +153,10 @@ public class LocalFragment extends Fragment implements LocationListener {
             requestPermissions(new String[]{coarseLocationPermission,fineLocationPermission},RC_LOCATION_PERMISSION);
         }
     }
-    private String getDeviceLocation(View v) {
+    private String getDeviceLocation(View v,String latitude, String longitude) {
         String locationResult = "";
+        Geocoder geocoder=new Geocoder(v.getContext(), Locale.ENGLISH);
+
         checkLocationSelfPermission(v);
 
         return "";

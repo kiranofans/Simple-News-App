@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android_projects.newsapipractice.Adapter.NewsArticleRecyclerViewAdapter;
+import com.android_projects.newsapipractice.PaginationListener;
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
@@ -38,9 +39,11 @@ public class PopularFragment extends Fragment {
 
     private NewsArticleRecyclerViewAdapter recyclerViewAdapter;
     private int currentPageNum=1;
+    private boolean isLastPage = false;
+    private boolean isLoading = false;
+
     private List<Article> popularArticleList = new ArrayList<>();
 
-    public boolean isLoading = false;
     private final String SORT_BY_POPULARITY="popularity";
 
     public static PopularFragment newInstance() {
@@ -101,37 +104,24 @@ public class PopularFragment extends Fragment {
             }
         });
     }
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        //mViewModel = ViewModelProviders.of(this).get(SecondViewModel.class);
-        // TODO: Use the ViewModel
-    }
 
     private void onScrollListener() {
-        popBinding.mainPopularRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        popBinding.mainPopularRecyclerView.addOnScrollListener(new PaginationListener(layoutManager) {
             @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-
-                layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-
-                int visibleItemCount = layoutManager.getChildCount();
-                int totalItemCount = layoutManager.getItemCount();
-                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
-                if (!isLoading) {//true
-                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
-                            && firstVisibleItemPosition >= 0 && totalItemCount >= 2) {
-                        currentPageNum++;
-                        loadPage(currentPageNum);
-                        isLoading = true;//make the isLoading true again, so it is false
-                    }
-                }
+            protected void loadMoreItems() {
+                isLoading=true;
+                currentPageNum++;
+                loadPage(currentPageNum);
             }
 
             @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
+            public boolean isLastPage() {
+                return isLastPage;
+            }
+
+            @Override
+            public boolean isLoading() {
+                return isLoading;
             }
         });
         recyclerViewAdapter.notifyDataSetChanged();
