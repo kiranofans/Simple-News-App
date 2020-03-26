@@ -3,7 +3,7 @@ package com.android_projects.newsapipractice.network;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.android_projects.newsapipractice.network.APIConstants.BASE_URL;
+import static com.android_projects.newsapipractice.network.ApiConstants.BASE_URL;
 
 public class Retrofit2Client {
     private static Retrofit retrofit = null;

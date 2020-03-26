@@ -20,9 +20,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.android_projects.newsapipractice.network.APIConstants.API_KEY;
-import static com.android_projects.newsapipractice.network.APIConstants.BASE_URL;
-
 public class NewsArticleRepository {
     /**
      * Create a Repository class to interacting to LiveData
