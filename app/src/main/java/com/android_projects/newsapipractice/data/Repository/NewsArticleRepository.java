@@ -28,19 +28,11 @@ public class NewsArticleRepository {
      * data model for the app, which provides simple data modification & retrieval APIs
      **/
     private final String TAG = NewsArticleRepository.class.getSimpleName();
-    private final String LANGUAGE_ENGLISH="en";
-    private final String LANGUAGE_SPANISH = "es";
-    private final String LANGUAGE_FRENCH = "fr";
 
     //Use mutableLiveData to fetch, sync, and persisting from different data sources
     private MutableLiveData<List<Article>> mutableLiveData = new MutableLiveData<>();
 
     private Application _application;
-
-    private String domains = "foxnews.com,wsj.com,nytimes.com,ctvnews.ca,bbc.co.uk,techcrunch.com,engadget.com";
-    String ENDPOINT_EVERYTHING ="v2/everything";
-    String ENDPOINT_TOPHEADLINES="v2/topheadlines";
-    String ENDPOINT_SOURCES="v2/sources";
 
     //String type params map
     private Map<String,String> requestPramsMap = new HashMap<String,String>();
@@ -52,13 +44,12 @@ public class NewsArticleRepository {
 
     private RetrofitApiService apiService = Retrofit2Client.getRetrofitService();
 
-
     /**
      * Performing Api calls here
      * */
     public MutableLiveData<List<Article>> getMutableLiveData(Call<NewsArticleMod> callEverything,
                                                              OnArticleDataReceivedCallback dataReceivedCallback) {
-    //Asynchronous
+       //Enqueue is Asynchronous
         callEverything.enqueue(new Callback<NewsArticleMod>() {
             @Override
             public void onResponse(Call<NewsArticleMod> call, Response<NewsArticleMod> response) {
@@ -73,14 +64,11 @@ public class NewsArticleRepository {
                 Log.d("CHECK NULL", response.body()+" is null");
 
             }
-
             @Override
             public void onFailure(Call<NewsArticleMod> call, Throwable t) {
                 Toast.makeText(_application,"Failed to sync data",Toast.LENGTH_LONG).show();
             }
         });
-
         return mutableLiveData; //Return the data source as mutable live data
     }
-
 }

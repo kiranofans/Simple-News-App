@@ -15,9 +15,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.android_projects.newsapipractice.Adapter.NewsArticleRecyclerViewAdapter;
+import com.android_projects.newsapipractice.PaginationListener;
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
@@ -37,9 +37,10 @@ public class HomeFragment extends Fragment {
     private LinearLayoutManager layoutManager;
 
     private int currentPageNum = 1;
-    private List<Article> articleList = new ArrayList<>();
-
+    private boolean isLastPage = false;
     public boolean isLoading = false;//To determine if load the data or not
+
+    private List<Article> articleList = new ArrayList<>();
 
     private final String SORT_BY_PUBLISHED_AT="publishedAt";
     private final String SORT_BY_RELEVANCY="relevancy";
@@ -61,9 +62,10 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view=v, savedInstanceState);
         viewModel = ViewModelProviders.of(this).get(NewsArticleViewModel.class);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(view.getContext().getString(R.string.title_latest_news));
+        layoutManager=new LinearLayoutManager(view.getContext());
 
         setRecyclerView(view);
-        setObserver();
+        setObserver();//Observer has to be separated from loadPage()
         loadPage(currentPageNum);//load news data the very first time
         swipeToRefreshListener();
         onScrollListener();
@@ -77,6 +79,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    //Set O
     private void setObserver() {
         viewModel.getArticleLiveData().observe(this, new Observer<List<Article>>() {
             @Override
@@ -97,39 +100,30 @@ public class HomeFragment extends Fragment {
     }
 
     private void setRecyclerView(View v) {
-        //recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerViewAdapter = new NewsArticleRecyclerViewAdapter(v.getContext(), articleList);
-        layoutManager=new LinearLayoutManager(v.getContext());
 
         homeBinding.mainHomeRecyclerView.setLayoutManager(layoutManager);
         homeBinding.mainHomeRecyclerView.setItemAnimator(new DefaultItemAnimator());
         homeBinding.mainHomeRecyclerView.setAdapter(recyclerViewAdapter);
     }
 
-    private void onScrollListener() {
-        homeBinding.mainHomeRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+    private void onScrollListener(){
+        homeBinding.mainHomeRecyclerView.addOnScrollListener(new PaginationListener(layoutManager) {
             @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-
-                layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-
-                int visibleItemCount = layoutManager.getChildCount();
-                int totalItemCount = layoutManager.getItemCount();
-                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
-                if (!isLoading) {//true
-                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
-                            && firstVisibleItemPosition >= 0 && totalItemCount >= 2) {
-                        currentPageNum++;
-                        loadPage(currentPageNum);
-                        isLoading = true;//make the isLoading true again, so it is false
-                    }
-                }
+            protected void loadMoreItems() {
+                isLoading = true;
+                currentPageNum++;
+                loadPage(currentPageNum);
             }
 
             @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
+            public boolean isLastPage() {
+                return isLastPage;
+            }
+
+            @Override
+            public boolean isLoading() {
+                return isLoading;
             }
         });
         recyclerViewAdapter.notifyDataSetChanged();
