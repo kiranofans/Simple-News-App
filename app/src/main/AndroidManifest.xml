@@ -22,4 +22,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!--Used when using network location provider for our Android App-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!--Providing permission for both Network and GPS location providers-->
+    <uses-permission android:name="android.permission. ACCESS_COARSE_LOCATION" />
 </manifest>

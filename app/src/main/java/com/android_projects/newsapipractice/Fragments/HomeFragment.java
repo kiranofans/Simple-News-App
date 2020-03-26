@@ -93,7 +93,7 @@ public class HomeFragment extends Fragment {
     private void loadPage(int page) {
         Log.d(TAG, "API called " + page);
         homeBinding.swipeRefreshLayout.setRefreshing(true);
-        viewModel.getArticlesList(page,SORT_BY_PUBLISHED_AT);
+        viewModel.getArticleListEverything(page,SORT_BY_PUBLISHED_AT);
     }
 
     private void setRecyclerView(View v) {

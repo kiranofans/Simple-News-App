@@ -1,133 +1,108 @@
 package com.android_projects.newsapipractice.Fragments;
 
+import android.Manifest;
+import android.app.Service;
 import android.content.Context;
-import android.net.Uri;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+
 import com.android_projects.newsapipractice.R;
+import com.android_projects.newsapipractice.databinding.FragmentLocalBinding;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link LocalFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link LocalFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class LocalFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-   // private OnFragmentInteractionListener mListener;
+public class LocalFragment extends Fragment implements LocationListener {
+    private final String TAG = LocalFragment.class.getSimpleName();
 
     private View v;
+    private FragmentLocalBinding localBinding;
+
+    private LocationManager locationMgr;
+    private final int RC_LOCATION_PERMISSION =101;
+
     public LocalFragment() {
         // Required empty public constructor
     }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return v=inflater.inflate(R.layout.fragment_local, container, false);
+        localBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_local, container, false);
+        return v = localBinding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(view.getContext().getString(R.string.title_local_news));
+        super.onViewCreated(view = v, savedInstanceState);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle
+                (view.getContext().getString(R.string.title_local_news));
 
+    }
+
+    private void checkLocationSelfPermission(View v){
+        String coarseLocationPermission = Manifest.permission.ACCESS_COARSE_LOCATION;
+        String fineLocationPermission=Manifest.permission.ACCESS_FINE_LOCATION;
+        boolean isGranted = ContextCompat.checkSelfPermission(v.getContext(),coarseLocationPermission) == PackageManager.PERMISSION_GRANTED |
+                ContextCompat.checkSelfPermission(v.getContext(),fineLocationPermission)==PackageManager.PERMISSION_GRANTED;
+        if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.M && !isGranted) {
+            locationMgr = (LocationManager) v.getContext().getSystemService(Context.LOCATION_SERVICE);
+            locationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, LocalFragment.this);
+        }else{
+            //call getLocation()
+            requestPermissions(new String[]{coarseLocationPermission,fineLocationPermission},RC_LOCATION_PERMISSION);
+        }
+    }
+    private String getDeviceLocation(View v) {
+        String locationResult = "";
+        checkLocationSelfPermission(v);
+
+        return "";
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //mViewModel = ViewModelProviders.of(this).get(SecondViewModel.class);
-        // TODO: Use the ViewModel
-    }
-   /* *//**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment LocalFragment.
-     *//*
-    // TODO: Rename and change types and number of parameters
-    public static LocalFragment newInstance(String param1, String param2) {
-        LocalFragment fragment = new LocalFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    public void onLocationChanged(Location location) {
+        Log.d(TAG, "Latitude: "+location.getLatitude()+"\n"+
+                "Longtitude: "+location.getLongitude());
+
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_local, container, false);
-    }*/
-
-   /* // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        checkLocationSelfPermission(v);
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }*/
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+        Log.d(TAG, "status: "+bundle.toString());
+    }
 
-   /* @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }*/
+    @Override
+    public void onProviderEnabled(String s) {
+        Log.d(TAG, "enabled: "+s);
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    /*public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }*/
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+        Log.d(TAG, "disabled: "+s);
+    }
 }

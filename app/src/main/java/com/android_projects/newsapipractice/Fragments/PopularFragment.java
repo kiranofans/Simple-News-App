@@ -87,7 +87,7 @@ public class PopularFragment extends Fragment {
     private void loadPage(int pageNum){
         Log.d(TAG, "API called " + pageNum);
         popBinding.swipeRefreshLayout.setRefreshing(true);
-        newsViewModel.getArticlesList(pageNum,SORT_BY_POPULARITY);
+        newsViewModel.getArticleListEverything(pageNum,SORT_BY_POPULARITY);
     }
 
     private void setPopObserver(){

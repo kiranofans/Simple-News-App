@@ -12,6 +12,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
+import retrofit2.http.Url;
 
 import static com.android_projects.newsapipractice.network.APIConstants.ENDPOINT_EVERYTHING;
 import static com.android_projects.newsapipractice.network.APIConstants.ENDPOINT_TOP_HEADLINES;
@@ -24,8 +25,9 @@ public interface RetrofitApiService {
                                        @QueryMap Map<String,String> requestParamsMap,
                         @Query("pageSize") int pageSize, @Query("page")int pageNumber);
 
-   /* @GET(ENDPOINT_TOP_HEADLINES)
-    Call<NewsArticleMod> getTopHeadlines(Header("Authorization")String authorization, @Query("language") String language,
-                        @Query("q") String q, @Query("pageSize") int pageSize,
-    @Query("sortBy") String sort_by, @Query("page")int pageNumber);*/
+    @GET(ENDPOINT_TOP_HEADLINES)
+    Call<NewsArticleMod> getTopHeadlines(@Header("Authorization")String authorization,
+                                       @QueryMap Map<String,String> requestParamsMap,
+                                       @Query("pageSize") int pageSize, @Query("page")int pageNumber);
+
 }

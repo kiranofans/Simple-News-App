@@ -21,6 +21,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.android_projects.newsapipractice.network.APIConstants.API_KEY;
+import static com.android_projects.newsapipractice.network.APIConstants.BASE_URL;
 
 public class NewsArticleRepository {
     /**
@@ -40,6 +41,9 @@ public class NewsArticleRepository {
     private Application _application;
 
     private String domains = "foxnews.com,wsj.com,nytimes.com,ctvnews.ca,bbc.co.uk,techcrunch.com,engadget.com";
+    String ENDPOINT_EVERYTHING ="v2/everything";
+    String ENDPOINT_TOPHEADLINES="v2/topheadlines";
+    String ENDPOINT_SOURCES="v2/sources";
 
     //String type params map
     private Map<String,String> requestPramsMap = new HashMap<String,String>();
@@ -51,20 +55,13 @@ public class NewsArticleRepository {
 
     private RetrofitApiService apiService = Retrofit2Client.getRetrofitService();
 
+
     /**
      * Performing Api calls here
      * */
-    public MutableLiveData<List<Article>> getMutableLiveData(Call<NewsArticleMod> callEverything, int page,String sortBy,
+    public MutableLiveData<List<Article>> getMutableLiveData(Call<NewsArticleMod> callEverything,
                                                              OnArticleDataReceivedCallback dataReceivedCallback) {
-
-        //Api Request Parameter Map
-        requestPramsMap.put("sortBy",sortBy);
-        requestPramsMap.put("domains",domains);
-        requestPramsMap.put("language",LANGUAGE_ENGLISH);
-
-        callEverything = apiService.getEverything("Bearer "+API_KEY,requestPramsMap,50,page);
-        //callEverything=apiService.getEverything("Bearer "+API_KEY,)
-
+    //Asynchronous
         callEverything.enqueue(new Callback<NewsArticleMod>() {
             @Override
             public void onResponse(Call<NewsArticleMod> call, Response<NewsArticleMod> response) {
