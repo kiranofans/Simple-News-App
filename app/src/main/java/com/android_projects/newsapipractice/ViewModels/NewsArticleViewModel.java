@@ -4,7 +4,6 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.android_projects.newsapipractice.data.Models.Article;
@@ -23,7 +22,7 @@ import static com.android_projects.newsapipractice.network.APIConstants.API_KEY;
 
 public class NewsArticleViewModel extends AndroidViewModel {
     private NewsArticleRepository repository;
-    private Call<NewsArticleMod> callEverything;
+    private Call<NewsArticleMod> callApiData;
 
     private MutableLiveData<List<Article>> articleLiveData = new MutableLiveData<>();
     private RetrofitApiService apiService = Retrofit2Client.getRetrofitService();
@@ -46,18 +45,18 @@ public class NewsArticleViewModel extends AndroidViewModel {
     }
 
     public void getArticleListEverything(int page, String sortBy){
-        callEverything= apiService.getEverything("Bearer "+API_KEY,requestPramsMap,50,page);
+        callApiData = apiService.getEverything("Bearer "+API_KEY,requestPramsMap,50,page);
         requestPramsMap.put("sortBy",sortBy);
         requestPramsMap.put("domains",domains);
         requestPramsMap.put("language",LANGUAGE_ENGLISH);
-        repository.getMutableLiveData(callEverything, data->articleLiveData.setValue(data));
+        repository.getMutableLiveData(callApiData, data->articleLiveData.setValue(data));
     }
 
     public void getArticleListTopHeadlines(int page, String sortBy, String countryCode){
         requestPramsMap.put("sortBy",sortBy);
         requestPramsMap.put("country",countryCode);
-        callEverything = apiService.getTopHeadlines("Bearer "+API_KEY,requestPramsMap,50,page);
-        repository.getMutableLiveData(callEverything,data->articleLiveData.setValue(data));
+        callApiData = apiService.getTopHeadlines("Bearer "+API_KEY,requestPramsMap,50,page);
+        repository.getMutableLiveData(callApiData, data->articleLiveData.setValue(data));
     }
 
     public MutableLiveData<List<Article>> getArticleLiveData(){
