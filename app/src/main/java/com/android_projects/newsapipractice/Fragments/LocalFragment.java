@@ -1,9 +1,9 @@
 package com.android_projects.newsapipractice.Fragments;
 
 import android.Manifest;
-import android.app.Service;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,16 +26,15 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.android_projects.newsapipractice.Adapter.NewsArticleRecyclerViewAdapter;
 import com.android_projects.newsapipractice.PaginationListener;
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
-import com.android_projects.newsapipractice.data.Models.NewsArticleMod;
 import com.android_projects.newsapipractice.databinding.FragmentLocalBinding;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -47,17 +47,21 @@ public class LocalFragment extends Fragment implements LocationListener {
     private NewsArticleViewModel localNewsViewModel;
 
     private LocationManager locationMgr;
-    private final int RC_LOCATION_PERMISSION =101;
+    private final int RC_LOCATION_PERMISSION = 101;
 
-    private final String SORT_BY_PUBLISHED_AT="publishedAt";
-    private int currentPageNum=1;
-    private boolean isLoading=false;
-    private boolean isLastPage=false;
+    private final String SORT_BY_PUBLISHED_AT = "publishedAt";
+    private int currentPageNum = 1;
+    private boolean isLoading = false;
+    private boolean isLastPage = false;
 
     private NewsArticleRecyclerViewAdapter recViewAdapter;
     private LinearLayoutManager layoutManager;
 
-    private List<Article> localNewsList=new ArrayList<>();
+    private List<Article> localNewsList = new ArrayList<>();
+
+    private double lat, lon;
+    private Location location;
+
     public LocalFragment() {
         // Required empty public constructor
     }
@@ -80,17 +84,18 @@ public class LocalFragment extends Fragment implements LocationListener {
         loadPage(currentPageNum);
         swipeToRefreshListener();
         onScrollListener();
+        // getDeviceLocation(view,lat, lon);
     }
 
-    private void swipeToRefreshListener(){
-        localBinding.localSwipeRefreshLayout.setOnRefreshListener(()->{
-            currentPageNum=1;
+    private void swipeToRefreshListener() {
+        localBinding.localSwipeRefreshLayout.setOnRefreshListener(() -> {
+            currentPageNum = 1;
             recViewAdapter.clear();
             loadPage(currentPageNum);
         });
     }
 
-    private void setObserver(){
+    private void setObserver() {
         localNewsViewModel.getArticleLiveData().observe(this, new Observer<List<Article>>() {
             @Override
             public void onChanged(List<Article> articles) {
@@ -103,13 +108,14 @@ public class LocalFragment extends Fragment implements LocationListener {
         });
     }
 
-    private void loadPage(int page){
+    private void loadPage(int page) {
         Log.d(TAG, "API called " + page);
         localBinding.localSwipeRefreshLayout.setRefreshing(true);
-        localNewsViewModel.getArticleListTopHeadlines(page,SORT_BY_PUBLISHED_AT,"ca");
+        localNewsViewModel.getArticleListTopHeadlines(page, SORT_BY_PUBLISHED_AT,
+                getDeviceLocation(v, lat, lon) + "");
     }
 
-    private void onScrollListener(){
+    private void onScrollListener() {
         localBinding.mainLocalRecyclerView.addOnScrollListener(new PaginationListener(layoutManager) {
             @Override
             protected void loadMoreItems() {
@@ -131,35 +137,56 @@ public class LocalFragment extends Fragment implements LocationListener {
         recViewAdapter.notifyDataSetChanged();
     }
 
-    private void setRecyclerView(View v){
+    private void setRecyclerView(View v) {
         recViewAdapter = new NewsArticleRecyclerViewAdapter(v.getContext(), localNewsList);
-        layoutManager=new LinearLayoutManager(v.getContext());
+        layoutManager = new LinearLayoutManager(v.getContext());
 
         localBinding.mainLocalRecyclerView.setLayoutManager(layoutManager);
         localBinding.mainLocalRecyclerView.setItemAnimator(new DefaultItemAnimator());
         localBinding.mainLocalRecyclerView.setAdapter(recViewAdapter);
     }
 
-    private void checkLocationSelfPermission(View v){
+    private void checkLocationSelfPermission(View v) {
         String coarseLocationPermission = Manifest.permission.ACCESS_COARSE_LOCATION;
-        String fineLocationPermission=Manifest.permission.ACCESS_FINE_LOCATION;
-        boolean isGranted = ContextCompat.checkSelfPermission(v.getContext(),coarseLocationPermission) == PackageManager.PERMISSION_GRANTED |
-                ContextCompat.checkSelfPermission(v.getContext(),fineLocationPermission)==PackageManager.PERMISSION_GRANTED;
-        if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.M && !isGranted) {
+        String fineLocationPermission = Manifest.permission.ACCESS_FINE_LOCATION;
+        boolean isGranted = ContextCompat.checkSelfPermission(v.getContext(), coarseLocationPermission) == PackageManager.PERMISSION_GRANTED |
+                ContextCompat.checkSelfPermission(v.getContext(), fineLocationPermission) == PackageManager.PERMISSION_GRANTED;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !isGranted) {
             locationMgr = (LocationManager) v.getContext().getSystemService(Context.LOCATION_SERVICE);
             locationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, LocalFragment.this);
-        }else{
+            location = locationMgr.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            lat = location.getLatitude();
+            lon = location.getLongitude();
+            getDeviceLocation(v, lat, lon);
+
+        } else {
             //call getLocation()
-            requestPermissions(new String[]{coarseLocationPermission,fineLocationPermission},RC_LOCATION_PERMISSION);
+            requestPermissions(new String[]{coarseLocationPermission, fineLocationPermission}, RC_LOCATION_PERMISSION);
         }
     }
-    private String getDeviceLocation(View v,String latitude, String longitude) {
+
+    private CharSequence getDeviceLocation(View v, double latitude, double longitude) {
         String locationResult = "";
-        Geocoder geocoder=new Geocoder(v.getContext(), Locale.ENGLISH);
-
-        checkLocationSelfPermission(v);
-
-        return "";
+        Geocoder geocoder = new Geocoder(v.getContext(), Locale.ENGLISH);
+        try {
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            if (addresses.size() > 0) {
+                Address fetchedAddresses = addresses.get(0);
+                StringBuilder addressStrBuilder = new StringBuilder();
+                for (int i = 0; i < fetchedAddresses.getMaxAddressLineIndex(); i++) {
+                    locationResult = addressStrBuilder.append(fetchedAddresses.getAddressLine(i)).append(" ").toString();
+                }
+                Log.d(TAG, "Address: " + addressStrBuilder.toString());
+            } else {
+                localBinding.noContentLayout.noContentLayout.setVisibility(View.VISIBLE);
+                localBinding.noContentLayout.noCotentImg.setVisibility(View.VISIBLE);
+                localBinding.noContentLayout.textNoContent.setVisibility(View.VISIBLE);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(v.getContext(), "Could not get location", Toast.LENGTH_LONG).show();
+        }
+        return locationResult;
     }
 
     @Override
@@ -169,30 +196,23 @@ public class LocalFragment extends Fragment implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d(TAG, "Latitude: "+location.getLatitude()+"\n"+
-                "Longtitude: "+location.getLongitude());
-
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        checkLocationSelfPermission(v);
+        Log.d(TAG, "Latitude: " + location.getLatitude() + "\n" +
+                "Longtitude: " + location.getLongitude());
     }
 
     @Override
     public void onStatusChanged(String s, int i, Bundle bundle) {
-        Log.d(TAG, "status: "+bundle.toString());
+        Log.d(TAG, "status: " + bundle.toString());
     }
 
     @Override
     public void onProviderEnabled(String s) {
-        Log.d(TAG, "enabled: "+s);
+        Log.d(TAG, "enabled: " + s);
 
     }
 
     @Override
     public void onProviderDisabled(String s) {
-        Log.d(TAG, "disabled: "+s);
+        Log.d(TAG, "disabled: " + s);
     }
 }
