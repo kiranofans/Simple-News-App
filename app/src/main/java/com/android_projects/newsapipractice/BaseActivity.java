@@ -1,6 +1,7 @@
 package com.android_projects.newsapipractice;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +31,7 @@ import com.android_projects.newsapipractice.Fragments.HomeFragment;
 import com.android_projects.newsapipractice.Fragments.LocalFragment;
 import com.android_projects.newsapipractice.Fragments.PopularFragment;
 import com.android_projects.newsapipractice.Fragments.CategoriesFragment;
+import com.android_projects.newsapipractice.data.AppConstants;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.IOException;
@@ -38,6 +40,8 @@ import java.util.Locale;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import io.reactivex.functions.Consumer;
+
+import static com.android_projects.newsapipractice.data.AppConstants.COUNTRY_CODE;
 
 public class BaseActivity extends AppCompatActivity implements LocationListener {
     private final String TAG = BaseActivity.class.getSimpleName();
@@ -50,6 +54,8 @@ public class BaseActivity extends AppCompatActivity implements LocationListener 
     private String fineLocationPermission = Manifest.permission.ACCESS_FINE_LOCATION;
 
     private RxPermissions rxPermissions;
+    private int coarseLocationPerm,fineLocationPerm;
+    private double lat, lon;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -109,42 +115,36 @@ public class BaseActivity extends AppCompatActivity implements LocationListener 
         return false;
     }
 
-    private void checkLocationPermission(){
-        boolean isGranted = ContextCompat.checkSelfPermission(this, coarseLocationPermission) == PackageManager.PERMISSION_GRANTED |
-                ContextCompat.checkSelfPermission(this, fineLocationPermission) == PackageManager.PERMISSION_GRANTED;
-        if (!isGranted) {
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this,coarseLocationPermission)){
-                Toast.makeText(this,"You have to allow the app to get device location",Toast.LENGTH_LONG).show();
-            }else{
-                ActivityCompat.requestPermissions(this,new String[]{coarseLocationPermission,fineLocationPermission}, RC_LOCATION_PERMISSION);
-            }
-        }else{
-            Log.d(TAG,"Permission Granted!");
-            locationMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            locationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, BaseActivity.this);
-            location = locationMgr.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            String lat = location.getLatitude()+"";
-            String lon = location.getLongitude()+"";
-            Log.d(TAG,"Latitude: "+lat+" Longitude: "+lon);
-        }
-    }
-
     @Override
     public void onLocationChanged(Location location) {
         Log.d(TAG, "Latitude: "+location.getLatitude()+"\n"+
-                "Longtitude: "+location.getLongitude());
+                "Longtitude: "+location.getLongitude()+"Country code: "+COUNTRY_CODE);
 
     }
 
     public void checkPermission(){
+        Geocoder geocoder=new Geocoder(this);
         rxPermissions.request(coarseLocationPermission,fineLocationPermission).subscribe(new Consumer<Boolean>() {
+            @SuppressLint("MissingPermission")
             @Override
             public void accept(Boolean aBoolean) throws Exception {
-                if(isLocationPermissionGranted()){
-                    // init view
-                    //view.setVisibility(View.VISIBLE);
-                    Toast.makeText(BaseActivity.this,"Permission granted!",Toast.LENGTH_SHORT).show();
 
+                if(coarseLocationPerm == PackageManager.PERMISSION_GRANTED ||
+                        fineLocationPerm == PackageManager.PERMISSION_GRANTED){
+
+                    locationMgr = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+                    locationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, BaseActivity.this);
+                    location = locationMgr.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                    lat = location.getLatitude(); lon = location.getLongitude();
+                    if(geocoder!=null){
+                        List<Address> addressList = geocoder.getFromLocation(lat,lon,1);
+                        Address address = addressList.get(0);
+                        StringBuilder strBuilder = new StringBuilder();
+                        strBuilder.append(address.getCountryCode());
+                        COUNTRY_CODE =strBuilder.toString();
+                    }
+                    //Can apply customized view
+                    Toast.makeText(BaseActivity.this,"Permission granted!",Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(BaseActivity.this,"Please allow the location permission",Toast.LENGTH_LONG).show();
                 }
@@ -152,8 +152,8 @@ public class BaseActivity extends AppCompatActivity implements LocationListener 
         });
     }
     public boolean isLocationPermissionGranted(){
-        int coarseLocationPerm =this.checkCallingOrSelfPermission(coarseLocationPermission);
-        int fineLocationPerm = this.checkCallingOrSelfPermission(fineLocationPermission);
+        coarseLocationPerm =this.checkCallingOrSelfPermission(coarseLocationPermission);
+        fineLocationPerm = this.checkCallingOrSelfPermission(fineLocationPermission);
         boolean isGranted = coarseLocationPerm == PackageManager.PERMISSION_GRANTED |
                 fineLocationPerm == PackageManager.PERMISSION_GRANTED;
         return isGranted;

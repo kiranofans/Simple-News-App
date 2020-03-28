@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.android_projects.newsapipractice.Adapter.NewsArticleRecyclerViewAdapter;
+import com.android_projects.newsapipractice.BaseActivity;
 import com.android_projects.newsapipractice.PaginationListener;
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
@@ -38,6 +39,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import static com.android_projects.newsapipractice.data.AppConstants.COUNTRY_CODE;
 
 public class LocalFragment extends Fragment implements LocationListener {
     private final String TAG = LocalFragment.class.getSimpleName();
@@ -61,6 +64,7 @@ public class LocalFragment extends Fragment implements LocationListener {
 
     private double lat, lon;
     private Location location;
+    private BaseActivity baseActivityInstance = new BaseActivity();
 
     public LocalFragment() {
         // Required empty public constructor
@@ -111,8 +115,7 @@ public class LocalFragment extends Fragment implements LocationListener {
     private void loadPage(int page) {
         Log.d(TAG, "API called " + page);
         localBinding.localSwipeRefreshLayout.setRefreshing(true);
-        localNewsViewModel.getArticleListTopHeadlines(page, SORT_BY_PUBLISHED_AT,
-                getDeviceLocation(v, lat, lon) + "");
+        localNewsViewModel.getArticleListTopHeadlines(page, SORT_BY_PUBLISHED_AT, COUNTRY_CODE);
     }
 
     private void onScrollListener() {
@@ -144,49 +147,6 @@ public class LocalFragment extends Fragment implements LocationListener {
         localBinding.mainLocalRecyclerView.setLayoutManager(layoutManager);
         localBinding.mainLocalRecyclerView.setItemAnimator(new DefaultItemAnimator());
         localBinding.mainLocalRecyclerView.setAdapter(recViewAdapter);
-    }
-
-    private void checkLocationSelfPermission(View v) {
-        String coarseLocationPermission = Manifest.permission.ACCESS_COARSE_LOCATION;
-        String fineLocationPermission = Manifest.permission.ACCESS_FINE_LOCATION;
-        boolean isGranted = ContextCompat.checkSelfPermission(v.getContext(), coarseLocationPermission) == PackageManager.PERMISSION_GRANTED |
-                ContextCompat.checkSelfPermission(v.getContext(), fineLocationPermission) == PackageManager.PERMISSION_GRANTED;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !isGranted) {
-            locationMgr = (LocationManager) v.getContext().getSystemService(Context.LOCATION_SERVICE);
-            locationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, LocalFragment.this);
-            location = locationMgr.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            lat = location.getLatitude();
-            lon = location.getLongitude();
-            getDeviceLocation(v, lat, lon);
-
-        } else {
-            //call getLocation()
-            requestPermissions(new String[]{coarseLocationPermission, fineLocationPermission}, RC_LOCATION_PERMISSION);
-        }
-    }
-
-    private CharSequence getDeviceLocation(View v, double latitude, double longitude) {
-        String locationResult = "";
-        Geocoder geocoder = new Geocoder(v.getContext(), Locale.ENGLISH);
-        try {
-            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-            if (addresses.size() > 0) {
-                Address fetchedAddresses = addresses.get(0);
-                StringBuilder addressStrBuilder = new StringBuilder();
-                for (int i = 0; i < fetchedAddresses.getMaxAddressLineIndex(); i++) {
-                    locationResult = addressStrBuilder.append(fetchedAddresses.getAddressLine(i)).append(" ").toString();
-                }
-                Log.d(TAG, "Address: " + addressStrBuilder.toString());
-            } else {
-                localBinding.noContentLayout.noContentLayout.setVisibility(View.VISIBLE);
-                localBinding.noContentLayout.noCotentImg.setVisibility(View.VISIBLE);
-                localBinding.noContentLayout.textNoContent.setVisibility(View.VISIBLE);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(v.getContext(), "Could not get location", Toast.LENGTH_LONG).show();
-        }
-        return locationResult;
     }
 
     @Override

@@ -13,5 +13,6 @@ public class AppConstants {
 
     public static final String PARAMS_DOMAINS = "foxnews.com,wsj.com,nytimes.com,ctvnews.ca,bbc.co.uk,techcrunch.com,engadget.com";
 
+    public static String COUNTRY_CODE = "";
 
 }
