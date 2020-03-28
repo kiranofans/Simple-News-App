@@ -2,42 +2,33 @@ package com.android_projects.newsapipractice;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.android_projects.newsapipractice.Fragments.CategoriesFragment;
 import com.android_projects.newsapipractice.Fragments.HomeFragment;
 import com.android_projects.newsapipractice.Fragments.LocalFragment;
 import com.android_projects.newsapipractice.Fragments.PopularFragment;
-import com.android_projects.newsapipractice.Fragments.CategoriesFragment;
-import com.android_projects.newsapipractice.data.AppConstants;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+
+import java.util.List;
 
 import io.reactivex.functions.Consumer;
 
@@ -54,13 +45,13 @@ public class BaseActivity extends AppCompatActivity implements LocationListener 
     private String fineLocationPermission = Manifest.permission.ACCESS_FINE_LOCATION;
 
     private RxPermissions rxPermissions;
-    private int coarseLocationPerm,fineLocationPerm;
+    private int coarseLocationPerm, fineLocationPerm;
     private double lat, lon;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        rxPermissions=new RxPermissions(this);
+        rxPermissions = new RxPermissions(this);
         checkPermission();
     }
 
@@ -82,6 +73,7 @@ public class BaseActivity extends AppCompatActivity implements LocationListener 
         }
         return super.onOptionsItemSelected(item);
     }
+
     public BottomNavigationView.OnNavigationItemSelectedListener mNavItemSelectedListener = new
             BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
@@ -117,42 +109,41 @@ public class BaseActivity extends AppCompatActivity implements LocationListener 
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d(TAG, "Latitude: "+location.getLatitude()+"\n"+
-                "Longtitude: "+location.getLongitude()+"Country code: "+COUNTRY_CODE);
+        Log.d(TAG, "Latitude: " + location.getLatitude() + "\n" +
+                "Longtitude: " + location.getLongitude() + "Country code: " + COUNTRY_CODE);
 
     }
 
-    public void checkPermission(){
-        Geocoder geocoder=new Geocoder(this);
-        rxPermissions.request(coarseLocationPermission,fineLocationPermission).subscribe(new Consumer<Boolean>() {
+    public void checkPermission() {
+        Geocoder geocoder = new Geocoder(this);
+        rxPermissions.request(coarseLocationPermission, fineLocationPermission).subscribe(new Consumer<Boolean>() {
             @SuppressLint("MissingPermission")
             @Override
             public void accept(Boolean aBoolean) throws Exception {
-
-                if(coarseLocationPerm == PackageManager.PERMISSION_GRANTED ||
-                        fineLocationPerm == PackageManager.PERMISSION_GRANTED){
-
-                    locationMgr = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+                if (isLocationPermissionGranted()) {
+                    locationMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                     locationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, BaseActivity.this);
                     location = locationMgr.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                    lat = location.getLatitude(); lon = location.getLongitude();
-                    if(geocoder!=null){
-                        List<Address> addressList = geocoder.getFromLocation(lat,lon,1);
+                    lat = location.getLatitude();
+                    lon = location.getLongitude();
+                    if (geocoder != null) {
+                        List<Address> addressList = geocoder.getFromLocation(lat, lon, 1);
                         Address address = addressList.get(0);
                         StringBuilder strBuilder = new StringBuilder();
                         strBuilder.append(address.getCountryCode());
-                        COUNTRY_CODE =strBuilder.toString();
+                        COUNTRY_CODE = strBuilder.toString();
                     }
                     //Can apply customized view
-                    Toast.makeText(BaseActivity.this,"Permission granted!",Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(BaseActivity.this,"Please allow the location permission",Toast.LENGTH_LONG).show();
+                    Toast.makeText(BaseActivity.this, "Permission granted!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(BaseActivity.this, "Please allow the location permission", Toast.LENGTH_LONG).show();
                 }
             }
         });
     }
-    public boolean isLocationPermissionGranted(){
-        coarseLocationPerm =this.checkCallingOrSelfPermission(coarseLocationPermission);
+
+    public boolean isLocationPermissionGranted() {
+        coarseLocationPerm = this.checkCallingOrSelfPermission(coarseLocationPermission);
         fineLocationPerm = this.checkCallingOrSelfPermission(fineLocationPermission);
         boolean isGranted = coarseLocationPerm == PackageManager.PERMISSION_GRANTED |
                 fineLocationPerm == PackageManager.PERMISSION_GRANTED;
@@ -161,17 +152,17 @@ public class BaseActivity extends AppCompatActivity implements LocationListener 
 
     @Override
     public void onStatusChanged(String s, int i, Bundle bundle) {
-        Log.d(TAG, "status: "+bundle.toString());
+        Log.d(TAG, "status: " + bundle.toString());
     }
 
     @Override
     public void onProviderEnabled(String s) {
-        Log.d(TAG, "enabled: "+s);
+        Log.d(TAG, "enabled: " + s);
 
     }
 
     @Override
     public void onProviderDisabled(String s) {
-        Log.d(TAG, "disabled: "+s);
+        Log.d(TAG, "disabled: " + s);
     }
 }

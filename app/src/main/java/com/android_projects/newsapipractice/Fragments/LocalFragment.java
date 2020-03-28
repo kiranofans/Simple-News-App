@@ -1,25 +1,16 @@
 package com.android_projects.newsapipractice.Fragments;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -35,14 +26,12 @@ import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.FragmentLocalBinding;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import static com.android_projects.newsapipractice.data.AppConstants.COUNTRY_CODE;
 
-public class LocalFragment extends Fragment implements LocationListener {
+public class LocalFragment extends Fragment {
     private final String TAG = LocalFragment.class.getSimpleName();
 
     private View v;
@@ -147,32 +136,5 @@ public class LocalFragment extends Fragment implements LocationListener {
         localBinding.mainLocalRecyclerView.setLayoutManager(layoutManager);
         localBinding.mainLocalRecyclerView.setItemAnimator(new DefaultItemAnimator());
         localBinding.mainLocalRecyclerView.setAdapter(recViewAdapter);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        Log.d(TAG, "Latitude: " + location.getLatitude() + "\n" +
-                "Longtitude: " + location.getLongitude());
-    }
-
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
-        Log.d(TAG, "status: " + bundle.toString());
-    }
-
-    @Override
-    public void onProviderEnabled(String s) {
-        Log.d(TAG, "enabled: " + s);
-
-    }
-
-    @Override
-    public void onProviderDisabled(String s) {
-        Log.d(TAG, "disabled: " + s);
     }
 }
