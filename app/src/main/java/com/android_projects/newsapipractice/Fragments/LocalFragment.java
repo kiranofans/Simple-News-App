@@ -1,16 +1,26 @@
 package com.android_projects.newsapipractice.Fragments;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -31,7 +41,7 @@ import java.util.List;
 
 import static com.android_projects.newsapipractice.data.AppConstants.COUNTRY_CODE;
 
-public class LocalFragment extends Fragment {
+public class LocalFragment extends Fragment implements LocationListener {
     private final String TAG = LocalFragment.class.getSimpleName();
 
     private View v;
@@ -53,8 +63,12 @@ public class LocalFragment extends Fragment {
 
     private double lat, lon;
     private Location location;
-    private BaseActivity baseActivityInstance = new BaseActivity();
 
+    private String coarseLocationPermission = Manifest.permission.ACCESS_COARSE_LOCATION;
+    private String fineLocationPermission = Manifest.permission.ACCESS_FINE_LOCATION;
+
+    private String countryCode;
+    private Criteria locCriteria = new Criteria();
     public LocalFragment() {
         // Required empty public constructor
     }
@@ -71,6 +85,7 @@ public class LocalFragment extends Fragment {
         super.onViewCreated(view = v, savedInstanceState);
         localNewsViewModel = ViewModelProviders.of(this).get(NewsArticleViewModel.class);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(view.getContext().getString(R.string.title_local_news));
+        locationMgr = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
         setRecyclerView(view);
         setObserver();
@@ -80,6 +95,12 @@ public class LocalFragment extends Fragment {
         // getDeviceLocation(view,lat, lon);
     }
 
+   /* private String getCountryName(String countryCodeStr){
+        String countryName="";
+        if(countryCodeStr != null || countryCodeStr!=""){
+
+        }
+    }*/
     private void swipeToRefreshListener() {
         localBinding.localSwipeRefreshLayout.setOnRefreshListener(() -> {
             currentPageNum = 1;
@@ -101,10 +122,17 @@ public class LocalFragment extends Fragment {
         });
     }
 
+    @SuppressLint("MissingPermission")
     private void loadPage(int page) {
         Log.d(TAG, "API called " + page);
+       /* if (locationMgr != null) {
+            locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) v.getContext());
+        }*/
+        String provider = locationMgr.getBestProvider(locCriteria,true);
         localBinding.localSwipeRefreshLayout.setRefreshing(true);
-        localNewsViewModel.getArticleListTopHeadlines(page, SORT_BY_PUBLISHED_AT, COUNTRY_CODE);
+        countryCode=getDeviceLocationData(locationMgr);
+        localNewsViewModel.getArticleListTopHeadlines(page, SORT_BY_PUBLISHED_AT, countryCode);
+        Log.d(TAG, "Country Code " +countryCode);
     }
 
     private void onScrollListener() {
@@ -136,5 +164,69 @@ public class LocalFragment extends Fragment {
         localBinding.mainLocalRecyclerView.setLayoutManager(layoutManager);
         localBinding.mainLocalRecyclerView.setItemAnimator(new DefaultItemAnimator());
         localBinding.mainLocalRecyclerView.setAdapter(recViewAdapter);
+    }
+
+
+    private String getDeviceLocationData(LocationManager locationMgr) {
+        String locationResult = "";
+        boolean isGranted = ContextCompat.checkSelfPermission(getContext(),coarseLocationPermission) == PackageManager.PERMISSION_GRANTED |
+                ContextCompat.checkSelfPermission(getContext(),fineLocationPermission) == PackageManager.PERMISSION_GRANTED;
+        Geocoder geocoder = new Geocoder(getContext());
+        if(isGranted){
+            String bestProvider = locationMgr.getBestProvider(locCriteria,false);
+            /*locationMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            locationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, BaseActivity.this);*/
+            locationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, (LocationListener)getContext());
+            location = locationMgr.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            if(location != null){
+                lat = location.getLatitude();
+                lon = location.getLongitude();
+                try {
+                    if (geocoder != null) {
+                        List<Address> addressList = geocoder.getFromLocation(lat, lon, 1);
+                        Address address = addressList.get(0);
+                       /* for(int i =0;i<providerList.size();i++){
+                            location = locationMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+                        }*/
+                        StringBuilder strBuilder = new StringBuilder();
+                        strBuilder.append(address.getCountryCode());
+                        address.getCountryName();
+                        locationResult = strBuilder.toString();
+                    }
+                    //Toast.makeText(getContext(), "Permission granted!", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG,"Permission granted");
+                } catch (Exception e) {
+                    Log.d(TAG, e.getMessage() + "Cause: " + e.getCause());
+                }
+            }else{
+                localBinding.noContentLayout.noContentLayout.setVisibility(View.VISIBLE);
+            }
+
+        }
+        Log.d(TAG, "Result: "+locationResult);
+        return locationResult;
+    }
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.d(TAG, "Latitude: " + location.getLatitude() + "\n" +
+                "Longtitude: " + location.getLongitude() + "Country code: " + COUNTRY_CODE);
+
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+        Log.d(TAG, "status: " + bundle.toString());
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+        Log.d(TAG, "enabled: " + s);
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+        Log.d(TAG, "disabled: " + s);
     }
 }

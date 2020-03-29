@@ -38,7 +38,7 @@ public class NewsArticleViewModel extends AndroidViewModel {
     }
 
     public void getArticleListEverything(int page, String sortBy) {
-        callApiData = apiService.getEverything("Bearer " + API_KEY, requestPramsMap, 3, page);
+        callApiData = apiService.getEverything("Bearer " + API_KEY, requestPramsMap, 100, page);
         requestPramsMap.put("sortBy", sortBy);
         requestPramsMap.put("domains", PARAMS_DOMAINS);
         requestPramsMap.put("language", LANGUAGE_ENGLISH);

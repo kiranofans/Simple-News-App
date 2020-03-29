@@ -26,6 +26,7 @@
             android:text="@string/no_result_found"/>
 
         <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/no_content_network_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
