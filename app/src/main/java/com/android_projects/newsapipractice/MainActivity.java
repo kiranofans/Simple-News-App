@@ -31,18 +31,4 @@ public class MainActivity extends BaseActivity{
         setFragments(new HomeFragment());
         mainBinding.mainBottomNavigation.setOnNavigationItemSelectedListener(mNavItemSelectedListener);
     }
-    /*@Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == 101){
-            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M && grantResults[0]!= PackageManager.PERMISSION_GRANTED){
-                Log.d(TAG,"Permission denied");
-                ActivityCompat.requestPermissions(this,new String[]{coarseLocationPermission,
-                        fineLocationPermission},101);
-            }
-        }else{
-            Log.d(TAG,"Pemission granted");
-        }
-    }*/
-
-
 }

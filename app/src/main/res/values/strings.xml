@@ -6,7 +6,7 @@
 
     <!--Toolbar title-->
     <string name="title_popular_news">Popular Articles</string>
-    <string name="title_local_news">Local News</string>
+    <string name="title_local_news">Local Top Headlines</string>
     <string name="title_latest_news">World Latest News</string>
     <string name="title_category">Categories &amp; More</string>
 

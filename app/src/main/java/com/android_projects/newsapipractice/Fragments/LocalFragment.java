@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.android_projects.newsapipractice.Adapter.NewsArticleRecyclerViewAdapter;
 import com.android_projects.newsapipractice.BaseActivity;
+import com.android_projects.newsapipractice.MyLocationListener;
 import com.android_projects.newsapipractice.PaginationListener;
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
@@ -92,15 +93,8 @@ public class LocalFragment extends Fragment implements LocationListener {
         loadPage(currentPageNum);
         swipeToRefreshListener();
         onScrollListener();
-        // getDeviceLocation(view,lat, lon);
     }
 
-   /* private String getCountryName(String countryCodeStr){
-        String countryName="";
-        if(countryCodeStr != null || countryCodeStr!=""){
-
-        }
-    }*/
     private void swipeToRefreshListener() {
         localBinding.localSwipeRefreshLayout.setOnRefreshListener(() -> {
             currentPageNum = 1;
@@ -176,8 +170,8 @@ public class LocalFragment extends Fragment implements LocationListener {
             String bestProvider = locationMgr.getBestProvider(locCriteria,false);
             /*locationMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             locationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, BaseActivity.this);*/
-            locationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, (LocationListener)getContext());
-            location = locationMgr.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            locationMgr.requestLocationUpdates(bestProvider, 0, 0, (LocationListener)getContext());
+            location = locationMgr.getLastKnownLocation(bestProvider);
             if(location != null){
                 lat = location.getLatitude();
                 lon = location.getLongitude();
@@ -207,6 +201,30 @@ public class LocalFragment extends Fragment implements LocationListener {
         Log.d(TAG, "Result: "+locationResult);
         return locationResult;
     }
+
+    LocationListener locationListener = new MyLocationListener(locationMgr, location) {
+        @Override
+        public void onLocationChanged(Location location) {
+            Log.d(TAG, "Latitude: " + location.getLatitude() + "\n" +
+                    "Longtitude: " + location.getLongitude() + "Country code: " + COUNTRY_CODE);
+        }
+
+        @Override
+        public void onStatusChanged(String s, int i, Bundle bundle) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String s) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String s) {
+
+        }
+    };
+
     @Override
     public void onLocationChanged(Location location) {
         Log.d(TAG, "Latitude: " + location.getLatitude() + "\n" +

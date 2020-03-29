@@ -116,13 +116,7 @@ public class BaseActivity extends AppCompatActivity implements LocationListener 
         if (isGranted) {
             Log.d(TAG,"latitude: "+lat+"\nLongitude: "+lon);
             Toast.makeText(BaseActivity.this, "Permission granted!", Toast.LENGTH_SHORT).show();
-           /* //get location data
-            locationMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            locationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, BaseActivity.this);*/
-
-            //countryCode=getDeviceLocationData(locationMgr);
-            //Can apply customized view
-
+         //Get location data
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 ActivityCompat.requestPermissions(this, new String[]{coarseLocationPermission, fineLocationPermission}, 101);
