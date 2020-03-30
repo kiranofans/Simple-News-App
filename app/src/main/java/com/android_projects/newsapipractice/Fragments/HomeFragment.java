@@ -128,4 +128,8 @@ public class HomeFragment extends Fragment {
         });
         recyclerViewAdapter.notifyDataSetChanged();
     }
+    /*private boolean hasNewArticles(List<Article> articleList){
+        int  lastIndex = articleList.size()-1;
+
+    }*/
 }

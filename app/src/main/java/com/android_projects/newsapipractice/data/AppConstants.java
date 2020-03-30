@@ -15,4 +15,6 @@ public class AppConstants {
 
     public static String COUNTRY_CODE = "";
 
+    public static final String BADGE_CHANNEL_ID="badge_channer_01";
+
 }

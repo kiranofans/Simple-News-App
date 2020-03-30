@@ -1,61 +1,27 @@
 package com.android_projects.newsapipractice;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.android_projects.newsapipractice.Fragments.CategoriesFragment;
-import com.android_projects.newsapipractice.Fragments.HomeFragment;
-import com.android_projects.newsapipractice.Fragments.LocalFragment;
-import com.android_projects.newsapipractice.Fragments.PopularFragment;
-import com.android_projects.newsapipractice.databinding.ActivityMainBinding;
-import com.google.android.material.bottomnavigation.BottomNavigationItemView;
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.tbruyelle.rxpermissions2.RxPermissions;
-
-import java.io.IOException;
-import java.util.List;
-
-import static com.android_projects.newsapipractice.data.AppConstants.COUNTRY_CODE;
-
-public class BaseActivity extends AppCompatActivity implements LocationListener {
+public class BaseActivity extends AppCompatActivity {
     private final String TAG = BaseActivity.class.getSimpleName();
-
-    private LocationManager locationMgr;
-    private final int RC_LOCATION_PERMISSION = 101;
-    private Location location;
 
     private String coarseLocationPermission = Manifest.permission.ACCESS_COARSE_LOCATION;
     private String fineLocationPermission = Manifest.permission.ACCESS_FINE_LOCATION;
 
-    private RxPermissions rxPermissions;
-    private int coarseLocationPerm, fineLocationPerm;
-    private double lat, lon;
-
-
-    public static String countryCode;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +48,7 @@ public class BaseActivity extends AppCompatActivity implements LocationListener 
         return super.onOptionsItemSelected(item);
     }
 
-    public BottomNavigationView.OnNavigationItemSelectedListener mNavItemSelectedListener = new
+  /*  public BottomNavigationView.OnNavigationItemSelectedListener mNavItemSelectedListener = new
             BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -101,9 +67,10 @@ public class BaseActivity extends AppCompatActivity implements LocationListener 
                             fragment = new CategoriesFragment();
                             break;
                     }
+                    //setBadge(1,item.getItemId());
                     return setFragments(fragment);
                 }
-            };
+            };*/
 
 
     public boolean setFragments(Fragment fragment) {
@@ -120,85 +87,17 @@ public class BaseActivity extends AppCompatActivity implements LocationListener 
         boolean isGranted = ContextCompat.checkSelfPermission(this, coarseLocationPermission) == PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(this, fineLocationPermission) == PackageManager.PERMISSION_GRANTED;
         if (isGranted) {
-            Log.d(TAG,"latitude: "+lat+"\nLongitude: "+lon);
-            Toast.makeText(BaseActivity.this, "Permission granted!", Toast.LENGTH_SHORT).show();
-         //Get location data
+            Log.d(TAG, "Permission granted!");
+            //Get location data
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                ActivityCompat.requestPermissions(this, new String[]{coarseLocationPermission, fineLocationPermission}, 101);
+                ActivityCompat.requestPermissions(this, new String[]{
+                        coarseLocationPermission, fineLocationPermission}, 101);
             }
         }
     }
-    /*public void checkPermission() {
-        Geocoder geocoder = new Geocoder(this);
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M && !isLocationPermissionGranted()){
-            rxPermissions.request(coarseLocationPermission, fineLocationPermission).subscribe(new Consumer<Boolean>() {
-                @SuppressLint("MissingPermission")
-                @Override
-                public void accept(Boolean aBoolean) throws Exception {
-                    if (isLocationPermissionGranted()) {
-                        locationMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                        locationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, BaseActivity.this);
-                        location = locationMgr.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                        lat = location.getLatitude();
-                        lon = location.getLongitude();
-                        if (geocoder != null) {
-                            List<Address> addressList = geocoder.getFromLocation(lat, lon, 1);
-                            Address address = addressList.get(0);
-                            StringBuilder strBuilder = new StringBuilder();
-                            strBuilder.append(address.getCountryCode());
-                            COUNTRY_CODE = strBuilder.toString();
-                        }
-                        //Can apply customized view
-                        Toast.makeText(BaseActivity.this, "Permission granted!", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(BaseActivity.this, "Please allow the location permission", Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
-        }else{
-            Log.d(TAG,"Permission granted");
-        }
 
-    }*/
-
-    /*public String getDeviceLocationData(LocationManager locationMgr) {
-        String locationResult = "";
-        boolean isGranted = ContextCompat.checkSelfPermission(this,coarseLocationPermission) == PackageManager.PERMISSION_GRANTED |
-                ContextCompat.checkSelfPermission(this,fineLocationPermission) == PackageManager.PERMISSION_GRANTED;
-        Geocoder geocoder = new Geocoder(this);
-        if(isGranted){
-            *//*locationMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            locationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, BaseActivity.this);*//*
-            location = locationMgr.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            lat = location.getLatitude();
-            lon = location.getLongitude();
-            try {
-                if (geocoder != null) {
-                    List<Address> addressList = geocoder.getFromLocation(lat, lon, 1);
-                    Address address = addressList.get(0);
-                    StringBuilder strBuilder = new StringBuilder();
-                    strBuilder.append(address.getCountryCode());
-                    locationResult = strBuilder.toString();
-                }
-                Toast.makeText(BaseActivity.this, "Permission granted!", Toast.LENGTH_SHORT).show();
-
-            } catch (Exception e) {
-                Log.d(TAG, e.getMessage() + "Cause: " + e.getCause());
-            }
-        }
-        Log.d(TAG, "Result: "+locationResult);
-        return locationResult;
-    }*/
-   /* public boolean isLocationPermissionGranted() {
-        coarseLocationPerm = this.checkCallingOrSelfPermission(coarseLocationPermission);
-        fineLocationPerm = this.checkCallingOrSelfPermission(fineLocationPermission);
-        boolean isGranted = coarseLocationPerm == PackageManager.PERMISSION_GRANTED |
-                fineLocationPerm == PackageManager.PERMISSION_GRANTED;
-        return isGranted;
-    }*/
-
-    @Override
+    /*@Override
     public void onLocationChanged(Location location) {
         Log.d(TAG, "Latitude: " + location.getLatitude() + "\n" +
                 "Longtitude: " + location.getLongitude() + "Country code: " + COUNTRY_CODE);
@@ -225,5 +124,5 @@ public class BaseActivity extends AppCompatActivity implements LocationListener 
     protected void onDestroy() {
         super.onDestroy();
 
-    }
+    }*/
 }

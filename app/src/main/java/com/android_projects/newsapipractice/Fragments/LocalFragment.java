@@ -119,10 +119,6 @@ public class LocalFragment extends Fragment implements LocationListener {
     @SuppressLint("MissingPermission")
     private void loadPage(int page) {
         Log.d(TAG, "API called " + page);
-       /* if (locationMgr != null) {
-            locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) v.getContext());
-        }*/
-        String provider = locationMgr.getBestProvider(locCriteria,true);
         localBinding.localSwipeRefreshLayout.setRefreshing(true);
         countryCode=getDeviceLocationData(locationMgr);
         localNewsViewModel.getArticleListTopHeadlines(page, SORT_BY_PUBLISHED_AT, countryCode);
@@ -140,12 +136,12 @@ public class LocalFragment extends Fragment implements LocationListener {
 
             @Override
             public boolean isLastPage() {
-                return false;
+                return isLastPage;
             }
 
             @Override
             public boolean isLoading() {
-                return false;
+                return isLoading;
             }
         });
         recViewAdapter.notifyDataSetChanged();
@@ -168,8 +164,7 @@ public class LocalFragment extends Fragment implements LocationListener {
         Geocoder geocoder = new Geocoder(getContext());
         if(isGranted){
             String bestProvider = locationMgr.getBestProvider(locCriteria,false);
-            /*locationMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            locationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, BaseActivity.this);*/
+
             locationMgr.requestLocationUpdates(bestProvider, 0, 0, (LocationListener)getContext());
             location = locationMgr.getLastKnownLocation(bestProvider);
             if(location != null){
@@ -179,16 +174,11 @@ public class LocalFragment extends Fragment implements LocationListener {
                     if (geocoder != null) {
                         List<Address> addressList = geocoder.getFromLocation(lat, lon, 1);
                         Address address = addressList.get(0);
-                       /* for(int i =0;i<providerList.size();i++){
-                            location = locationMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-                        }*/
                         StringBuilder strBuilder = new StringBuilder();
                         strBuilder.append(address.getCountryCode());
                         address.getCountryName();
                         locationResult = strBuilder.toString();
                     }
-                    //Toast.makeText(getContext(), "Permission granted!", Toast.LENGTH_SHORT).show();
                     Log.d(TAG,"Permission granted");
                 } catch (Exception e) {
                     Log.d(TAG, e.getMessage() + "Cause: " + e.getCause());
@@ -201,29 +191,6 @@ public class LocalFragment extends Fragment implements LocationListener {
         Log.d(TAG, "Result: "+locationResult);
         return locationResult;
     }
-
-    LocationListener locationListener = new MyLocationListener(locationMgr, location) {
-        @Override
-        public void onLocationChanged(Location location) {
-            Log.d(TAG, "Latitude: " + location.getLatitude() + "\n" +
-                    "Longtitude: " + location.getLongitude() + "Country code: " + COUNTRY_CODE);
-        }
-
-        @Override
-        public void onStatusChanged(String s, int i, Bundle bundle) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String s) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String s) {
-
-        }
-    };
 
     @Override
     public void onLocationChanged(Location location) {
