@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -28,6 +29,9 @@ import com.android_projects.newsapipractice.Fragments.CategoriesFragment;
 import com.android_projects.newsapipractice.Fragments.HomeFragment;
 import com.android_projects.newsapipractice.Fragments.LocalFragment;
 import com.android_projects.newsapipractice.Fragments.PopularFragment;
+import com.android_projects.newsapipractice.databinding.ActivityMainBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -50,11 +54,12 @@ public class BaseActivity extends AppCompatActivity implements LocationListener 
     private int coarseLocationPerm, fineLocationPerm;
     private double lat, lon;
 
+
     public static String countryCode;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        rxPermissions = new RxPermissions(this);
+        //rxPermissions = new RxPermissions(this);
         requestLocationPermission();
     }
 
@@ -99,6 +104,7 @@ public class BaseActivity extends AppCompatActivity implements LocationListener 
                     return setFragments(fragment);
                 }
             };
+
 
     public boolean setFragments(Fragment fragment) {
         if (fragment != null) {

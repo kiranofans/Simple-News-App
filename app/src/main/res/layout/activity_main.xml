@@ -26,6 +26,7 @@
                 app:itemTextColor="@android:color/darker_gray"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:menu="@menu/bottom_nav_menu" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
     <!--Header and footers in recyclerView-->
