@@ -50,7 +50,6 @@ public class LocalFragment extends Fragment implements LocationListener {
     private NewsArticleViewModel localNewsViewModel;
 
     private LocationManager locationMgr;
-    private final int RC_LOCATION_PERMISSION = 101;
 
     private final String SORT_BY_PUBLISHED_AT = "publishedAt";
     private int currentPageNum = 1;
@@ -155,7 +154,6 @@ public class LocalFragment extends Fragment implements LocationListener {
         localBinding.mainLocalRecyclerView.setItemAnimator(new DefaultItemAnimator());
         localBinding.mainLocalRecyclerView.setAdapter(recViewAdapter);
     }
-
 
     private String getDeviceLocationData(LocationManager locationMgr) {
         String locationResult = "";

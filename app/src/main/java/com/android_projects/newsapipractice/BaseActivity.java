@@ -22,6 +22,8 @@ public class BaseActivity extends AppCompatActivity {
     private String coarseLocationPermission = Manifest.permission.ACCESS_COARSE_LOCATION;
     private String fineLocationPermission = Manifest.permission.ACCESS_FINE_LOCATION;
 
+    private final int LOCATION_PERM_RC = 101;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +94,7 @@ public class BaseActivity extends AppCompatActivity {
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 ActivityCompat.requestPermissions(this, new String[]{
-                        coarseLocationPermission, fineLocationPermission}, 101);
+                        coarseLocationPermission, fineLocationPermission}, LOCATION_PERM_RC);
             }
         }
     }
