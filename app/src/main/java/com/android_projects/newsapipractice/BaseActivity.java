@@ -27,7 +27,6 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //rxPermissions = new RxPermissions(this);
         requestLocationPermission();
     }
 
@@ -90,41 +89,12 @@ public class BaseActivity extends AppCompatActivity {
                 ContextCompat.checkSelfPermission(this, fineLocationPermission) == PackageManager.PERMISSION_GRANTED;
         if (isGranted) {
             Log.d(TAG, "Permission granted!");
-            //Get location data
         } else {
+            Log.d(TAG, "Permission denied!");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 ActivityCompat.requestPermissions(this, new String[]{
                         coarseLocationPermission, fineLocationPermission}, LOCATION_PERM_RC);
             }
         }
     }
-
-    /*@Override
-    public void onLocationChanged(Location location) {
-        Log.d(TAG, "Latitude: " + location.getLatitude() + "\n" +
-                "Longtitude: " + location.getLongitude() + "Country code: " + COUNTRY_CODE);
-
-    }
-
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
-        Log.d(TAG, "status: " + bundle.toString());
-    }
-
-    @Override
-    public void onProviderEnabled(String s) {
-        Log.d(TAG, "enabled: " + s);
-
-    }
-
-    @Override
-    public void onProviderDisabled(String s) {
-        Log.d(TAG, "disabled: " + s);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-    }*/
 }

@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 
 import com.android_projects.newsapipractice.data.AppConstants;
 
@@ -26,6 +27,7 @@ public class MyNotificationPublisher extends BroadcastReceiver {
                     BADGE_CHANNEL_IDS_NAME,importance);
             assert notificationMgr!=null;
             notificationMgr.createNotificationChannel(notificationChannel);
+            Log.d(TAG,"Notification Broadcast: "+notificationMgr);
         }
         int id = intent.getIntExtra(BADGE_NOTIFICATION_ID,0);
         notificationMgr.notify(id,notification);
