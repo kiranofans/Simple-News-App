@@ -19,8 +19,8 @@ import androidx.fragment.app.FragmentTransaction;
 public class BaseActivity extends AppCompatActivity {
     private final String TAG = BaseActivity.class.getSimpleName();
 
-    private String coarseLocationPermission = Manifest.permission.ACCESS_COARSE_LOCATION;
-    private String fineLocationPermission = Manifest.permission.ACCESS_FINE_LOCATION;
+    public String coarseLocationPermission = Manifest.permission.ACCESS_COARSE_LOCATION;
+    public String fineLocationPermission = Manifest.permission.ACCESS_FINE_LOCATION;
 
     private final int LOCATION_PERM_RC = 101;
 
