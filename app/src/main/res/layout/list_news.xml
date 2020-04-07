@@ -8,7 +8,6 @@
     android:layout_margin="8dp"
     app:cardPreventCornerOverlap="true"
     app:cardCornerRadius="4dp">
-
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,26 +39,64 @@
             android:layout_marginEnd="8dp"
             android:textSize="18sp"
             android:text="Secondary Text" />
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:weightSum="8">
+            android:layout_marginStart="8dp">
             <Button
                 android:id="@+id/btn_read_more"
-                android:layout_weight="2"
-                android:background="@android:color/transparent"
-                android:layout_alignParentStart="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                android:background="@android:color/transparent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/linear_share_buttons"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:textColor="@color/colorAccent"
                 android:text="Read More"/>
-        </RelativeLayout>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/linear_share_buttons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/btn_read_more"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/btn_read_more"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/btn_share"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="@android:drawable/ic_menu_share"/>
+                <Button
+                    android:id="@+id/btn_share_twitter"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="@mipmap/ic_share_twitter" />
+                <Button
+                    android:id="@+id/btn_share_facebook"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@mipmap/ic_share_facebook" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <include android:id="@+id/recycler_view_footer"
             layout="@layout/load_more_layout"
             android:visibility="gone"/>
 
+        <include android:id="@+id/go_to_top_button"
+            layout="@layout/button_return_to_top"
+            android:visibility="gone"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.cardview.widget.CardView>
 </layout>

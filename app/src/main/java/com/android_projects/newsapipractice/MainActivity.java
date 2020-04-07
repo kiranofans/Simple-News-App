@@ -46,7 +46,6 @@ public class MainActivity extends BaseActivity{
 
     private final static String default_notification_channel_id = "default" ;
 
-    public static boolean isLoading=false;//To determine if load the data or not
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

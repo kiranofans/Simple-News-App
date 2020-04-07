@@ -34,19 +34,12 @@ public class NewsArticleRepository {
 
     private Application _application;
 
-    //String type params map
-    private Map<String,String> requestPramsMap = new HashMap<String,String>();
-
     public NewsArticleRepository(Application application) {
         //Initialize application context for the view model
         _application = application;
     }
 
-    private RetrofitApiService apiService = Retrofit2Client.getRetrofitService();
-
-    /**
-     * Performing Api calls here
-     * */
+    // Performing Api calls here
     public MutableLiveData<List<Article>> getMutableLiveData(Call<NewsArticleMod> callEverything,
                                                              OnArticleDataReceivedCallback dataReceivedCallback) {
        //Enqueue is Asynchronous
@@ -54,7 +47,6 @@ public class NewsArticleRepository {
             @Override
             public void onResponse(Call<NewsArticleMod> call, Response<NewsArticleMod> response) {
                 NewsArticleMod newsArticles= response.body();
-
                 if(newsArticles!= null){
                     //Callback to return data to live data
                     Log.d(TAG, "onResponse: ");
@@ -62,7 +54,6 @@ public class NewsArticleRepository {
                     //Convert the data source to mutable live data
                 }
                 Log.d("CHECK NULL", response.body()+" is null");
-
             }
             @Override
             public void onFailure(Call<NewsArticleMod> call, Throwable t) {

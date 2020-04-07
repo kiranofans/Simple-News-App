@@ -31,4 +31,7 @@
 
     <!--Location updates-->
     <string name="location_update">Location update</string>
+
+    <!--Home fragment widgets-->
+    <string name="button_return_to_top">See new articles</string>
 </resources>

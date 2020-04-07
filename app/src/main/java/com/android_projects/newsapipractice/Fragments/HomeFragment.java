@@ -14,11 +14,14 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android_projects.newsapipractice.Adapter.NewsArticleRecyclerViewAdapter;
 import com.android_projects.newsapipractice.PaginationListener;
 import com.android_projects.newsapipractice.R;
+import com.android_projects.newsapipractice.Utils.DataDiffCallback;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.FragmentHomeBinding;
@@ -38,7 +41,7 @@ public class HomeFragment extends Fragment {
 
     private int currentPageNum = 1;
     private boolean isLastPage = false;
-    public boolean isLoading = false;//To determine if load the data or not
+    private boolean isLoading = false;//To determine if load the data or not
 
     private List<Article> articleList = new ArrayList<>();
 
@@ -79,14 +82,16 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    //Set O
+    //Observer only refresh
     private void setObserver() {
+        List<Article> newList = new ArrayList<>();
         viewModel.getArticleLiveData().observe(this, new Observer<List<Article>>() {
             @Override
             public void onChanged(List<Article> articles) {
                 isLoading = false;
                 articleList.addAll(articles);
                 Log.d(TAG, "onChanged: " + articleList.size());
+
                 homeBinding.swipeRefreshLayout.setRefreshing(false);
                 recyclerViewAdapter.notifyDataSetChanged();
             }
@@ -102,9 +107,11 @@ public class HomeFragment extends Fragment {
     private void setRecyclerView(View v) {
         recyclerViewAdapter = new NewsArticleRecyclerViewAdapter(v.getContext(), articleList);
 
+        //homeBinding.mainHomeRecyclerView.getAdapter().
         homeBinding.mainHomeRecyclerView.setLayoutManager(layoutManager);
         homeBinding.mainHomeRecyclerView.setItemAnimator(new DefaultItemAnimator());
         homeBinding.mainHomeRecyclerView.setAdapter(recyclerViewAdapter);
+        recyclerViewAdapter.updateList(articleList);
     }
 
     private void onScrollListener(){
@@ -128,8 +135,5 @@ public class HomeFragment extends Fragment {
         });
         recyclerViewAdapter.notifyDataSetChanged();
     }
-    /*private boolean hasNewArticles(List<Article> articleList){
-        int  lastIndex = articleList.size()-1;
 
-    }*/
 }
