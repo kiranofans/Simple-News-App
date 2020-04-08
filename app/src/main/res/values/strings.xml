@@ -22,7 +22,10 @@
     <string name="top_menu_categories">Categories</string>
 
     <!--Article Activity-->
-    <string name="button_continue_reading">Go to source page</string>
+    <string name="article_author"></string>
+    <string name="article_button_continue_reading">Go to source page</string>
+    <string name="article_content_unavailable">Sorry! The content of this article is unavailable for now.\nPlease tap on the GO TO SOURCE PAGE button below to read more</string>
+    <string name="article_author_not_available">Author Not Available</string>
 
     <!--No content layout-->
     <string name="no_result_found">No result found</string>
@@ -34,4 +37,7 @@
 
     <!--Home fragment widgets-->
     <string name="button_return_to_top">See new articles</string>
+
+    <!--RecyclerView-->
+    <string name="fragment_transition_name">open_img_transition_name</string>
 </resources>

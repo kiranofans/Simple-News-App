@@ -62,7 +62,7 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view=v, savedInstanceState);
+        super.onViewCreated(view, savedInstanceState);
         viewModel = ViewModelProviders.of(this).get(NewsArticleViewModel.class);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(view.getContext().getString(R.string.title_latest_news));
         layoutManager=new LinearLayoutManager(view.getContext());

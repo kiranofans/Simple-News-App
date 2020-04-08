@@ -84,7 +84,7 @@ public class NewsArticleRecyclerViewAdapter extends RecyclerView.Adapter<BaseVie
         Log.d(TAG,"Diff result: "+result);
     }
 
-    public class ArticleHolder extends BaseViewHolder<Article> {
+    public class ArticleHolder extends BaseViewHolder<Article>{
         ListNewsBinding binding;
         private ButtonReturnToTopBinding goToTopBinding;
 
@@ -107,9 +107,10 @@ public class NewsArticleRecyclerViewAdapter extends RecyclerView.Adapter<BaseVie
 
         @Override
         public void bind(Article object) {
-            binding.articleDescription.setText(object.getDescription());
+            binding.articleTvSource.setText(object.getSource().getName());
+            binding.articleTvPublishDate.setText(object.getPublishedAt());//can be converted to local timezone
             binding.articleTitle.setText(object.getTitle());
-            setReadMoreBtn(object);
+            itemOnClick(object);
             showFooter();
             Glide.with(context).load(object.getUrlToImage()).into(binding.articleImageView);
             if(payloads.isEmpty()){
@@ -125,8 +126,16 @@ public class NewsArticleRecyclerViewAdapter extends RecyclerView.Adapter<BaseVie
             }
         }
 
-        private void setReadMoreBtn(Article object) {
-            binding.btnReadMore.setOnClickListener(new View.OnClickListener() {
+        private void showFooter() {
+            if (isLoading) {
+                binding.recyclerViewFooter.loadMoreProgressBar.setVisibility(View.VISIBLE);
+            } else {
+                binding.recyclerViewFooter.loadMoreProgressBar.setVisibility(View.GONE);
+            }
+        }
+
+        private void itemOnClick(Article object){
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     int position = getAdapterPosition();
@@ -139,14 +148,8 @@ public class NewsArticleRecyclerViewAdapter extends RecyclerView.Adapter<BaseVie
                     }
                 }
             });
+
         }
 
-        private void showFooter() {
-            if (isLoading) {
-                binding.recyclerViewFooter.loadMoreProgressBar.setVisibility(View.VISIBLE);
-            } else {
-                binding.recyclerViewFooter.loadMoreProgressBar.setVisibility(View.GONE);
-            }
-        }
     }
 }

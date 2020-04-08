@@ -15,27 +15,27 @@
          android:layout_width="match_parent"
          android:layout_height="match_parent"
          tools:context=".ArticleActivity">
-
-         <androidx.appcompat.widget.AppCompatImageView
-             android:id="@+id/article_img_view_content"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             app:layout_constraintTop_toTopOf="parent"
-             app:layout_constraintBottom_toTopOf="@+id/article_tv_title"
-             android:src="@android:drawable/ic_menu_report_image" />
          <androidx.appcompat.widget.AppCompatTextView
              android:id="@+id/article_tv_title"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
-             android:layout_margin="12dp"
+             android:padding="4dp"
              android:textColor="@android:color/black"
-             android:textSize="25sp"
+             android:textSize="28sp"
              android:textStyle="bold"
-             app:layout_constraintTop_toBottomOf="@+id/article_img_view_content"
-             app:layout_constraintBottom_toTopOf="@+id/article_tv_content"
+             app:layout_constraintTop_toTopOf="parent"
+             app:layout_constraintBottom_toTopOf="@+id/article_img_view_content"
              app:layout_constraintEnd_toEndOf="parent"
              app:layout_constraintVertical_chainStyle="packed"
              android:text="@string/app_name"/>
+         <androidx.appcompat.widget.AppCompatImageView
+             android:id="@+id/article_img_view_content"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             app:layout_constraintTop_toBottomOf="@+id/article_tv_title"
+             app:layout_constraintBottom_toTopOf="@+id/article_tv_content"
+             android:src="@android:drawable/ic_menu_report_image" />
+
 <!--         <androidx.appcompat.widget.AppCompatTextView
              android:id="@+id/article_tv_date"
              android:layout_width="wrap_content"
@@ -50,22 +50,22 @@
              <androidx.appcompat.widget.AppCompatTextView
                  android:id="@+id/article_tv_content"
                  android:layout_width="match_parent"
-                 android:layout_margin="12dp"
+                 android:layout_margin="8dp"
                  android:textColor="@android:color/black"
                  android:textSize="22sp"
-                 app:layout_constraintTop_toBottomOf="@+id/article_tv_title"
+                 app:layout_constraintTop_toBottomOf="@+id/article_img_view_content"
                  android:layout_height="wrap_content"
                  android:text="content"/>
          <androidx.appcompat.widget.AppCompatButton
              android:id="@+id/article_tv_source_link"
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
-             android:layout_margin="12dp"
+             android:layout_margin="8dp"
              android:background="@android:color/transparent"
              app:layout_constraintEnd_toEndOf="parent"
              android:textColor="@color/colorAccent"
              app:layout_constraintTop_toBottomOf="@+id/article_tv_content"
-             android:text="@string/button_continue_reading"/>
+             android:text="@string/article_button_continue_reading"/>
      </androidx.constraintlayout.widget.ConstraintLayout>
      </androidx.core.widget.NestedScrollView>
  </androidx.coordinatorlayout.widget.CoordinatorLayout>

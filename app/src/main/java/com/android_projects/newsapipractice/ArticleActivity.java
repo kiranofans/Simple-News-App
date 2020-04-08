@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.view.View;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.android_projects.newsapipractice.data.Models.Article;
@@ -21,7 +20,6 @@ public class ArticleActivity extends BaseActivity {
     private ActivityArticleBinding mBinding;
 
     private NewsArticleMod newsArticleMod;
-    private Article articleMod = new Article();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +36,10 @@ public class ArticleActivity extends BaseActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         getSupportActionBar().setTitle(articleObj.getSource().getName());
-        if(isAuthorProvided(articleObj)){
+        if(isAuthorProvided(articleObj)){//if author is null
             getSupportActionBar().setSubtitle("Author: "+articleObj.getAuthor());
         }else{
-            getSupportActionBar().setSubtitle("Author Not Provided");
+            getSupportActionBar().setSubtitle(getString(R.string.article_author_not_available));
         }
     }
 
@@ -57,7 +55,16 @@ public class ArticleActivity extends BaseActivity {
         SpannableStringBuilder strBuilder = new SpannableStringBuilder();
         int buildLength = strBuilder.length();
         strBuilder.append(object.getUrl());
-        //strBuilder.setSpan(new StyleSpan());
+
+        if(isContentEmpty(object) && mBinding.articleTvContent!=null){
+            mBinding.articleTvContent.setText(object.getDescription());
+            if(object.getDescription()==null||object.getDescription()==""){
+                mBinding.articleTvContent.setText(R.string.article_content_unavailable);
+            }
+        }else{
+            mBinding.articleTvContent.setVisibility(View.VISIBLE);
+        }
+
         mBinding.articleTvSourceLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,8 +73,22 @@ public class ArticleActivity extends BaseActivity {
         });
     }
 
+    private void setImgOnClick(){
+        mBinding.articleImgViewContent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+    }
+    private boolean isContentEmpty(Article obj){
+        if(obj.getContent()==null || obj.getContent()==""){
+            return true;
+        }
+        return false;
+    }
     private boolean isAuthorProvided(Article obj){
-        if(obj.getAuthor()!=null || obj.getAuthor() != ""){
+        if(obj.getAuthor()!=null || obj.getAuthor()!=""){
             return true;
         }
         return false;
