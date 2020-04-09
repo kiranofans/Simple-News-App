@@ -37,7 +37,7 @@ public class ArticleActivity extends BaseActivity {
 
         getSupportActionBar().setTitle(articleObj.getSource().getName());
         if(isAuthorProvided(articleObj)){//if author is null
-            getSupportActionBar().setSubtitle("Author: "+articleObj.getAuthor());
+            getSupportActionBar().setSubtitle("By "+articleObj.getAuthor());
         }else{
             getSupportActionBar().setSubtitle(getString(R.string.article_author_not_available));
         }

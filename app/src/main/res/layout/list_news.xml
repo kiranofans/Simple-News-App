@@ -26,14 +26,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="6dp"
                 android:paddingStart="3dp"
                 android:paddingEnd="3dp"
-                android:background="@color/colorPrimary"
+                android:background="@drawable/background_round_bottom_left_corner_border"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="@color/colorAccent"
+                android:textColor="@android:color/black"
                 android:text="Secondary Text" />
         </RelativeLayout>
 
@@ -43,6 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Article Title"
+            android:layout_marginBottom="8dp"
             android:layout_marginStart="6dp"
             android:layout_marginEnd="6dp"
             android:textColor="@android:color/black"
@@ -61,7 +63,9 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp">
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/article_tv_publish_date"
@@ -74,7 +78,8 @@
                 app:layout_constraintEnd_toStartOf="@+id/linear_share_buttons"
                 android:textAlignment="textStart"
                 android:layout_weight="3"
-                android:textSize="16sp"
+                android:textSize="18sp"
+                android:textColor="@android:color/darker_gray"
                 android:text="@string/app_name"/>
 
             <androidx.appcompat.widget.LinearLayoutCompat
