@@ -9,13 +9,6 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <FrameLayout
-                android:id="@+id/main_fragment_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_constraintBottom_toTopOf="@+id/main_bottom_navigation" />
-
             <com.google.android.material.bottomnavigation.BottomNavigationView
                 android:id="@+id/main_bottom_navigation"
                 style="@style/Widget.MaterialComponents.BottomNavigationView"
@@ -27,6 +20,11 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:menu="@menu/bottom_nav_menu" />
 
+            <FrameLayout
+                android:id="@+id/main_fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toTopOf="@+id/main_bottom_navigation" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
     <!--Header and footers in recyclerView-->

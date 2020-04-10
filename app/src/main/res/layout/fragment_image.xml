@@ -6,17 +6,26 @@
         android:id="@+id/image_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorBlackHalfTransparent"
         tools:context=".ImageFragment"
         android:transitionName="@string/fragment_transition_name">
-
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.github.chrisbanes.photoview.PhotoView
             android:id="@+id/full_image_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_margin="8dp"
             android:layout_centerInParent="true"
             android:src="@drawable/ic_no_results_found" />
+        <FrameLayout
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include layout="@layout/img_bottom_nav_layout"
+                android:id="@+id/img_bottom_nav"/>
+
+        </FrameLayout>
+
 
     </RelativeLayout>
 </layout>

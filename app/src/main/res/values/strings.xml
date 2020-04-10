@@ -40,4 +40,11 @@
 
     <!--RecyclerView-->
     <string name="fragment_transition_name">open_img_transition_name</string>
+
+    <!--Image Fragment-->
+    <string name="img_bottom_nav_share">Share</string>
+    <string name="img_bottom_nav_tweet">Tweet</string>
+    <string name="img_bottom_nav_facebook">Facebook</string>
+    <string name="img_bottom_nav_email">Email</string>
+    <string name="img_bottom_nav_download">Download image</string>
 </resources>

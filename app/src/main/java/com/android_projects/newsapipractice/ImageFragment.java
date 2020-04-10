@@ -1,15 +1,16 @@
 package com.android_projects.newsapipractice;
 
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,9 +43,10 @@ public class ImageFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        imgBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_image,
+        final Context contextThemeWraper = new ContextThemeWrapper(getActivity(),R.style.ImageFragmentTheme);
+        LayoutInflater localInflater = inflater.cloneInContext(contextThemeWraper);
+        imgBinding = DataBindingUtil.inflate(localInflater, R.layout.fragment_image,
                 container, false);
-
         return v=imgBinding.getRoot();
         //newsViewModel = ViewModelProviders.of(this).get(NewsArticleViewModel.class);
     }
@@ -54,25 +56,15 @@ public class ImageFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         articleMod = (Article) getActivity().getIntent().getSerializableExtra(EXTRA_KEY_ARTICLE);
 
-        setTransition();
+        receiveTransition();
 
     }
 
-    private void configureToolbar(Article articleObj){
-        //Set the back arrow button
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        ((AppCompatActivity)getActivity()).setTitle("");
-    }
-
-    private void setTransition(){
+    private void receiveTransition(){
         String transName = ViewCompat.getTransitionName(imgBinding.imageFragmentContainer);
 
         ViewCompat.setTransitionName(imgBinding.imageFragmentContainer,transName);
         Glide.with(this).load(articleMod.getUrlToImage()).into(imgBinding.fullImageView);
 
-        configureToolbar(articleMod);
     }
-
 }
