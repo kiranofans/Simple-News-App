@@ -10,13 +10,14 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textColorPrimary">@android:color/black</item>
         <item name="android:textColorSecondary">@color/colorAccent</item>
+        <item name="android:statusBarColor">@color/colorBlackHalfTransparent</item>
 
         <!-- app logo author attribute: <div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>-->
     </style>
 
     <style name="ImageFragmentTheme" parent="Theme.MaterialComponents.DayNight.Bridge">
         <item name="android:windowNoTitle">true</item>
-        <!--<item name="android:windowActionBar">false</item>-->
+        <item name="android:windowActionBar">false</item>
         <item name="android:statusBarColor">@color/colorBlackHalfTransparent</item>
         <item name="android:windowBackground">@null</item>
         <item name="colorPrimary">@color/colorPrimary</item>

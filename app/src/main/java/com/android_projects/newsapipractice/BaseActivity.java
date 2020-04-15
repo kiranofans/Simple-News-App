@@ -28,6 +28,7 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestLocationPermission();
+        getSupportActionBar().collapseActionView();
     }
 
     @Override
@@ -48,31 +49,6 @@ public class BaseActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-  /*  public BottomNavigationView.OnNavigationItemSelectedListener mNavItemSelectedListener = new
-            BottomNavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    Fragment fragment = null;
-                    switch (item.getItemId()) {
-                        case R.id.nav_home:
-                            fragment = new HomeFragment();
-                            break;
-                        case R.id.nav_popular:
-                            fragment = new PopularFragment();
-                            break;
-                        case R.id.nav_local:
-                            fragment = new LocalFragment();
-                            break;
-                        case R.id.nav_categories:
-                            fragment = new CategoriesFragment();
-                            break;
-                    }
-                    //setBadge(1,item.getItemId());
-                    return setFragments(fragment);
-                }
-            };*/
-
 
     public boolean setFragments(Fragment fragment) {
         if (fragment != null) {

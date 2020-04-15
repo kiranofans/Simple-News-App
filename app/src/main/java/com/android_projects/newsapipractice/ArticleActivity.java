@@ -1,19 +1,24 @@
 package com.android_projects.newsapipractice;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.transition.Fade;
-import android.transition.TransitionInflater;
-import android.transition.TransitionSet;
 import android.view.View;
 import android.view.Window;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.android_projects.newsapipractice.Fragments.ImageFragment;
+import com.android_projects.newsapipractice.Utils.DetailsTransition;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.data.Models.NewsArticleMod;
 import com.android_projects.newsapipractice.databinding.ActivityArticleBinding;
@@ -29,8 +34,10 @@ public class ArticleActivity extends BaseActivity {
 
     private Article articleObj;
 
-    private final long FADE_DEFAULT_TIME= 1000;
+    private final long FADE_DEFAULT_TIME= 800;
     private final long MOVE_DEFAULT_TIME = 100;
+
+   // private ImageFragment imageFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
@@ -87,39 +94,38 @@ public class ArticleActivity extends BaseActivity {
         mBinding.articleImgViewContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //setImgFragment(new ImageFragment(),transName);
                 performTransition();
+                //new DetailsTransition(this,setImgFragment())
             }
         });
     }
 
     private void performTransition(){
         if(isDestroyed())return;
-
-        ImageFragment imgFragment = new ImageFragment();
         String transName = ViewCompat.getTransitionName(mBinding.articleRootView);
 
         //Exit activity transition
         Fade exitFade = new Fade();
         exitFade.setDuration(FADE_DEFAULT_TIME);
         getWindow().setExitTransition(exitFade);
-        //getWindow().setAllowEnterTransitionOverlap(true);
+        getWindow().setAllowEnterTransitionOverlap(true);
 
-        TransitionSet enterTransSet = new TransitionSet();
-        enterTransSet.addTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.move));
-        enterTransSet.setDuration(MOVE_DEFAULT_TIME);
-        enterTransSet.setStartDelay(FADE_DEFAULT_TIME);
-        imgFragment.setSharedElementEnterTransition(enterTransSet);
+        ImageFragment imgFragment = new ImageFragment();
+        imgFragment.setSharedElementEnterTransition(new DetailsTransition());
 
+        //Enter transition
         Fade enterFade = new Fade();
         enterFade.setDuration(FADE_DEFAULT_TIME);
         imgFragment.setEnterTransition(enterFade);
-        imgFragment.setSharedElementReturnTransition(new Fade());
+
+        //Return transition
+        imgFragment.setSharedElementReturnTransition(new DetailsTransition());
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.addSharedElement(mBinding.articleImgViewContent,transName)
                 .replace(R.id.article_root_view,imgFragment).addToBackStack(null)
                 .commit();
-
     }
 
     private boolean isContentEmpty(Article obj){
@@ -136,15 +142,25 @@ public class ArticleActivity extends BaseActivity {
         return false;
     }
 
+    /*@Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        ColorDrawable halfTransparentBlack= new ColorDrawable(Color.TRANSPARENT);
+        this.getSupportActionBar().setBackgroundDrawable(halfTransparentBlack);
+    }
+
+    @Override
+    public void onAttachFragment(@NonNull Fragment fragment) {
+        super.onAttachFragment(fragment);
+        ColorDrawable halfTransparentBlack= new ColorDrawable(Color.TRANSPARENT);
+        this.getSupportActionBar().setBackgroundDrawable(halfTransparentBlack);
+
+    }*/
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();//set the back arrow onClick event
         return true;
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-    }
 }
