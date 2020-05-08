@@ -14,10 +14,8 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android_projects.newsapipractice.ArticleActivity;
-import com.android_projects.newsapipractice.Fragments.FragmentCommunication;
 import com.android_projects.newsapipractice.ImageActivity;
 import com.android_projects.newsapipractice.Utils.DataDiffCallback;
-import com.android_projects.newsapipractice.Utils.RecyclerViewImgClickListener;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.ButtonReturnToTopBinding;
 import com.android_projects.newsapipractice.databinding.ListNewsBinding;
@@ -35,8 +33,6 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
     private Context context;
     public boolean isLoading = false;//To determine if load the data or not
 
-    private RecyclerViewImgClickListener mListener;
-
     @NonNull
     @Override
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -44,10 +40,9 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
         return new ArticleHolder(newsBinding);
     }
 
-    public NewsRecyclerViewAdapter(Context context, List<Article> list, RecyclerViewImgClickListener listener) {
+    public NewsRecyclerViewAdapter(Context context, List<Article> list) {
         this.context = context;
         articleList = list; //initialize articleList
-        mListener=listener;
     }
 
     @Override
@@ -94,7 +89,6 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
         private ListNewsBinding holderBinding;
         private ButtonReturnToTopBinding goToTopBinding;
 
-        private FragmentCommunication fragCommunicator;
         private int position;
         List<Object> payloads = new ArrayList<>();
 

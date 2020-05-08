@@ -37,7 +37,6 @@ import com.android_projects.newsapipractice.MyLocationBroadcastReceiver;
 import com.android_projects.newsapipractice.MyLocationService;
 import com.android_projects.newsapipractice.PaginationListener;
 import com.android_projects.newsapipractice.R;
-import com.android_projects.newsapipractice.Utils.RecyclerViewImgClickListener;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.FragmentLocalBinding;
@@ -52,7 +51,7 @@ import static com.android_projects.newsapipractice.MyLocationService.LOCATION_BR
 import static com.android_projects.newsapipractice.MyLocationService.countryCode;
 import static com.android_projects.newsapipractice.MyLocationService.countryName;
 
-public class LocalFragment extends Fragment implements RecyclerViewImgClickListener{
+public class LocalFragment extends Fragment{
     private final String TAG = LocalFragment.class.getSimpleName();
 
     private View v;
@@ -170,7 +169,7 @@ public class LocalFragment extends Fragment implements RecyclerViewImgClickListe
     }
 
     private void setRecyclerView(View v) {
-        recViewAdapter = new NewsRecyclerViewAdapter(v.getContext(), localNewsList,this);
+        recViewAdapter = new NewsRecyclerViewAdapter(v.getContext(), localNewsList);
         layoutManager = new LinearLayoutManager(v.getContext());
 
         localBinding.mainLocalRecyclerView.setLayoutManager(layoutManager);
@@ -267,11 +266,6 @@ public class LocalFragment extends Fragment implements RecyclerViewImgClickListe
     public void onStop() {
         getActivity().unregisterReceiver(locReceiver);
         super.onStop();
-    }
-
-    @Override
-    public void onRecyclerViewImageClicked(NewsRecyclerViewAdapter.ArticleHolder articleHolder, int position, ListNewsBinding newsBinding) {
-
     }
 
    /* @Override

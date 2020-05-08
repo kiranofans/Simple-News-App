@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import com.android_projects.newsapipractice.Adapter.NewsRecyclerViewAdapter;
 import com.android_projects.newsapipractice.PaginationListener;
 import com.android_projects.newsapipractice.R;
-import com.android_projects.newsapipractice.Utils.RecyclerViewImgClickListener;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.FragmentPopularBinding;
@@ -29,7 +28,7 @@ import com.android_projects.newsapipractice.databinding.ListNewsBinding;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PopularFragment extends Fragment implements RecyclerViewImgClickListener {
+public class PopularFragment extends Fragment{
     private  final String TAG = PopularFragment.class.getSimpleName();
 
     private View v;
@@ -72,7 +71,7 @@ public class PopularFragment extends Fragment implements RecyclerViewImgClickLis
     }
 
     private void setPopularRecyclerView(){
-        recyclerViewAdapter = new NewsRecyclerViewAdapter(v.getContext(),popularArticleList,this);
+        recyclerViewAdapter = new NewsRecyclerViewAdapter(v.getContext(),popularArticleList);
         layoutManager=new LinearLayoutManager(v.getContext());
 
         popBinding.mainPopularRecyclerView.setLayoutManager(layoutManager);
@@ -126,10 +125,5 @@ public class PopularFragment extends Fragment implements RecyclerViewImgClickLis
             }
         });
         recyclerViewAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onRecyclerViewImageClicked(NewsRecyclerViewAdapter.ArticleHolder articleHolder, int position, ListNewsBinding newsBinding) {
-
     }
 }
