@@ -1,5 +1,6 @@
 package com.android_projects.newsapipractice.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,9 +9,11 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.android_projects.newsapipractice.Adapter.CategoriesRecyclerViewAdapter;
+import com.android_projects.newsapipractice.LoginActivity;
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.FragmentCategoryBinding;
@@ -21,12 +24,12 @@ import java.util.List;
 public class CategoriesFragment extends Fragment {
     private final String TAG = CategoriesFragment.class.getSimpleName();
 
+    private FragmentCategoryBinding catBinding;
     private View v;
     private FragmentCategoryBinding categoryBinding;
 
     private CategoriesRecyclerViewAdapter recyclerViewAdapter;
     private List<Article> categoryList=new ArrayList<>();
-
 
     public static CategoriesFragment newInstance() {
         return new CategoriesFragment();
@@ -35,7 +38,8 @@ public class CategoriesFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_category, container, false);
+        catBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_category,container,false);
+        return v= catBinding.getRoot();
     }
 
     @Override
@@ -43,6 +47,12 @@ public class CategoriesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(view.getContext().getString(R.string.title_category));
 
+        catBinding.buttonOpenFacebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().startActivity(new Intent(getContext(),LoginActivity.class));
+            }
+        });
     }
 
     @Override

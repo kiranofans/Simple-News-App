@@ -30,14 +30,13 @@
              app:layout_constraintVertical_chainStyle="packed"
              android:text="@string/app_name"/>
 
-         <androidx.appcompat.widget.AppCompatImageView
+         <com.github.chrisbanes.photoview.PhotoView
              android:id="@+id/article_img_view_content"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              app:layout_constraintTop_toBottomOf="@+id/article_tv_title"
              app:layout_constraintBottom_toTopOf="@+id/article_tv_content"
-             android:src="@android:drawable/ic_menu_report_image"
-             android:transitionName="@string/fragment_transition_name"/>
+             android:src="@android:drawable/ic_menu_report_image"/>
 
              <androidx.appcompat.widget.AppCompatTextView
                  android:id="@+id/article_tv_content"

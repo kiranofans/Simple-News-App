@@ -1,28 +1,20 @@
 package com.android_projects.newsapipractice;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
-import android.transition.Fade;
 import android.view.View;
 import android.view.Window;
 
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.ViewCompat;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
-import com.android_projects.newsapipractice.Fragments.ImageFragment;
-import com.android_projects.newsapipractice.Utils.DetailsTransition;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.data.Models.NewsArticleMod;
 import com.android_projects.newsapipractice.databinding.ActivityArticleBinding;
 import com.bumptech.glide.Glide;
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
+import com.viven.imagezoom.ImageZoomHelper;
 
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_ARTICLE;
 
@@ -34,10 +26,9 @@ public class ArticleActivity extends BaseActivity {
 
     private Article articleObj;
 
-    private final long FADE_DEFAULT_TIME= 800;
-    private final long MOVE_DEFAULT_TIME = 100;
-
-   // private ImageFragment imageFragment;
+    private PhotoViewAttacher photoViewAttacher;
+    private ImageZoomHelper imgZoom;
+   // private ImageActivity imageFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
@@ -45,7 +36,10 @@ public class ArticleActivity extends BaseActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_article);
         articleObj = (Article) getIntent().getSerializableExtra(EXTRA_KEY_ARTICLE);
 
-        setImgOnClick();
+        photoViewAttacher=new PhotoViewAttacher(mBinding.articleImgViewContent);
+       // photoViewAttacher.setZoomable(true);
+
+        // setImgOnClick();
         getObjectExtra();
 
     }
@@ -94,14 +88,19 @@ public class ArticleActivity extends BaseActivity {
         mBinding.articleImgViewContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //setImgFragment(new ImageFragment(),transName);
-                performTransition();
+                //setImgFragment(new ImageActivity(),transName);
+                //performTransition();
                 //new DetailsTransition(this,setImgFragment())
             }
         });
     }
 
-    private void performTransition(){
+   /* @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return imgZoom.onDispatchTouchEvent(ev)|| super.dispatchTouchEvent(ev);
+    }*/
+
+    /*private void performTransition(){
         if(isDestroyed())return;
         String transName = ViewCompat.getTransitionName(mBinding.articleRootView);
 
@@ -111,7 +110,7 @@ public class ArticleActivity extends BaseActivity {
         getWindow().setExitTransition(exitFade);
         getWindow().setAllowEnterTransitionOverlap(true);
 
-        ImageFragment imgFragment = new ImageFragment();
+        ImageActivity imgFragment = new ImageActivity();
         imgFragment.setSharedElementEnterTransition(new DetailsTransition());
 
         //Enter transition
@@ -126,7 +125,7 @@ public class ArticleActivity extends BaseActivity {
         ft.addSharedElement(mBinding.articleImgViewContent,transName)
                 .replace(R.id.article_root_view,imgFragment).addToBackStack(null)
                 .commit();
-    }
+    }*/
 
     private boolean isContentEmpty(Article obj){
         if(obj.getContent()==null || obj.getContent()==""){

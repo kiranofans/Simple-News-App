@@ -1,6 +1,7 @@
 package com.android_projects.newsapipractice.Utils;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
@@ -12,6 +13,7 @@ import java.util.List;
 
 public class DataDiffCallback extends DiffUtil.Callback
 {
+    private final String TAG = DataDiffCallback.class.getSimpleName();
     private final List<Article> mOldArticleList;
     private final List<Article> mNewArticleList;
 
@@ -62,7 +64,10 @@ public class DataDiffCallback extends DiffUtil.Callback
         if(!newArticle.getSource().getName().equals(oldArticle.getSource().getName())){
             diffBundle.putString(KEY_ARTICLE_NAMES,newArticle.getSource().getName());
         }
-        if(diffBundle.size() == 0) return null;
+        if(diffBundle.size() == 0){
+            Log.d(TAG,"Diffbundle is empty");
+            return null;
+        }
         return diffBundle;
     }
 }

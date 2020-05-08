@@ -15,16 +15,29 @@
         <!-- app logo author attribute: <div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>-->
     </style>
 
-    <style name="ImageFragmentTheme" parent="Theme.MaterialComponents.DayNight.Bridge">
+    <style name="ImageActivityTheme" parent="Theme.MaterialComponents.DayNight.Bridge">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:statusBarColor">@color/colorBlackHalfTransparent</item>
         <item name="android:windowBackground">@null</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="android:textColorPrimary">@color/colorPrimary</item>
-        <item name="actionBarStyle">@style/ImageFragmentActionBar</item>
+        <item name="actionBarStyle">@style/ImageActivityActionBar</item>
     </style>
-    <style name="ImageFragmentActionBar" parent="Widget.AppCompat.ActionBar">
+
+    <style name="ImageActivityActionBar" parent="Widget.AppCompat.ActionBar">
         <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="FullscreenTheme" parent="AppTheme">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/colorPrimary</item>
     </style>
 </resources>

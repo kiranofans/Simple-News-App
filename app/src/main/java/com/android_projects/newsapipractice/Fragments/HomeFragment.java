@@ -1,6 +1,9 @@
 package com.android_projects.newsapipractice.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.transition.Fade;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,29 +17,31 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.transition.Explode;
 
-import com.android_projects.newsapipractice.Adapter.NewsArticleRecyclerViewAdapter;
+import com.android_projects.newsapipractice.Adapter.NewsRecyclerViewAdapter;
 import com.android_projects.newsapipractice.PaginationListener;
 import com.android_projects.newsapipractice.R;
-import com.android_projects.newsapipractice.Utils.DataDiffCallback;
+import com.android_projects.newsapipractice.Utils.RecyclerViewImgClickListener;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.FragmentHomeBinding;
+import com.android_projects.newsapipractice.databinding.ListNewsBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment {
+import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_ARTICLE;
+
+public class HomeFragment extends Fragment implements RecyclerViewImgClickListener {
     private final String TAG = HomeFragment.class.getSimpleName();
 
     private FragmentHomeBinding homeBinding;
     private NewsArticleViewModel viewModel;
     private View v;
 
-    private NewsArticleRecyclerViewAdapter recyclerViewAdapter;
+    private NewsRecyclerViewAdapter recyclerViewAdapter;
     private LinearLayoutManager layoutManager;
 
     private int currentPageNum = 1;
@@ -44,9 +49,13 @@ public class HomeFragment extends Fragment {
     private boolean isLoading = false;//To determine if load the data or not
 
     private List<Article> articleList = new ArrayList<>();
+    private Article articleMod = new Article();
 
     private final String SORT_BY_PUBLISHED_AT="publishedAt";
     private final String SORT_BY_RELEVANCY="relevancy";
+
+    private final long FADE_DEFAULT_TIME= 500;
+    private final long MOVE_DEFAULT_TIME = 100;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -105,7 +114,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void setRecyclerView(View v) {
-        recyclerViewAdapter = new NewsArticleRecyclerViewAdapter(v.getContext(), articleList);
+        recyclerViewAdapter = new NewsRecyclerViewAdapter(v.getContext(), articleList,this);
 
         //homeBinding.mainHomeRecyclerView.getAdapter().
         homeBinding.mainHomeRecyclerView.setLayoutManager(layoutManager);
@@ -134,6 +143,60 @@ public class HomeFragment extends Fragment {
             }
         });
         recyclerViewAdapter.notifyDataSetChanged();
+    }
+
+    private void setFragmentTransition(NewsRecyclerViewAdapter.ArticleHolder articleHolder, int pos) {
+
+        //Article articleMod = (Article) getActivity().getIntent().getSerializableExtra(EXTRA_KEY_ARTICLE);
+        String transName = getString(R.string.fragment_transition_name);
+
+
+        //Exit activity transition
+        Explode exitExplode = new Explode();
+        exitExplode.setDuration(FADE_DEFAULT_TIME);
+        this.setExitTransition(TransitionInflater.from(getContext()).inflateTransition(android.R.transition.move));
+        this.setAllowEnterTransitionOverlap(true);
+
+       // getActivity().getSupportFragmentManager().beginTransaction().addSharedElement()
+       /* setExitSharedElementCallback(new SharedElementCallback() {
+            @Override
+            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                ListNewsBinding newsBinding;
+               // NewsRecyclerViewAdapter.ArticleHolder selectedViewHolder = new NewsRecyclerViewAdapter.ArticleHolder(newsBinding);
+                if(selectedViewHolder == null || selectedViewHolder.itemView==null){
+                    return;
+                }
+
+                //sharedElements.put(articleMod.getUrlToImage(),selectedViewHolder.getB)
+                super.onMapSharedElements(names, sharedElements);
+            }
+        });*/
+
+    }
+
+    @Override
+    public void onRecyclerViewImageClicked(NewsRecyclerViewAdapter.ArticleHolder articleHolder, int position, ListNewsBinding newsBinding) {
+       // Article articleMod = (Article) getActivity().getIntent().getSerializableExtra(EXTRA_KEY_ARTICLE);
+        String transName = getString(R.string.fragment_transition_name);
+        int pos = articleHolder.getAdapterPosition();
+        articleMod = (Article)getActivity().getIntent().getSerializableExtra(EXTRA_KEY_ARTICLE);
+
+        //Exit activity transition
+        Fade exitFade = new Fade();
+        exitFade.setDuration(FADE_DEFAULT_TIME);
+        setExitTransition(TransitionInflater.from(getContext()).inflateTransition(android.R.transition.move));
+        this.setAllowEnterTransitionOverlap(true);
+
+       /* getWindow().setSharedElementEnterTransition(new DetailsTransition());
+        imgFragment.setEnterTransition(new Fade());
+        imgFragment.setSharedElementReturnTransition(new Fade());*/
+
+       /* getActivity().getSupportFragmentManager().beginTransaction().addSharedElement
+                (articleHolder.getBinding().articleImageView,transName+position)
+                .replace(R.id.main_fragment_container,imgFragment).addToBackStack(null).commit();*/
+       //Intent imgIntent = new Intent(getContext(),ImageActivity.class);
+      // getActivity().startActivityFromFragment(this,imgIntent,101);
+
     }
 
 }

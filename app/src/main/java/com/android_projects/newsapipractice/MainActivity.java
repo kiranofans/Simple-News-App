@@ -37,13 +37,6 @@ public class MainActivity extends BaseActivity{
     private final String TAG = MainActivity.class.getSimpleName();
 
     private ActivityMainBinding mainBinding;
-    private NotificationBadgeLayoutBinding badgeBinding;
-    private BadgeDrawable badgeDrawable;
-
-    private BottomNavigationMenuView bottomNavMenuView;
-    private View notificationBadge;
-    private boolean isBadgeVisible=false;
-
     private final static String default_notification_channel_id = "default" ;
 
 
@@ -54,59 +47,9 @@ public class MainActivity extends BaseActivity{
 
         //loading default fragment
         setFragments(new HomeFragment());
-        badgeNotification(getNotification(),1);
+        //badgeNotification(getNotification(),1);
 
         mainBinding.mainBottomNavigation.setOnNavigationItemSelectedListener(mNavItemSelectedListener);
-    }
-
-    public BottomNavigationView.OnNavigationItemSelectedListener mNavItemSelectedListener = new
-            BottomNavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    Fragment fragment = null;
-                    switch (item.getItemId()) {
-                        case R.id.nav_home:
-                            fragment = new HomeFragment();
-                            //Once clicked count=0
-                            break;
-                        case R.id.nav_popular:
-                            fragment = new PopularFragment();
-                            break;
-                        case R.id.nav_local:
-                            fragment = new LocalFragment();
-                            break;
-                        case R.id.nav_categories:
-                            fragment = new CategoriesFragment();
-                            break;
-                    }
-                    badgeNotification(getNotification(),0);
-                    return setFragments(fragment);
-                }
-            };
-
-    public void setBadge(int count,int resId,PendingIntent pendingIntent){
-        badgeDrawable = mainBinding.mainBottomNavigation.getOrCreateBadge(resId);
-
-        badgeDrawable.setNumber(count);
-        if(badgeDrawable.getNumber()>0){
-            badgeDrawable.setVisible(true);
-        }else {
-            badgeDrawable.setVisible(false);
-            //badgeDrawable.setVisible(false);
-        }
-    }
-
-    private void badgeNotification(Notification notification,int count){
-        Intent notificationIntent = new Intent(this, MyNotificationPublisher.class);
-        notificationIntent.putExtra(MyNotificationPublisher.BADGE_CHANNEL_IDS_NAME,1);
-        notificationIntent.putExtra(MyNotificationPublisher.BADGE_NOTIFICATION_ID,notification);
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,
-                notificationIntent,PendingIntent.FLAG_UPDATE_CURRENT);
-        setBadge(count,R.id.nav_home,pendingIntent);
-        setBadge(count,R.id.nav_popular,pendingIntent);
-        setBadge(count,R.id.nav_local,pendingIntent);
-
     }
 
     private Notification getNotification(){
@@ -115,6 +58,7 @@ public class MainActivity extends BaseActivity{
         builder.setChannelId(BADGE_CHANNEL_ID);
         return builder.build();
     }
+
 
   /*  private String getDeviceLocationData(LocationManager locationMgr) {
         String locationResult = "";
@@ -150,4 +94,14 @@ public class MainActivity extends BaseActivity{
         Log.d(TAG, "Result: "+locationResult);
         return locationResult;
     }*/
+
+    @Override
+    public void onBackPressed() {
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+        if(count == 0){
+            super.onBackPressed();
+        }else{
+            getSupportFragmentManager().popBackStack();
+        }
+    }
 }

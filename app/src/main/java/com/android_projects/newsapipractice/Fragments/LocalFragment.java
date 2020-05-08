@@ -1,7 +1,6 @@
 package com.android_projects.newsapipractice.Fragments;
 
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -25,7 +24,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -33,32 +31,28 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.android_projects.newsapipractice.Adapter.NewsArticleRecyclerViewAdapter;
+import com.android_projects.newsapipractice.Adapter.NewsRecyclerViewAdapter;
 import com.android_projects.newsapipractice.BuildConfig;
 import com.android_projects.newsapipractice.MyLocationBroadcastReceiver;
 import com.android_projects.newsapipractice.MyLocationService;
 import com.android_projects.newsapipractice.PaginationListener;
 import com.android_projects.newsapipractice.R;
+import com.android_projects.newsapipractice.Utils.RecyclerViewImgClickListener;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.FragmentLocalBinding;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+import com.android_projects.newsapipractice.databinding.ListNewsBinding;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.LOCATION_SERVICE;
-import static com.android_projects.newsapipractice.MyLocationService.BROADCAST_CONN_CHANGE;
 import static com.android_projects.newsapipractice.MyLocationService.LOCATION_BROADCAST_ACTION;
 import static com.android_projects.newsapipractice.MyLocationService.countryCode;
 import static com.android_projects.newsapipractice.MyLocationService.countryName;
-import static com.android_projects.newsapipractice.MyLocationService.latitude;
 
-public class LocalFragment extends Fragment{
+public class LocalFragment extends Fragment implements RecyclerViewImgClickListener{
     private final String TAG = LocalFragment.class.getSimpleName();
 
     private View v;
@@ -75,7 +69,7 @@ public class LocalFragment extends Fragment{
     private boolean isLoading = false;
     private boolean isLastPage = false;
 
-    private NewsArticleRecyclerViewAdapter recViewAdapter;
+    private NewsRecyclerViewAdapter recViewAdapter;
     private LinearLayoutManager layoutManager;
 
     private List<Article> localNewsList = new ArrayList<>();
@@ -176,7 +170,7 @@ public class LocalFragment extends Fragment{
     }
 
     private void setRecyclerView(View v) {
-        recViewAdapter = new NewsArticleRecyclerViewAdapter(v.getContext(), localNewsList);
+        recViewAdapter = new NewsRecyclerViewAdapter(v.getContext(), localNewsList,this);
         layoutManager = new LinearLayoutManager(v.getContext());
 
         localBinding.mainLocalRecyclerView.setLayoutManager(layoutManager);
@@ -273,6 +267,11 @@ public class LocalFragment extends Fragment{
     public void onStop() {
         getActivity().unregisterReceiver(locReceiver);
         super.onStop();
+    }
+
+    @Override
+    public void onRecyclerViewImageClicked(NewsRecyclerViewAdapter.ArticleHolder articleHolder, int position, ListNewsBinding newsBinding) {
+
     }
 
    /* @Override

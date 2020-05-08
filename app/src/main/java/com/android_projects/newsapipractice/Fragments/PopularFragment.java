@@ -11,24 +11,25 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android_projects.newsapipractice.Adapter.NewsArticleRecyclerViewAdapter;
+import com.android_projects.newsapipractice.Adapter.NewsRecyclerViewAdapter;
 import com.android_projects.newsapipractice.PaginationListener;
 import com.android_projects.newsapipractice.R;
+import com.android_projects.newsapipractice.Utils.RecyclerViewImgClickListener;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.FragmentPopularBinding;
+import com.android_projects.newsapipractice.databinding.ListNewsBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PopularFragment extends Fragment {
+public class PopularFragment extends Fragment implements RecyclerViewImgClickListener {
     private  final String TAG = PopularFragment.class.getSimpleName();
 
     private View v;
@@ -37,7 +38,7 @@ public class PopularFragment extends Fragment {
     private FragmentPopularBinding popBinding;
     private NewsArticleViewModel newsViewModel;
 
-    private NewsArticleRecyclerViewAdapter recyclerViewAdapter;
+    private NewsRecyclerViewAdapter recyclerViewAdapter;
     private int currentPageNum=1;
     private boolean isLastPage = false;
     private boolean isLoading = false;
@@ -71,7 +72,7 @@ public class PopularFragment extends Fragment {
     }
 
     private void setPopularRecyclerView(){
-        recyclerViewAdapter = new NewsArticleRecyclerViewAdapter(v.getContext(),popularArticleList);
+        recyclerViewAdapter = new NewsRecyclerViewAdapter(v.getContext(),popularArticleList,this);
         layoutManager=new LinearLayoutManager(v.getContext());
 
         popBinding.mainPopularRecyclerView.setLayoutManager(layoutManager);
@@ -125,5 +126,10 @@ public class PopularFragment extends Fragment {
             }
         });
         recyclerViewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onRecyclerViewImageClicked(NewsRecyclerViewAdapter.ArticleHolder articleHolder, int position, ListNewsBinding newsBinding) {
+
     }
 }
