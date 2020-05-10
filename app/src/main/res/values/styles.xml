@@ -15,7 +15,7 @@
         <!-- app logo author attribute: <div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>-->
     </style>
 
-    <style name="ImageActivityTheme" parent="Theme.MaterialComponents.DayNight.Bridge">
+    <style name="ImageActivityTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:statusBarColor">@color/colorBlackHalfTransparent</item>
@@ -27,6 +27,7 @@
 
     <style name="ImageActivityActionBar" parent="Widget.AppCompat.ActionBar">
         <item name="android:background">@android:color/transparent</item>
+        <item name="android:homeAsUpIndicator">@mipmap/ic_back_arrow_white_24px</item>
     </style>
 
     <style name="FullscreenTheme" parent="AppTheme">

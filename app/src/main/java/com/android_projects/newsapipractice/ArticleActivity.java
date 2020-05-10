@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.view.View;
-import android.view.Window;
 
 import androidx.databinding.DataBindingUtil;
 
@@ -31,13 +30,11 @@ public class ArticleActivity extends BaseActivity {
    // private ImageActivity imageFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
+
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_article);
         articleObj = (Article) getIntent().getSerializableExtra(EXTRA_KEY_ARTICLE);
-
         photoViewAttacher=new PhotoViewAttacher(mBinding.articleImgViewContent);
-       // photoViewAttacher.setZoomable(true);
 
         // setImgOnClick();
         getObjectExtra();
@@ -84,49 +81,6 @@ public class ArticleActivity extends BaseActivity {
         });
     }
 
-    private void setImgOnClick(){
-        mBinding.articleImgViewContent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //setImgFragment(new ImageActivity(),transName);
-                //performTransition();
-                //new DetailsTransition(this,setImgFragment())
-            }
-        });
-    }
-
-   /* @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        return imgZoom.onDispatchTouchEvent(ev)|| super.dispatchTouchEvent(ev);
-    }*/
-
-    /*private void performTransition(){
-        if(isDestroyed())return;
-        String transName = ViewCompat.getTransitionName(mBinding.articleRootView);
-
-        //Exit activity transition
-        Fade exitFade = new Fade();
-        exitFade.setDuration(FADE_DEFAULT_TIME);
-        getWindow().setExitTransition(exitFade);
-        getWindow().setAllowEnterTransitionOverlap(true);
-
-        ImageActivity imgFragment = new ImageActivity();
-        imgFragment.setSharedElementEnterTransition(new DetailsTransition());
-
-        //Enter transition
-        Fade enterFade = new Fade();
-        enterFade.setDuration(FADE_DEFAULT_TIME);
-        imgFragment.setEnterTransition(enterFade);
-
-        //Return transition
-        imgFragment.setSharedElementReturnTransition(new DetailsTransition());
-
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.addSharedElement(mBinding.articleImgViewContent,transName)
-                .replace(R.id.article_root_view,imgFragment).addToBackStack(null)
-                .commit();
-    }*/
-
     private boolean isContentEmpty(Article obj){
         if(obj.getContent()==null || obj.getContent()==""){
             return true;
@@ -140,21 +94,6 @@ public class ArticleActivity extends BaseActivity {
         }
         return false;
     }
-
-    /*@Override
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        ColorDrawable halfTransparentBlack= new ColorDrawable(Color.TRANSPARENT);
-        this.getSupportActionBar().setBackgroundDrawable(halfTransparentBlack);
-    }
-
-    @Override
-    public void onAttachFragment(@NonNull Fragment fragment) {
-        super.onAttachFragment(fragment);
-        ColorDrawable halfTransparentBlack= new ColorDrawable(Color.TRANSPARENT);
-        this.getSupportActionBar().setBackgroundDrawable(halfTransparentBlack);
-
-    }*/
 
     @Override
     public boolean onSupportNavigateUp() {

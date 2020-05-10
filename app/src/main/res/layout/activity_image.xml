@@ -10,14 +10,7 @@
         android:background="@color/colorBlackHalfTransparent"
         android:theme="@style/ImageActivityTheme"
         tools:context=".ImageActivity">
-           <androidx.appcompat.widget.Toolbar
-               android:id="@+id/img_fragment_toolbar"
-               android:layout_alignParentTop="true"
-               android:layout_width="match_parent"
-               android:layout_height="?attr/actionBarSize"
-               android:theme="@style/ImageActivityActionBar"
-               app:titleTextColor="@color/colorPrimary"
-               app:menu="@menu/main_setting_menu" />
+
         <com.github.chrisbanes.photoview.PhotoView
             android:id="@+id/full_image_view"
             android:layout_width="match_parent"
@@ -25,6 +18,21 @@
             android:layout_margin="8dp"
             android:layout_centerInParent="true"
             android:src="@drawable/ic_no_results_found" />
+
+        <FrameLayout
+            android:layout_alignParentTop="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/img_fragment_toolbar"
+                android:layout_width="match_parent"
+                android:elevation="8dp"
+                android:layout_height="?attr/actionBarSize"
+                android:theme="@style/ImageActivityActionBar"
+                app:titleTextColor="@color/colorPrimary"
+                app:menu="@menu/main_setting_menu" />
+        </FrameLayout>
+
         <FrameLayout
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"

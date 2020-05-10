@@ -139,7 +139,7 @@ public class HomeFragment extends Fragment {
         recyclerViewAdapter.notifyDataSetChanged();
     }
 
-    private void setFragmentTransition(NewsRecyclerViewAdapter.ArticleHolder articleHolder, int pos) {
+ /*   private void setFragmentTransition(NewsRecyclerViewAdapter.ArticleHolder articleHolder, int pos) {
 
         //Article articleMod = (Article) getActivity().getIntent().getSerializableExtra(EXTRA_KEY_ARTICLE);
         String transName = getString(R.string.fragment_transition_name);
@@ -150,7 +150,7 @@ public class HomeFragment extends Fragment {
         exitExplode.setDuration(FADE_DEFAULT_TIME);
         this.setExitTransition(TransitionInflater.from(getContext()).inflateTransition(android.R.transition.move));
         this.setAllowEnterTransitionOverlap(true);
-    }
+    }*/
 
    /* @Override
     public void onRecyclerViewImageClicked(NewsRecyclerViewAdapter.ArticleHolder articleHolder, int position, ListNewsBinding newsBinding) {
