@@ -47,8 +47,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.LOCATION_SERVICE;
+import static com.android_projects.newsapipractice.BaseActivity.countryCode;
 import static com.android_projects.newsapipractice.MyLocationService.LOCATION_BROADCAST_ACTION;
-import static com.android_projects.newsapipractice.MyLocationService.countryCode;
 import static com.android_projects.newsapipractice.MyLocationService.countryName;
 
 public class LocalFragment extends Fragment{
@@ -75,8 +75,6 @@ public class LocalFragment extends Fragment{
 
     public MyLocationService locationService;
     public boolean isTracking = false;
-    //private String countryCode,countryName;
-    //private Criteria locCriteria = new Criteria();
 
     private MyLocationBroadcastReceiver locReceiver=null;
    /* private MyLocationService mLocationReceiver;
@@ -139,9 +137,9 @@ public class LocalFragment extends Fragment{
     @SuppressLint("MissingPermission")
     private void loadPage(int page) {
         Log.d(TAG, "API called " + page);
-        localNewsViewModel.getArticleListTopHeadlines(page, SORT_BY_PUBLISHED_AT, "ca");
+        localNewsViewModel.getArticleListTopHeadlines(page, SORT_BY_PUBLISHED_AT, getDeviceCountryCode());
 
-        Toast.makeText(getContext(),"is Local location null:"+countryCode,Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(),"is Local location null:"+getDeviceCountryCode(),Toast.LENGTH_LONG).show();
         Log.d(TAG,"Is location null: "+countryName+"\nLocation: "+countryCode
                 /*locationIntent.getExtras().getDouble(LATITUDE,0)*/ );
     }

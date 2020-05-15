@@ -48,7 +48,7 @@ public class MyLocationService extends Service {
     private LocationManager locationMgr = null;
     private MyLocationListener mLocationListener;
 
-    public static String countryCode, countryName;
+    public static String countryName;
     public static double latitude;
     private double lat, lon;
 
@@ -105,7 +105,7 @@ public class MyLocationService extends Service {
     @Override
     public void onCreate() {
         Log.d(TAG, "onCreate()");
-        initLocationManager();
+        initLocationManager(getApplicationContext());
         startTracking();
         startForeground(LOCATION_FOREGROUND_ID, getNotification());
     }
@@ -159,28 +159,28 @@ public class MyLocationService extends Service {
 
     @SuppressLint("missingPermission")
     public String startTracking() {
-        String result;
-        initLocationManager();
+        String result = "";
+        initLocationManager(getApplicationContext());
 
         //mLocationListener = new MyLocationListener(LocationManager.PASSIVE_PROVIDER);
         try {
             locationMgr.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER,0,0,mLocationListeners[0]);
-            mLocation =getLastKnownLocation();
+            mLocation = getLastKnownLocation(getApplicationContext());
 
+            //geocode(mLocation,new Geocoder(this));
             countryName = mLocation + " MyLocation";
-
         } catch (SecurityException e) {
             Log.i(TAG, "Failed to request location update,ignore", e);
         } catch (IllegalArgumentException e) {
             Log.d(TAG, "GPS or Network provider does not exist " + e.getMessage()
                     + "\nCaused by " + e.getCause());
         }
-        return result=mLocation.toString();
+        return result=geocode(mLocation,new Geocoder(this));
     }
 
     @SuppressLint("MissingPermission")
-    private Location getLastKnownLocation() {
-        initLocationManager();
+    public Location getLastKnownLocation(Context context) {
+        initLocationManager(context);
         List<String> providerList = locationMgr.getProviders(false);
         Location bestLocations = null;
         for (String provider : providerList) {
@@ -204,13 +204,13 @@ public class MyLocationService extends Service {
         this.onDestroy();
     }
 
-    private void initLocationManager() {
+    private void initLocationManager(Context context) {
         if (locationMgr == null) {
-            locationMgr = (LocationManager) _activity.getSystemService(LOCATION_SERVICE);
+            locationMgr = (LocationManager) context.getSystemService(LOCATION_SERVICE);
         }
     }
 
-    private String geocode(Location location, Geocoder geocoder) {
+    public String geocode(Location location, Geocoder geocoder) {
         String result = "";
         if (location != null) {
             if (geocoder != null) {

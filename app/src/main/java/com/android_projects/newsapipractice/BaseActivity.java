@@ -5,6 +5,8 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,6 +48,8 @@ public class BaseActivity extends AppCompatActivity {
     private boolean isBadgeVisible=false;
     private final int LOCATION_PERM_RC = 101;
 
+    public static String countryCode="";
+    public boolean isGranted;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,7 +137,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     private void requestLocationPermission() {
-        boolean isGranted = ContextCompat.checkSelfPermission(this, coarseLocationPermission) == PackageManager.PERMISSION_GRANTED ||
+        isGranted = ContextCompat.checkSelfPermission(this, coarseLocationPermission) == PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(this, fineLocationPermission) == PackageManager.PERMISSION_GRANTED;
         if (isGranted) {
             Log.d(TAG, "Permission granted!");
@@ -145,4 +149,11 @@ public class BaseActivity extends AppCompatActivity {
             }
         }
     }
+
+   /* private void getCountryCode(){
+        MyLocationService locationService = new MyLocationService();
+        Location location = locationService.getLastKnownLocation(this);
+        countryCode=locationService.geocode(location,new Geocoder(this));
+
+    }*/
 }

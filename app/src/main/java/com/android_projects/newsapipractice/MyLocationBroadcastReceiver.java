@@ -12,7 +12,6 @@ import android.util.Log;
 import com.android_projects.newsapipractice.Fragments.LocalFragment;
 
 import static com.android_projects.newsapipractice.MyLocationService.LOCATION_BROADCAST_ACTION;
-import static com.android_projects.newsapipractice.MyLocationService.countryCode;
 
 public class MyLocationBroadcastReceiver extends BroadcastReceiver {
     private final String TAG = MyLocationBroadcastReceiver.class.getSimpleName();
@@ -35,7 +34,7 @@ public class MyLocationBroadcastReceiver extends BroadcastReceiver {
             Log.d(TAG,"Is Action null: "+action.isEmpty());
             lat = intent.getExtras().getDouble("LATITUDE",0);
             lon = intent.getExtras().getDouble("LONGITUDE",0);
-            countryCode=lat+"";
+           // countryCode=lat+"";
         }
         Log.d(TAG,"Lat "+lat+"\nLon: "+lon);
 
