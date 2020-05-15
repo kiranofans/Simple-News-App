@@ -6,7 +6,7 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
-        <com.facebook.login.widget.LoginButton
+        <Button
             android:id="@+id/button_open_facebook"
             android:text="Open facebook"
             app:layout_constraintTop_toTopOf="parent"

@@ -31,7 +31,6 @@ public class ArticleActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_article);
         articleObj = (Article) getIntent().getSerializableExtra(EXTRA_KEY_ARTICLE);
         photoViewAttacher=new PhotoViewAttacher(mBinding.articleImgViewContent);

@@ -65,7 +65,6 @@ public class LoginActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         accessToken=AccessToken.getCurrentAccessToken();
 
-        //AppEventsLogger.activateApp(this);
         loginBinding.buttonFacebookLogin.setPermissions(Arrays.asList(EMAIL,"public_profile"));
         startActivity(new Intent(LoginActivity.this, SettingsActivity.class));
 
@@ -76,12 +75,12 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        fbCallbackMgr.onActivityResult(requestCode,resultCode,data);
         super.onActivityResult(requestCode, resultCode, data);
+        fbCallbackMgr.onActivityResult(requestCode,resultCode,data);
     }
 
     private void fbLoginCallback(){
-        LoginManager.getInstance().registerCallback(fbCallbackMgr, new FacebookCallback<LoginResult>() {
+        loginBinding.buttonFacebookLogin.registerCallback(fbCallbackMgr, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 accessToken = loginResult.getAccessToken();
