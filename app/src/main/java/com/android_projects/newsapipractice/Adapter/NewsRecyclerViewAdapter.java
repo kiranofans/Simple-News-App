@@ -1,11 +1,13 @@
 package com.android_projects.newsapipractice.Adapter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -120,7 +122,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
             setImageOnClick(object);
             //showFooter();
             Glide.with(context).load(object.getUrlToImage()).into(holderBinding.articleImageView);
-            setCardButtonOnClicks();
+            setCardButtonOnClicks(object);
             /*if (payloads.isEmpty()) {
                 Log.d(TAG,"Payloads is empty");
                 return;
@@ -182,15 +184,26 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
                 }
             });
         }
-        private void setCardButtonOnClicks() {
-            position = getAdapterPosition();
 
+        private void sharePlainText(Article obj){
+            ProgressDialog progressBar = new ProgressDialog(itemView.getContext());
+            progressBar.show();
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            //Pass your sharing content to the "putExtra" method of the Intent class
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT,obj.getTitle());
+            shareIntent.putExtra(Intent.EXTRA_TEXT,obj.getTitle()+" "+obj.getUrl());
+            context.startActivity(Intent.createChooser(shareIntent,"Share Via"));
+            progressBar.dismiss();
+        }
+
+        private void setCardButtonOnClicks(Article obj) {
+            position = getAdapterPosition();
             holderBinding.btnShare.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Log.d(TAG, "Share button clicked "+position);
-
-                    Toast.makeText(view.getContext(), "Ok", Toast.LENGTH_SHORT).show();
+                    sharePlainText(obj);
                 }
             });
             holderBinding.btnShareFacebook.setOnClickListener(new View.OnClickListener() {

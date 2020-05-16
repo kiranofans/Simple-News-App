@@ -46,10 +46,10 @@ public class ArticleActivity extends BaseActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         getSupportActionBar().setTitle(articleObj.getSource().getName());
-        if(isAuthorProvided(articleObj)){//if author is null
-            getSupportActionBar().setSubtitle("By "+articleObj.getAuthor());
-        }else{
+        if(isAuthorEmpty(articleObj)){//if author is null
             getSupportActionBar().setSubtitle(getString(R.string.article_author_not_available));
+        }else{
+            getSupportActionBar().setSubtitle("By "+articleObj.getAuthor());
         }
     }
 
@@ -87,8 +87,8 @@ public class ArticleActivity extends BaseActivity {
         return false;
     }
 
-    private boolean isAuthorProvided(Article obj){
-        if(obj.getAuthor()!=null || obj.getAuthor()!=""){
+    private boolean isAuthorEmpty(Article obj){
+        if(obj.getAuthor()==null|| obj.getAuthor()==""){
             return true;
         }
         return false;

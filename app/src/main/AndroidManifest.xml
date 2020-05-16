@@ -50,10 +50,10 @@
             </intent-filter>
         </activity>
 
-        <provider
+        <!--<provider
             android:name="com.facebook.FacebookContentProvider"
             android:authorities="com.facebook.app.FacebookContentProvider"
-            android:exported="true" />
+            android:exported="true" />-->
 
         <receiver android:name=".MyNotificationPublisher">
             <intent-filter>
