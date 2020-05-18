@@ -3,8 +3,11 @@ package com.android_projects.newsapipractice;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.ActivityImageBinding;
@@ -25,6 +28,7 @@ public class ImageActivity extends AppCompatActivity {
         articleMod = (Article)getIntent().getSerializableExtra(EXTRA_KEY_ARTICLE);
 
         getSerializable();
+        imgBottomButtons();
     }
 
     private void getSerializable(){
@@ -34,12 +38,33 @@ public class ImageActivity extends AppCompatActivity {
         }
     }
 
+    private void imgBottomButtons(){
+        imgBinding.imgBottomNav.imgBottomNavShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!isObjNull()){
+                    shareImage();
+                }
+            }
+        });
+    }
+
     private void configActionBar(){
         setSupportActionBar(imgBinding.imgFragmentToolbar);
         getSupportActionBar().setTitle(articleMod.getTitle());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
 
+    private void shareImage(){
+        Intent imgShareIntent = new Intent(Intent.ACTION_SEND);//same as intent.setAction();
+        Uri imgUri = Uri.parse(articleMod.getUrlToImage());
+        imgShareIntent.setType("image/*");
+        imgShareIntent.putExtra(Intent.EXTRA_SUBJECT,articleMod.getPublishedAt());
+        imgShareIntent.putExtra(Intent.EXTRA_TITLE,articleMod.getTitle());
+        imgShareIntent.putExtra(Intent.EXTRA_TEXT,articleMod.getTitle()+"\n"+articleMod.getUrlToImage());
+        imgShareIntent.putExtra(Intent.EXTRA_STREAM,imgUri);
+        startActivity(Intent.createChooser(imgShareIntent,"Share Image Via"));
     }
     private boolean isObjNull(){
         if(articleMod==null){
