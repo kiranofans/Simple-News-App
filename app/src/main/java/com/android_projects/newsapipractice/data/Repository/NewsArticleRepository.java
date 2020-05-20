@@ -9,12 +9,8 @@ import androidx.lifecycle.MutableLiveData;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.data.Models.NewsArticleMod;
 import com.android_projects.newsapipractice.data.OnArticleDataReceivedCallback;
-import com.android_projects.newsapipractice.network.Retrofit2Client;
-import com.android_projects.newsapipractice.network.RetrofitApiService;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,7 +46,7 @@ public class NewsArticleRepository {
                 if(newsArticles!= null){
                     //Callback to return data to live data
                     Log.d(TAG, "onResponse: ");
-                    dataReceivedCallback.onDataReceived(newsArticles.getArticles());
+                    dataReceivedCallback.onArticleDataReceived(newsArticles.getArticles());
                     //Convert the data source to mutable live data
                 }
                 Log.d("CHECK NULL", response.body()+" is null");

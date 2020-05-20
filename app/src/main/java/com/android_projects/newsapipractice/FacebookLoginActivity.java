@@ -3,47 +3,24 @@ package com.android_projects.newsapipractice;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.android_projects.newsapipractice.ViewModels.LoginViewModel;
-import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
-import com.android_projects.newsapipractice.databinding.ActivityLoginBinding;
+import com.android_projects.newsapipractice.databinding.ActivityFacebookLoginBinding;
 import com.facebook.AccessToken;
-import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphRequestAsyncTask;
-import com.facebook.GraphResponse;
-import com.facebook.Profile;
-import com.facebook.appevents.AppEventsLogger;
-import com.facebook.login.Login;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-
-import org.json.JSONObject;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class LoginActivity extends AppCompatActivity {
-    private final String TAG = LoginActivity.class.getSimpleName();
-    private ActivityLoginBinding loginBinding;
+public class FacebookLoginActivity extends AppCompatActivity {
+    private final String TAG = FacebookLoginActivity.class.getSimpleName();
+    private ActivityFacebookLoginBinding  loginBinding;
     private LoginViewModel loginViewModel;
 
     private final String EMAIL = "email";
@@ -54,32 +31,33 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
-        loginBinding= DataBindingUtil.setContentView(this,R.layout.activity_login);
+        loginBinding= DataBindingUtil.setContentView(this,R.layout.activity_facebook_login);
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
 
-        getSupportActionBar().setTitle("Login");
-        facebookLogin();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        //facebookLogin();
 
     }
-    private void facebookLogin(){
+    /*private void facebookLogin(){
         FacebookSdk.sdkInitialize(getApplicationContext());
         accessToken=AccessToken.getCurrentAccessToken();
 
         loginBinding.buttonFacebookLogin.setPermissions(Arrays.asList(EMAIL,"public_profile"));
-        startActivity(new Intent(LoginActivity.this, SettingsActivity.class));
+        startActivity(new Intent(FacebookLoginActivity.this, SettingsActivity.class));
 
         fbCallbackMgr = CallbackManager.Factory.create();
         checkLoginStatus();
         fbLoginCallback();
-    }
+    }*/
 
-    @Override
+    /*@Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         fbCallbackMgr.onActivityResult(requestCode,resultCode,data);
-    }
+    }*/
 
-    private void fbLoginCallback(){
+    /*private void fbLoginCallback(){
         loginBinding.buttonFacebookLogin.registerCallback(fbCallbackMgr, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -93,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
                 }).executeAsync();
                 Profile profile= Profile.getCurrentProfile();
                 loginViewModel.loadUserProfile(accessToken);
-                startActivity(new Intent(LoginActivity.this, SettingsActivity.class));
+                startActivity(new Intent(FacebookLoginActivity.this, SettingsActivity.class));
 
                 Log.d(TAG, loginResult.toString() + " Logged in successfully");
             }
@@ -101,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onCancel() {
                 Log.d(TAG, "Facebook sign in process canceled");
-                Toast.makeText(LoginActivity.this, "Facebook Login Canceled",Toast.LENGTH_SHORT).show();
+                Toast.makeText(FacebookLoginActivity.this, "Facebook Login Canceled",Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -109,8 +87,8 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d(TAG, "Facebook sign in error");
             }
         });
-    }
-    AccessTokenTracker accessTokenTracker = new AccessTokenTracker() {
+    }*/
+    /*AccessTokenTracker accessTokenTracker = new AccessTokenTracker() {
         @Override
         protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
             if(currentAccessToken == null){
@@ -119,8 +97,8 @@ public class LoginActivity extends AppCompatActivity {
                 //make avatar visible
             }
         }
-    };
-    private void checkLoginStatus(){
+    };*/
+    /*private void checkLoginStatus(){
         boolean isLoggedInToFB = accessToken!=null && !accessToken.isExpired();
 
         accessTokenTracker.startTracking();
@@ -137,5 +115,5 @@ public class LoginActivity extends AppCompatActivity {
         }else{
             //make imageview gone
         }
-    }
+    }*/
 }
