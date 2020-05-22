@@ -5,7 +5,7 @@ import java.io.Serializable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class GoogleSignInCredentials implements Serializable{
+public class GoogleSignInModWrapper implements Serializable{
 
     @SerializedName("web")
     @Expose

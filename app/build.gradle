@@ -23,11 +23,11 @@ android {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
-    signingConfigs{
-        debug{
+    signingConfigs {
+        debug {
             storeFile file("newsappdebug.keystore")
         }
-        release{
+        release {
             storeFile file("newsapp.keystore")
         }
     }
@@ -89,7 +89,7 @@ dependencies {
     implementation "com.github.okaybroda:ImageZoom:1.1.0"
 
     //Facebook APIs
-    implementation 'com.facebook.android:facebook-login:5.11.0'
+    implementation 'com.facebook.android:facebook-login:5.15.3'
     implementation "com.facebook.android:facebook-android-sdk:[5,6)"
     implementation 'com.facebook.android:facebook-share:6.3.0'
     implementation project(path: ':facebook')

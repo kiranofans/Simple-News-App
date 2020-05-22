@@ -6,6 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import static com.android_projects.newsapipractice.network.ApiConstants.BASE_URL;
 
 public class Retrofit2Client {
+
     private static Retrofit retrofit = null;
 
     public static synchronized RetrofitApiService getRetrofitService(){

@@ -17,15 +17,19 @@
     <string name="bottom_nav_more">More</string>
 
     <!--Top Setting menu strings-->
-    <string name="top_mene_setting">General Settings</string>
+    <string name="top_mene_setting">My Account &amp; Settings</string>
     <string name="top_menu_languages">Languages</string>
     <string name="top_menu_categories">Categories</string>
 
     <!--Article Activity-->
-    <string name="article_author"></string>
+    <string name="article_author">Author</string>
     <string name="article_button_continue_reading">Go to source page</string>
     <string name="article_content_unavailable">Sorry! The content of this article is unavailable for now.\nPlease tap on the GO TO SOURCE PAGE button below to read more</string>
     <string name="article_author_not_available">Author Not Available</string>
+
+    <!--Login Activity-->
+    <string name="login_with_google">Sign in with Google</string>
+    <string name="login_with_facebook">Login with Facebook</string>
 
     <!--No content layout-->
     <string name="no_result_found">No result found</string>
@@ -70,4 +74,6 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+    <string name="google_server_client_id">6880028977-254005n4n79i68ebkr8v53jiar34cfm3.apps.googleusercontent.com</string>
 </resources>

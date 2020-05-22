@@ -35,9 +35,7 @@ public class ArticleActivity extends BaseActivity {
         articleObj = (Article) getIntent().getSerializableExtra(EXTRA_KEY_ARTICLE);
         photoViewAttacher=new PhotoViewAttacher(mBinding.articleImgViewContent);
 
-        // setImgOnClick();
         getObjectExtra();
-
     }
 
     private void configureToolbar(Article articleObj){
@@ -60,7 +58,7 @@ public class ArticleActivity extends BaseActivity {
         Glide.with(this).load(articleObj.getUrlToImage()).into(mBinding.articleImgViewContent);
 
         SpannableStringBuilder strBuilder = new SpannableStringBuilder();
-        int buildLength = strBuilder.length();
+       // int buildLength = strBuilder.length();
         strBuilder.append(articleObj.getUrl());
 
         if(isContentEmpty(articleObj) && mBinding.articleTvContent!=null){

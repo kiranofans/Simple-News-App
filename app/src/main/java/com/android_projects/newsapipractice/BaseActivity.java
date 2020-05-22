@@ -5,8 +5,6 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Geocoder;
-import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -93,6 +91,7 @@ public class BaseActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.top_setting:
+                startActivity(new Intent(this, LoginActivity.class));
                 return true;
             case R.id.top_setting_language:
                 return true;
