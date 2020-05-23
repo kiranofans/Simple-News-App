@@ -1,7 +1,6 @@
 package com.android_projects.newsapipractice.Adapter;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,7 +22,6 @@ import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.ButtonReturnToTopBinding;
 import com.android_projects.newsapipractice.databinding.ListNewsBinding;
 import com.bumptech.glide.Glide;
-import com.facebook.share.Share;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 
@@ -126,10 +123,10 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
             holderBinding.articleTvPublishDate.setText(object.getPublishedAt());//can be converted to local timezone
             holderBinding.articleTitle.setText(object.getTitle());
             itemOnClick(object);
-            setImageOnClick(object);
+            setImgOnClick(object);
             //showFooter();
             Glide.with(context).load(object.getUrlToImage()).into(holderBinding.articleImageView);
-            setCardButtonOnClicks(object);
+            setCardBtnOnClicks(object);
             /*if (payloads.isEmpty()) {
                 Log.d(TAG,"Payloads is empty");
                 return;
@@ -171,7 +168,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
 
         }
 
-        private void setImageOnClick(Article object){
+        private void setImgOnClick(Article object){
             //ImageActivity imgFrag = ImageActivity.newInstance(position);
             holderBinding.articleImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -209,7 +206,16 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
                 shareDialog.show(shareLinkContent);
             }
         }
-        private void setCardButtonOnClicks(Article obj) {
+
+        private void twitterShare(Article obj){
+            //May apply webView later
+            String twitterUrl = "https://twitter.com/intent/tweet?text="+
+                    obj.getTitle()+"&url="+ obj.getUrl();
+            Uri twitterUri = Uri.parse(twitterUrl);
+            context.startActivity(new Intent(Intent.ACTION_VIEW,twitterUri));
+        }
+
+        private void setCardBtnOnClicks(Article obj) {
             position = getAdapterPosition();
             holderBinding.btnShare.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -230,7 +236,8 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
                 @Override
                 public void onClick(View view) {
                     Log.d(TAG, "Twitter clicked "+position);
-                    Toast.makeText(view.getContext(), "Twitter", Toast.LENGTH_SHORT).show();
+                    twitterShare(obj);
+                    //Toast.makeText(view.getContext(), "Twitter", Toast.LENGTH_SHORT).show();
 
                 }
             });

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
@@ -15,10 +16,10 @@ import android.widget.Toast;
 import com.android_projects.newsapipractice.ViewModels.LoginViewModel;
 import com.android_projects.newsapipractice.databinding.ActivityLoginBinding;
 import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.login.Login;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
@@ -34,6 +35,7 @@ import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.Task;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static com.google.android.gms.common.Scopes.DRIVE_APPFOLDER;
 
@@ -56,7 +58,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     //Facebook log in
     private final int RC_FACEBOOK_LOG_IN=201;
-    private AccessToken facebookAccessToken;
+    private boolean isLoggedInToFB=false;
+    private AccessToken fbAccessToken;
     private LoginViewModel fbLoginViewModel;
     private final String PARAM_EMAIL = "email";
     private CallbackManager fbCallbackMgr;
@@ -72,12 +75,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void facebookLogin(){
+        fbAccessToken =AccessToken.getCurrentAccessToken();
+
         fbCallbackMgr = CallbackManager.Factory.create();
+
+        //Facebook login callback
         LoginManager.getInstance().registerCallback(fbCallbackMgr, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.d(TAG,"Logged in to Facebook account");
-                facebookAccessToken=loginResult.getAccessToken();
+                fbAccessToken =loginResult.getAccessToken();
             }
 
             @Override
@@ -103,6 +110,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         });
     }
 
+    private void facebookLoginCallback(){
+
+    }
     private void googleLogin(){
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(googleClientID).requestServerAuthCode(googleClientID)
@@ -176,8 +186,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             Log.d(TAG,"Not logged in yet");
         }
 
-        if(facebookAccessToken!=null){
-            onLoggedInWithFacebook(true);
+        isLoggedInToFB = fbAccessToken !=null && !fbAccessToken.isExpired();
+        if(isLoggedInToFB){
+            onLoggedInWithFacebook(isLoggedInToFB);
             Toast.makeText(getApplicationContext(),"Already logged in with Facebook",
                     Toast.LENGTH_SHORT).show();
         }else{
@@ -196,6 +207,18 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void onLoggedInWithFacebook(boolean isLoggedIn){
+        AccessTokenTracker accessTokenTracker = new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
+                if(currentAccessToken == null){
+                    //update ui: logged out from facebook
+
+                }else{
+                    //ui visibility: Visible
+                }
+            }
+        };
+        accessTokenTracker.startTracking();
         if(isLoggedIn){
             Intent fbLoggedInIntent = new Intent(this,MyAccountActivity.class);
             startActivity(fbLoggedInIntent);
