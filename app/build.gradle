@@ -20,7 +20,6 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-
     signingConfigs {
         debugSigningConfigs {
             storeFile file(debugKeystoreProperties['storeFile'])
@@ -28,11 +27,19 @@ android {
             keyAlias debugKeystoreProperties['keyAlias']
             keyPassword debugKeystoreProperties['keyPassword']
         }
+        releaseSigningConfigs{
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+        }
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.releaseSigningConfigs
         }
         debug {
             debuggable true
