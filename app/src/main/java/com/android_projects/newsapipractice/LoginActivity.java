@@ -49,10 +49,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private GoogleSignInOptions gso;
     private GoogleSignInClient googleSignInClient;
     private GoogleApiClient googleApiClient;
-    private final String googleClientSecret = "ssMGge9ukL0GS4bf4BqD-P8B";
-
-    //Google Server Client id
-    private final String googleClientID = "927157329080-u3kmqqlngtk79d0vj1pt8kq5mt5ce8lb.apps.googleusercontent.com";
+    private String googleClientID;
+    //private final String googleClientSecret=getString(R.string.google_client_secret);
     private final int RC_GOOGLE_SIGN_IN=202;
     private String googleIdToken;
 
@@ -114,6 +112,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     }
     private void googleLogin(){
+        googleClientID=getString(R.string.google_server_client_id);
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(googleClientID).requestServerAuthCode(googleClientID)
                 .requestScopes(new Scope(DRIVE_APPFOLDER)).requestEmail().build();
