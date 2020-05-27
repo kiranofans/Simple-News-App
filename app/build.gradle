@@ -4,7 +4,7 @@ def debugKeystorePropertiesFile = rootProject.file("./keystore/debugkeystore.pro
 def debugKeystoreProperties = new Properties()
 debugKeystoreProperties.load(new FileInputStream(debugKeystorePropertiesFile))
 
-def keystorePropertiesFile = rootProject.file("./keystore/keystore.properties")
+def keystorePropertiesFile = rootProject.file("./keystore/release_keystore.properties")
 def keystoreProperties=new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
@@ -118,4 +118,5 @@ dependencies {
 
     //Google APIs
     implementation "com.google.android.gms:play-services-auth:18.0.0"
+    implementation "com.google.android.gms:play-services-plus:17.0.0"
 }

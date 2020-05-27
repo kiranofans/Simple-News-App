@@ -8,11 +8,13 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.android_projects.newsapipractice.Utils.Utility;
 import com.android_projects.newsapipractice.ViewModels.LoginViewModel;
 import com.android_projects.newsapipractice.databinding.ActivityLoginBinding;
 import com.facebook.AccessToken;
@@ -39,7 +41,7 @@ import java.util.List;
 
 import static com.google.android.gms.common.Scopes.DRIVE_APPFOLDER;
 
-public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
+public class LoginActivity extends AppCompatActivity{
     private final String TAG = LoginActivity.class.getSimpleName();
 
     private ActivityLoginBinding loginBinding;
@@ -52,7 +54,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private String googleClientID;
     //private final String googleClientSecret=getString(R.string.google_client_secret);
     private final int RC_GOOGLE_SIGN_IN=202;
-    private String googleIdToken;
+    public static String googleIdToken;
 
     //Facebook log in
     private final int RC_FACEBOOK_LOG_IN=201;
@@ -113,9 +115,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
     private void googleLogin(){
         googleClientID=getString(R.string.google_server_client_id);
+        //If requestServerAuthCode() is called, you don't have to call requestIdToken
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(googleClientID).requestServerAuthCode(googleClientID)
+                .requestIdToken(googleClientID)/*.requestServerAuthCode(googleClientID)*/
                 .requestScopes(new Scope(DRIVE_APPFOLDER)).requestEmail().build();
+                //DRIVE_APPFOLDER: Scope for accessing appfolder files from Google Drive.
 
         //GoogleApiClient deprecated: to call detailed permission intent
         /*googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage
@@ -138,10 +142,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == RC_GOOGLE_SIGN_IN){
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            //This works with GoogleApiClient's auth intent
+           // GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
 
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleGoogleSignInResult(task,result);
+            handleGoogleSignInResult(task/*,result*/);
             Toast.makeText(getApplicationContext(),"Logged in successfully",
                     Toast.LENGTH_SHORT).show();
 
@@ -151,18 +156,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         }
     }
 
-    private void handleGoogleSignInResult(Task<GoogleSignInAccount> completeTask, GoogleSignInResult result){
+    public void handleGoogleSignInResult(Task<GoogleSignInAccount> completeTask/*, GoogleSignInResult result*/){
         try{
             GoogleSignInAccount googleAccount = completeTask.getResult(ApiException.class);
-            if(result.isSuccess()){
+            if(googleAccount.getIdToken()!=null){
                 Toast.makeText(getApplicationContext(),"Result OK. Username: "+
                         googleAccount.getDisplayName(),Toast.LENGTH_SHORT).show();
                 Log.d(TAG,"Sign in result ok");
                 onLoggedInWithGoogle(googleAccount,true);
                 //Update UI
             }
-
-
         }catch (ApiException e){
             // The ApiException status code indicates the detailed failure reason.
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
@@ -170,22 +173,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         }
     }
+
     @Override
     protected void onStart() {
         super.onStart();
-        GoogleSignInAccount alreadyLoggedGoogleAccount = GoogleSignIn.getLastSignedInAccount(this);
-        if(alreadyLoggedGoogleAccount != null){
-            Toast.makeText(getApplicationContext(),"Already logged in with Google",
-                    Toast.LENGTH_SHORT).show();
-            onLoggedInWithGoogle(alreadyLoggedGoogleAccount,true);
-        }else{
-            Toast.makeText(getApplicationContext(),"Not logged in "+
-                    GoogleSignIn.getLastSignedInAccount(this),Toast.LENGTH_SHORT).show();
-
-            Log.d(TAG,"Not logged in yet");
-        }
 
         isLoggedInToFB = fbAccessToken !=null && !fbAccessToken.isExpired();
+
         if(isLoggedInToFB){
             onLoggedInWithFacebook(isLoggedInToFB);
             Toast.makeText(getApplicationContext(),"Already logged in with Facebook",
@@ -200,6 +194,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         if(isSignedIn){
             Intent googleCredentialIntent = new Intent(this,MyAccountActivity.class);
             googleCredentialIntent.putExtra("GOOGLE_CREDENTIALS",account);
+
             startActivity(googleCredentialIntent);
             this.finish();
         }
@@ -222,11 +217,5 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             Intent fbLoggedInIntent = new Intent(this,MyAccountActivity.class);
             startActivity(fbLoggedInIntent);
         }
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Toast.makeText(getApplicationContext(), "Google connection error has occurred: "+
-                connectionResult.getErrorMessage(), Toast.LENGTH_SHORT).show();
     }
 }

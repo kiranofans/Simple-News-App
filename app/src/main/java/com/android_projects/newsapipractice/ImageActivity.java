@@ -8,11 +8,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.ActivityImageBinding;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
+import static com.android_projects.newsapipractice.LoginActivity.googleIdToken;
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_ARTICLE;
 
 public class ImageActivity extends AppCompatActivity {
@@ -47,6 +51,13 @@ public class ImageActivity extends AppCompatActivity {
                 }
             }
         });
+        imgBinding.imgBottomNav.imgBottomNavDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(ImageActivity.this);
+                downloadImage(account);
+            }
+        });
     }
 
     private void configActionBar(){
@@ -56,12 +67,22 @@ public class ImageActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
+    private void downloadImage(GoogleSignInAccount account){
+        if(account.getIdToken()==null){
+            Toast.makeText(getApplicationContext(),
+                    "Sorry, You have to sign in to use this feature", Toast.LENGTH_LONG).show();
+        }
+        //Got the idToken on May 24, 2020; will check this on another day
+        Toast.makeText(getApplicationContext(),"Start downloading "+account.getIdToken(), Toast.LENGTH_LONG).show();
+        Log.d(TAG,"Access Token is OK\n"+account.getIdToken());
+        //download
+    }
+
     private void shareImage(){
         Intent imgShareIntent = new Intent(Intent.ACTION_SEND);//same as intent.setAction();
         Uri imgUri = Uri.parse(articleMod.getUrlToImage());
-        imgShareIntent.setType("image/*");
+        imgShareIntent.setType("*/*");
         imgShareIntent.putExtra(Intent.EXTRA_SUBJECT,articleMod.getPublishedAt());
-        imgShareIntent.putExtra(Intent.EXTRA_TITLE,articleMod.getTitle());
         imgShareIntent.putExtra(Intent.EXTRA_TEXT,articleMod.getTitle()+"\n"+articleMod.getUrlToImage());
         imgShareIntent.putExtra(Intent.EXTRA_STREAM,imgUri);
         startActivity(Intent.createChooser(imgShareIntent,"Share Image Via"));

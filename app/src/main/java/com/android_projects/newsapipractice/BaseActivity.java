@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,11 +26,15 @@ import com.android_projects.newsapipractice.Fragments.CategoriesFragment;
 import com.android_projects.newsapipractice.Fragments.HomeFragment;
 import com.android_projects.newsapipractice.Fragments.LocalFragment;
 import com.android_projects.newsapipractice.Fragments.PopularFragment;
+import com.android_projects.newsapipractice.Utils.Utility;
 import com.android_projects.newsapipractice.databinding.ActivityMainBinding;
 import com.android_projects.newsapipractice.databinding.NotificationBadgeLayoutBinding;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import static com.android_projects.newsapipractice.LoginActivity.googleIdToken;
 
 public class BaseActivity extends AppCompatActivity {
     private final String TAG = BaseActivity.class.getSimpleName();
@@ -149,10 +154,20 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-   /* private void getCountryCode(){
-        MyLocationService locationService = new MyLocationService();
-        Location location = locationService.getLastKnownLocation(this);
-        countryCode=locationService.geocode(location,new Geocoder(this));
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Utility utility=new Utility();
+        GoogleSignInAccount alreadyLoggedGoogleAccount = GoogleSignIn.getLastSignedInAccount(this);
+        if(alreadyLoggedGoogleAccount != null){
+            Toast.makeText(getApplicationContext(),"Logged in with Google",Toast.LENGTH_SHORT).show();
+            Log.d(TAG,"Already logged in with Google");
+            //onLoggedInWithGoogle(alreadyLoggedGoogleAccount,true);
+        }else{
+            Toast.makeText(getApplicationContext(),"Not Logged in",Toast.LENGTH_SHORT).show();
+            Log.d(TAG,"Not logged in yet");
+        }
+        //utility.isLoggedIn(alreadyLoggedGoogleAccount);
+    }
 
-    }*/
 }
