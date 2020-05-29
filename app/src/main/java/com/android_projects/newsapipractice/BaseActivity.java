@@ -158,16 +158,9 @@ public class BaseActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Utility utility=new Utility();
-        GoogleSignInAccount alreadyLoggedGoogleAccount = GoogleSignIn.getLastSignedInAccount(this);
-        if(alreadyLoggedGoogleAccount != null){
-            Toast.makeText(getApplicationContext(),"Logged in with Google",Toast.LENGTH_SHORT).show();
-            Log.d(TAG,"Already logged in with Google");
-            //onLoggedInWithGoogle(alreadyLoggedGoogleAccount,true);
-        }else{
-            Toast.makeText(getApplicationContext(),"Not Logged in",Toast.LENGTH_SHORT).show();
-            Log.d(TAG,"Not logged in yet");
-        }
-        //utility.isLoggedIn(alreadyLoggedGoogleAccount);
+        GoogleSignInAccount alreadyLoggedGoogleAccount = GoogleSignIn.getLastSignedInAccount(getApplication());
+        utility.isLoggedIn(alreadyLoggedGoogleAccount);
+
     }
 
 }

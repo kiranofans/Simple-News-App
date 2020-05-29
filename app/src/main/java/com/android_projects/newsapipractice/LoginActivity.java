@@ -49,7 +49,7 @@ public class LoginActivity extends AppCompatActivity{
 
     //Google sign in
     private GoogleSignInOptions gso;
-    private GoogleSignInClient googleSignInClient;
+    public static GoogleSignInClient googleSignInClient;
     private GoogleApiClient googleApiClient;
     private String googleClientID;
     //private final String googleClientSecret=getString(R.string.google_client_secret);
@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity{
         LoginManager.getInstance().registerCallback(fbCallbackMgr, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Log.d(TAG,"Logged in to Facebook account");
+                Log.d(TAG,"Logged in to Facebook ic_account");
                 fbAccessToken =loginResult.getAccessToken();
             }
 
@@ -177,6 +177,8 @@ public class LoginActivity extends AppCompatActivity{
     @Override
     protected void onStart() {
         super.onStart();
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        onLoggedInWithGoogle(account,true);
 
         isLoggedInToFB = fbAccessToken !=null && !fbAccessToken.isExpired();
 
@@ -191,7 +193,7 @@ public class LoginActivity extends AppCompatActivity{
     }
 
     private void onLoggedInWithGoogle(GoogleSignInAccount account, boolean isSignedIn){
-        if(isSignedIn){
+        if(account!=null && isSignedIn){
             Intent googleCredentialIntent = new Intent(this,MyAccountActivity.class);
             googleCredentialIntent.putExtra("GOOGLE_CREDENTIALS",account);
 

@@ -42,7 +42,5 @@
                 android:id="@+id/img_bottom_nav"/>
 
         </FrameLayout>
-
-
     </RelativeLayout>
 </layout>

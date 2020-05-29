@@ -2,20 +2,24 @@
 <layout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MyAccountActivity">
+        tools:context=".MyAccountActivity"
+        android:theme="@style/FullscreenTheme">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/account_imgview_user_avatar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_no_results_found"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+        <include layout="@layout/app_bar_layout"
+            android:id="@+id/account_app_bar"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/account_nested_scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:layout_gravity="fill_vertical"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
+
+        <include layout="@layout/account_content_frame"
+            android:id="@+id/account_content"/>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

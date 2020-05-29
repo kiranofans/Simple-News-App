@@ -11,6 +11,7 @@ import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,12 +20,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LoginViewModel extends ViewModel {
+    private final String TAG = LoginViewModel.class.getSimpleName();
+
     private MutableLiveData<String> id,emailAddress,profilePicUrl;
     private MutableLiveData<List<String>> allInfo;
 
     private String email, facebookId, picUrl;
 
     private List<String> profileInfos;
+
 
     public LoginViewModel() {
         //Initialize MutableLiveData
@@ -56,7 +60,7 @@ public class LoginViewModel extends ViewModel {
         profilePicUrl.setValue(profilePicURL);
     }
 
-    public LiveData<List<String>> loadUserProfile(AccessToken newAccessToken){
+    public LiveData<List<String>> loadFbUserProfile(AccessToken newAccessToken){
         profileInfos = new ArrayList<>();
         GraphRequest graphRequest = GraphRequest.newMeRequest(newAccessToken, new GraphRequest.GraphJSONObjectCallback() {
             @Override

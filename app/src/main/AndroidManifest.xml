@@ -10,7 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MyAccountActivity"
-            android:label="@string/top_mene_setting"></activity>
+            android:label="@string/top_mene_setting"
+            android:theme="@style/FullscreenTheme"></activity>
         <activity android:name=".LoginActivity" />
         <activity
             android:name=".ImageActivity"

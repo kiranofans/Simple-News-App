@@ -68,13 +68,14 @@ public class ImageActivity extends AppCompatActivity {
     }
 
     private void downloadImage(GoogleSignInAccount account){
-        if(account.getIdToken()==null){
+        if(account!=null){
+            Toast.makeText(getApplicationContext(),"Start downloading "+account.getIdToken(), Toast.LENGTH_SHORT).show();
+            Log.d(TAG,"Access Token is OK\n"+account.getIdToken());
+        }else{
+            //Got the idToken on May 24, 2020; will check this on another day
             Toast.makeText(getApplicationContext(),
                     "Sorry, You have to sign in to use this feature", Toast.LENGTH_LONG).show();
         }
-        //Got the idToken on May 24, 2020; will check this on another day
-        Toast.makeText(getApplicationContext(),"Start downloading "+account.getIdToken(), Toast.LENGTH_LONG).show();
-        Log.d(TAG,"Access Token is OK\n"+account.getIdToken());
         //download
     }
 

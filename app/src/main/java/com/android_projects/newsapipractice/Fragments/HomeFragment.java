@@ -1,7 +1,7 @@
 package com.android_projects.newsapipractice.Fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +13,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.transition.Explode;
 
 import com.android_projects.newsapipractice.Adapter.NewsRecyclerViewAdapter;
 import com.android_projects.newsapipractice.PaginationListener;
@@ -43,13 +43,9 @@ public class HomeFragment extends Fragment {
     private boolean isLoading = false;//To determine if load the data or not
 
     private List<Article> articleList = new ArrayList<>();
-    private Article articleMod = new Article();
 
     private final String SORT_BY_PUBLISHED_AT="publishedAt";
     private final String SORT_BY_RELEVANCY="relevancy";
-
-    private final long FADE_DEFAULT_TIME= 500;
-    private final long MOVE_DEFAULT_TIME = 100;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -66,7 +62,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(NewsArticleViewModel.class);
+        viewModel = new ViewModelProvider(this).get(NewsArticleViewModel.class);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(view.getContext().getString(R.string.title_latest_news));
         layoutManager=new LinearLayoutManager(view.getContext());
 
@@ -86,8 +82,9 @@ public class HomeFragment extends Fragment {
     }
 
     //Observer only refresh
+    @SuppressLint("FragmentLiveDataObserve")
     private void setObserver() {
-        List<Article> newList = new ArrayList<>();
+        //List<Article> newList = new ArrayList<>();
         viewModel.getArticleLiveData().observe(this, new Observer<List<Article>>() {
             @Override
             public void onChanged(List<Article> articles) {

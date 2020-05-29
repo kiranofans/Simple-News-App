@@ -19,8 +19,6 @@ public class Utility {
             Log.d(TAG, "Not logged in yet");
             return false;
         }
-
-
     }
 
     public void handleGoogleSignInResult(Task<GoogleSignInAccount> completeTask/*, GoogleSignInResult result*/){
