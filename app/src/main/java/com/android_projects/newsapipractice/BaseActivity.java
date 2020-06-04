@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,12 +28,9 @@ import com.android_projects.newsapipractice.Fragments.PopularFragment;
 import com.android_projects.newsapipractice.Utils.Utility;
 import com.android_projects.newsapipractice.databinding.ActivityMainBinding;
 import com.android_projects.newsapipractice.databinding.NotificationBadgeLayoutBinding;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import static com.android_projects.newsapipractice.LoginActivity.googleIdToken;
 
 public class BaseActivity extends AppCompatActivity {
     private final String TAG = BaseActivity.class.getSimpleName();
@@ -51,12 +47,15 @@ public class BaseActivity extends AppCompatActivity {
     private boolean isBadgeVisible=false;
     private final int LOCATION_PERM_RC = 101;
 
+    private Utility utility;
+
     public static String countryCode="";
     public boolean isGranted;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainBinding = DataBindingUtil.setContentView(this,R.layout.activity_main);
+        utility=new Utility();
 
         requestLocationPermission();
         getSupportActionBar().setIcon(android.R.drawable.stat_sys_headset);
@@ -157,10 +156,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Utility utility=new Utility();
-        GoogleSignInAccount alreadyLoggedGoogleAccount = GoogleSignIn.getLastSignedInAccount(getApplication());
-        utility.isLoggedIn(alreadyLoggedGoogleAccount);
-
+        utility.isLoggedInWithGoogle(getApplicationContext());
     }
 
 }

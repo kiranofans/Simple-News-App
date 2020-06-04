@@ -18,10 +18,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android_projects.newsapipractice.ArticleActivity;
 import com.android_projects.newsapipractice.ImageActivity;
 import com.android_projects.newsapipractice.Utils.DataDiffCallback;
+import com.android_projects.newsapipractice.Utils.Utility;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.ButtonReturnToTopBinding;
 import com.android_projects.newsapipractice.databinding.ListNewsBinding;
 import com.bumptech.glide.Glide;
+import com.facebook.share.model.ShareHashtag;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 
@@ -92,6 +94,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
     public class ArticleHolder extends BaseViewHolder<Article> {
         private ListNewsBinding holderBinding;
         private ButtonReturnToTopBinding goToTopBinding;
+        private Utility utility;
 
         ShareDialog shareDialog = new ShareDialog((Activity) context);
 
@@ -189,18 +192,11 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
             });
         }
 
-        private void sharePlainText(Article obj){
-            Intent shareIntent = new Intent(Intent.ACTION_SEND);
-
-            //Pass your sharing content to the "putExtra" method of the Intent class
-            shareIntent.setType("text/plain");
-            shareIntent.putExtra(Intent.EXTRA_SUBJECT,obj.getTitle());
-            shareIntent.putExtra(Intent.EXTRA_TEXT,obj.getTitle()+" "+obj.getUrl());
-            context.startActivity(Intent.createChooser(shareIntent,"Share Via"));
-        }
-
         private void facebookLinkShare(Article obj){
-            ShareLinkContent shareLinkContent = new ShareLinkContent.Builder().setQuote(obj.getTitle())
+            String newsSource = obj.getSource().getName();
+            ShareLinkContent shareLinkContent = new ShareLinkContent.Builder().setShareHashtag(
+                    new ShareHashtag.Builder().setHashtag("#"+newsSource).build())
+                    .setQuote(obj.getDescription())
                     .setContentUrl(Uri.parse(obj.getUrl())).build();
             if(shareDialog.canShow(ShareLinkContent.class)){
                 shareDialog.show(shareLinkContent);
@@ -221,7 +217,8 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
                 @Override
                 public void onClick(View view) {
                     Log.d(TAG, "Share button clicked "+position);
-                    sharePlainText(obj);
+                    utility=new Utility();
+                    utility.shareArticles(obj,itemView.getContext(),"Share Via ");
                 }
             });
             holderBinding.btnShareFacebook.setOnClickListener(new View.OnClickListener() {
