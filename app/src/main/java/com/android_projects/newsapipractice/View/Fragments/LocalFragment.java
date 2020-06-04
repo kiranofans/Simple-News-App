@@ -1,4 +1,4 @@
-package com.android_projects.newsapipractice.Fragments;
+package com.android_projects.newsapipractice.View.Fragments;
 
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
@@ -33,23 +33,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.android_projects.newsapipractice.Adapter.NewsRecyclerViewAdapter;
 import com.android_projects.newsapipractice.BuildConfig;
-import com.android_projects.newsapipractice.MyLocationBroadcastReceiver;
-import com.android_projects.newsapipractice.MyLocationService;
-import com.android_projects.newsapipractice.PaginationListener;
+import com.android_projects.newsapipractice.View.MyLocationBroadcastReceiver;
+import com.android_projects.newsapipractice.View.MyLocationService;
+import com.android_projects.newsapipractice.View.PaginationListener;
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.FragmentLocalBinding;
-import com.android_projects.newsapipractice.databinding.ListNewsBinding;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.LOCATION_SERVICE;
-import static com.android_projects.newsapipractice.BaseActivity.countryCode;
-import static com.android_projects.newsapipractice.MyLocationService.LOCATION_BROADCAST_ACTION;
-import static com.android_projects.newsapipractice.MyLocationService.countryName;
+import static com.android_projects.newsapipractice.View.BaseActivity.countryCode;
+import static com.android_projects.newsapipractice.View.MyLocationService.LOCATION_BROADCAST_ACTION;
+import static com.android_projects.newsapipractice.View.MyLocationService.countryName;
 
 public class LocalFragment extends Fragment{
     private final String TAG = LocalFragment.class.getSimpleName();

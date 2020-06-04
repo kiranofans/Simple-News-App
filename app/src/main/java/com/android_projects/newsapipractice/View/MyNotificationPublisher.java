@@ -1,4 +1,4 @@
-package com.android_projects.newsapipractice;
+package com.android_projects.newsapipractice.View;
 
 import android.app.Notification;
 import android.app.NotificationChannel;

@@ -1,4 +1,4 @@
-package com.android_projects.newsapipractice;
+package com.android_projects.newsapipractice.View;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;

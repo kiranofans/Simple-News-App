@@ -1,4 +1,4 @@
-package com.android_projects.newsapipractice;
+package com.android_projects.newsapipractice.View;
 
 import android.Manifest;
 import android.app.Notification;
@@ -21,10 +21,11 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.android_projects.newsapipractice.Fragments.CategoriesFragment;
-import com.android_projects.newsapipractice.Fragments.HomeFragment;
-import com.android_projects.newsapipractice.Fragments.LocalFragment;
-import com.android_projects.newsapipractice.Fragments.PopularFragment;
+import com.android_projects.newsapipractice.View.Fragments.CategoriesFragment;
+import com.android_projects.newsapipractice.View.Fragments.HomeFragment;
+import com.android_projects.newsapipractice.View.Fragments.LocalFragment;
+import com.android_projects.newsapipractice.View.Fragments.PopularFragment;
+import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.Utils.Utility;
 import com.android_projects.newsapipractice.databinding.ActivityMainBinding;
 import com.android_projects.newsapipractice.databinding.NotificationBadgeLayoutBinding;
@@ -54,7 +55,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainBinding = DataBindingUtil.setContentView(this,R.layout.activity_main);
+        mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         utility=new Utility();
 
         requestLocationPermission();

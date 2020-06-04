@@ -1,9 +1,11 @@
-package com.android_projects.newsapipractice;
+package com.android_projects.newsapipractice.View;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
 import android.preference.PreferenceManager;
+
+import com.android_projects.newsapipractice.R;
 
 import java.text.DateFormat;
 import java.util.Date;

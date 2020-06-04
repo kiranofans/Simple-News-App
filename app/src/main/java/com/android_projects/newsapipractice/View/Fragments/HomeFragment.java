@@ -1,4 +1,4 @@
-package com.android_projects.newsapipractice.Fragments;
+package com.android_projects.newsapipractice.View.Fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -14,12 +14,11 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.android_projects.newsapipractice.Adapter.NewsRecyclerViewAdapter;
-import com.android_projects.newsapipractice.PaginationListener;
+import com.android_projects.newsapipractice.View.PaginationListener;
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;

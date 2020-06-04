@@ -1,14 +1,11 @@
-package com.android_projects.newsapipractice;
+package com.android_projects.newsapipractice.View;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,45 +13,27 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.telephony.mbms.DownloadRequest;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.Utils.Utility;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.ActivityImageBinding;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.Request;
-import com.bumptech.glide.request.target.SizeReadyCallback;
-import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.request.transition.Transition;
-import com.facebook.share.Share;
-import com.facebook.share.ShareApi;
 import com.facebook.share.model.ShareHashtag;
 import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.model.ShareMediaContent;
-import com.facebook.share.model.SharePhoto;
-import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 
-import bolts.AppLink;
-
-import static com.android_projects.newsapipractice.LoginActivity.googleIdToken;
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_ARTICLE;
 
 public class ImageActivity extends AppCompatActivity {
@@ -76,7 +55,7 @@ public class ImageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        imgBinding= DataBindingUtil.setContentView(this,R.layout.activity_image);
+        imgBinding= DataBindingUtil.setContentView(this, R.layout.activity_image);
         articleMod = (Article)getIntent().getSerializableExtra(EXTRA_KEY_ARTICLE);
         fbShareDialog = new ShareDialog(this);
         utility=new Utility();

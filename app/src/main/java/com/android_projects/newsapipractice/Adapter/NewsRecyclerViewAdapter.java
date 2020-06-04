@@ -15,8 +15,8 @@ import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android_projects.newsapipractice.ArticleActivity;
-import com.android_projects.newsapipractice.ImageActivity;
+import com.android_projects.newsapipractice.View.ArticleActivity;
+import com.android_projects.newsapipractice.View.ImageActivity;
 import com.android_projects.newsapipractice.Utils.DataDiffCallback;
 import com.android_projects.newsapipractice.Utils.Utility;
 import com.android_projects.newsapipractice.data.Models.Article;

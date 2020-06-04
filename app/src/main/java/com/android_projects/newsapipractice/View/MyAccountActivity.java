@@ -1,4 +1,4 @@
-package com.android_projects.newsapipractice;
+package com.android_projects.newsapipractice.View;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,14 +10,14 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.databinding.DataBindingUtil;
 
+import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.databinding.ActivityMyAccountBinding;
 import com.bumptech.glide.Glide;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-import static com.android_projects.newsapipractice.LoginActivity.googleSignInClient;
+import static com.android_projects.newsapipractice.View.LoginActivity.googleSignInClient;
 
 public class MyAccountActivity extends AppCompatActivity {
     private final String TAG = MyAccountActivity.class.getSimpleName();

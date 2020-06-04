@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:background="@color/colorBlackHalfTransparent"
         android:theme="@style/ImageActivityTheme"
-        tools:context=".ImageActivity">
+        tools:context=".View.ImageActivity">
 
         <com.github.chrisbanes.photoview.PhotoView
             android:id="@+id/full_image_view"

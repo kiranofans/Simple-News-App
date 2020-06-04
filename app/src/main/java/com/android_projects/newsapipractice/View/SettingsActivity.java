@@ -1,10 +1,12 @@
-package com.android_projects.newsapipractice;
+package com.android_projects.newsapipractice.View;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
+
+import com.android_projects.newsapipractice.R;
 
 public class SettingsActivity extends AppCompatActivity {
 

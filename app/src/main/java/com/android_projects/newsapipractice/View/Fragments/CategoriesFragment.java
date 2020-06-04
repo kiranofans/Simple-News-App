@@ -1,4 +1,4 @@
-package com.android_projects.newsapipractice.Fragments;
+package com.android_projects.newsapipractice.View.Fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

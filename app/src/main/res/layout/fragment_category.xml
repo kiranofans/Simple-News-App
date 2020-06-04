@@ -4,7 +4,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        tools:context=".View.MainActivity">
 
  <!--       <com.facebook.login.widget.LoginButton
             android:id="@+id/button_open_facebook"

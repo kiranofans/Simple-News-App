@@ -1,20 +1,17 @@
-package com.android_projects.newsapipractice;
+package com.android_projects.newsapipractice.View;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.android_projects.newsapipractice.Utils.Utility;
+import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.ViewModels.LoginViewModel;
 import com.android_projects.newsapipractice.databinding.ActivityLoginBinding;
 import com.facebook.AccessToken;
@@ -24,20 +21,16 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.Task;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static com.google.android.gms.common.Scopes.DRIVE_APPFOLDER;
 
@@ -67,7 +60,7 @@ public class LoginActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loginBinding= DataBindingUtil.setContentView(this,R.layout.activity_login);
+        loginBinding= DataBindingUtil.setContentView(this, R.layout.activity_login);
         fbLoginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
 
         googleLogin();

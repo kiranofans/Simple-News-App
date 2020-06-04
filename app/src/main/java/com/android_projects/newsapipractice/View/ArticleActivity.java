@@ -1,4 +1,4 @@
-package com.android_projects.newsapipractice;
+package com.android_projects.newsapipractice.View;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -8,6 +8,7 @@ import android.view.View;
 
 import androidx.databinding.DataBindingUtil;
 
+import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.data.Models.NewsArticleMod;
 import com.android_projects.newsapipractice.databinding.ActivityArticleBinding;

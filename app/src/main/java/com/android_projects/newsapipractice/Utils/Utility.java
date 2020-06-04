@@ -1,6 +1,5 @@
 package com.android_projects.newsapipractice.Utils;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -8,7 +7,6 @@ import android.widget.Toast;
 
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.facebook.AccessToken;
-import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;

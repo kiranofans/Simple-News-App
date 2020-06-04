@@ -9,18 +9,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MyAccountActivity"
+        <activity android:name=".View.MyAccountActivity"
             android:label="@string/top_mene_setting"
             android:theme="@style/FullscreenTheme"></activity>
-        <activity android:name=".LoginActivity" />
+        <activity android:name=".View.LoginActivity" />
         <activity
-            android:name=".ImageActivity"
+            android:name=".View.ImageActivity"
             android:theme="@style/ImageActivityTheme" />
         <activity
-            android:name=".SettingsActivity"
+            android:name=".View.SettingsActivity"
             android:label="@string/title_activity_settings" />
-        <activity android:name=".ArticleActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".View.ArticleActivity" />
+        <activity android:name=".View.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -53,7 +53,7 @@
             android:authorities="com.facebook.app.FacebookContentProvider"
             android:exported="true" />
         -->
-        <receiver android:name=".MyNotificationPublisher">
+        <receiver android:name=".View.MyNotificationPublisher">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />

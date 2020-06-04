@@ -1,17 +1,13 @@
-package com.android_projects.newsapipractice;
+package com.android_projects.newsapipractice.View;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
 import android.os.Build;
 import android.util.Log;
 
-import com.android_projects.newsapipractice.Fragments.LocalFragment;
-
-import static com.android_projects.newsapipractice.MyLocationService.LOCATION_BROADCAST_ACTION;
+import static com.android_projects.newsapipractice.View.MyLocationService.LOCATION_BROADCAST_ACTION;
 
 public class MyLocationBroadcastReceiver extends BroadcastReceiver {
     private final String TAG = MyLocationBroadcastReceiver.class.getSimpleName();

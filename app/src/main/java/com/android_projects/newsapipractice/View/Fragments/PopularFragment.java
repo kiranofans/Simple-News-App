@@ -1,4 +1,4 @@
-package com.android_projects.newsapipractice.Fragments;
+package com.android_projects.newsapipractice.View.Fragments;
 
 import android.os.Bundle;
 
@@ -18,12 +18,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android_projects.newsapipractice.Adapter.NewsRecyclerViewAdapter;
-import com.android_projects.newsapipractice.PaginationListener;
+import com.android_projects.newsapipractice.View.PaginationListener;
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.FragmentPopularBinding;
-import com.android_projects.newsapipractice.databinding.ListNewsBinding;
 
 import java.util.ArrayList;
 import java.util.List;

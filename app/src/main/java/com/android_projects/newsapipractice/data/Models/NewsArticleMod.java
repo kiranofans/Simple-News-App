@@ -1,7 +1,5 @@
 package com.android_projects.newsapipractice.data.Models;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import com.android_projects.newsapipractice.Adapter.BaseModel;
 import com.android_projects.newsapipractice.Adapter.Constants;
 import com.google.gson.annotations.Expose;

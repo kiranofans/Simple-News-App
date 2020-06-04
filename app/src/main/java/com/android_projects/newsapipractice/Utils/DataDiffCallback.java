@@ -7,7 +7,6 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 
 import com.android_projects.newsapipractice.data.Models.Article;
-import com.android_projects.newsapipractice.data.Models.NewsArticleMod;
 
 import java.util.List;
 
