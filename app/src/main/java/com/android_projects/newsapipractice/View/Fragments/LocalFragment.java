@@ -13,13 +13,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -185,7 +183,7 @@ public class LocalFragment extends Fragment {
         return locationResult;
     }
 
-    private void tryAllowPermissionAgain() {
+    private void requestPermissionAgain() {
         if (localBinding.noDataFoundLayout.noDataPermissionButton != null) {
             localBinding.noDataFoundLayout.noDataPermissionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -215,7 +213,7 @@ public class LocalFragment extends Fragment {
             localBinding.localSwipeRefreshLayout.setRefreshing(false);
             localBinding.localSwipeRefreshLayout.setEnabled(false);
             localBinding.noDataFoundLayout.noDataFoundContent.setVisibility(View.VISIBLE);
-            tryAllowPermissionAgain();
+            requestPermissionAgain();
             Log.d(TAG,"Location permission denied");
         }
     }
@@ -236,7 +234,7 @@ public class LocalFragment extends Fragment {
                 isPermissionGranted = false;
                 localBinding.noDataFoundLayout.noDataFoundContent.setVisibility(View.VISIBLE);
                 showLocationRational(permissions);
-                tryAllowPermissionAgain();
+                requestPermissionAgain();
             }
 
             @Override
@@ -248,7 +246,7 @@ public class LocalFragment extends Fragment {
                 Log.d(TAG,"change text");
                 utility.dialogToOpenSetting(getContext(),"Location Permission Denied",
                         "Click GO TO SETTINGS to enable location permission, " +
-                                "then refresh the page by tapping on the button on bottom navigation");
+                                "then refresh the page by tapping on the button in the bottom navigation bar.");
 
             }
 
