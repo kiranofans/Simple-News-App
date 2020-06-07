@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.android_projects.newsapipractice.Adapter.NewsRecyclerViewAdapter;
+import com.android_projects.newsapipractice.View.Adapter.NewsRecyclerViewAdapter;
 import com.android_projects.newsapipractice.View.PaginationListener;
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;

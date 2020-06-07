@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
-import com.android_projects.newsapipractice.Adapter.CategoriesRecyclerViewAdapter;
+import com.android_projects.newsapipractice.View.Adapter.CategoriesRecyclerViewAdapter;
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.FragmentCategoryBinding;

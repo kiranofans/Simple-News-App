@@ -1,20 +1,14 @@
 package com.android_projects.newsapipractice.View.Fragments;
 
 import android.annotation.SuppressLint;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +17,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -31,12 +27,11 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.android_projects.newsapipractice.Adapter.NewsRecyclerViewAdapter;
-import com.android_projects.newsapipractice.BuildConfig;
-import com.android_projects.newsapipractice.View.MyLocationBroadcastReceiver;
-import com.android_projects.newsapipractice.View.MyLocationService;
-import com.android_projects.newsapipractice.View.PaginationListener;
 import com.android_projects.newsapipractice.R;
+import com.android_projects.newsapipractice.Utils.Utility;
+import com.android_projects.newsapipractice.View.Adapter.NewsRecyclerViewAdapter;
+import com.android_projects.newsapipractice.View.Managers.PermissionManager;
+import com.android_projects.newsapipractice.View.PaginationListener;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.FragmentLocalBinding;
@@ -46,40 +41,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.LOCATION_SERVICE;
-import static com.android_projects.newsapipractice.View.BaseActivity.countryCode;
-import static com.android_projects.newsapipractice.View.MyLocationService.LOCATION_BROADCAST_ACTION;
-import static com.android_projects.newsapipractice.View.MyLocationService.countryName;
 
-public class LocalFragment extends Fragment{
+public class LocalFragment extends Fragment {
     private final String TAG = LocalFragment.class.getSimpleName();
+
+    private Utility utility;
 
     private View v;
     private FragmentLocalBinding localBinding;
     private NewsArticleViewModel localNewsViewModel;
 
     private LocationManager locationMgr;
-    private final String LATITUDE="LATITUDE";
-    private final String LONGITUDE = "LONGITUDE";
-    private final String LOCATION_PROVIDER = "PROVIDER";
+    private PermissionManager permMgr;
 
     private final String SORT_BY_PUBLISHED_AT = "publishedAt";
     private int currentPageNum = 1;
     private boolean isLoading = false;
     private boolean isLastPage = false;
+    private boolean isPermissionGranted = true;
 
     private NewsRecyclerViewAdapter recViewAdapter;
     private LinearLayoutManager layoutManager;
 
+    private String[] locationPermissions;
+
     private List<Article> localNewsList = new ArrayList<>();
-
-    public MyLocationService locationService;
-    public boolean isTracking = false;
-
-    private MyLocationBroadcastReceiver locReceiver=null;
-   /* private MyLocationService mLocationReceiver;
-    private MyLocationService myLocationListener;*/
-    private IntentFilter intentFilter = new IntentFilter();
-    private Intent locationIntent;
 
     public LocalFragment() {
         // Required empty public constructor
@@ -89,30 +75,28 @@ public class LocalFragment extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         localBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_local, container, false);
+        utility = new Utility();
+        permMgr = new PermissionManager(getContext());
+        locationPermissions = new String[]{permMgr.coarseLocationPerm, permMgr.fineLocationPerm};
+
         return v = localBinding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view = v, savedInstanceState);
-        localNewsViewModel = ViewModelProviders.of(this).get(NewsArticleViewModel.class);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(view.getContext().getString(R.string.title_local_news));
-
-        locReceiver=new MyLocationBroadcastReceiver();
-
-        intentFilter.addAction(LOCATION_BROADCAST_ACTION);
-        locationIntent = new Intent(getActivity().getApplication(), MyLocationService.class);
-        getActivity().getApplication().startService(locationIntent);
-        getActivity().getApplication().bindService(locationIntent,serviceConnection, Context.BIND_AUTO_CREATE);
+        super.onViewCreated(view, savedInstanceState);
+        localNewsViewModel = ViewModelProviders.of(getActivity()).get(NewsArticleViewModel.class);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(view.getContext()
+                .getString(R.string.title_local_news));
 
         setRecyclerView(view);
-        setObserver();
-        loadPage(currentPageNum);
-        swipeToRefreshListener();
+        checkLocationPermissionResults(locationPermissions);//Permission granted,display content
         onScrollListener();
     }
 
     private void swipeToRefreshListener() {
+        localBinding.localSwipeRefreshLayout.setRefreshing(true);
+        localBinding.localSwipeRefreshLayout.setEnabled(true);
         localBinding.localSwipeRefreshLayout.setOnRefreshListener(() -> {
             currentPageNum = 1;
             recViewAdapter.clear();
@@ -121,7 +105,7 @@ public class LocalFragment extends Fragment{
     }
 
     private void setObserver() {
-        localNewsViewModel.getArticleLiveData().observe(this, new Observer<List<Article>>() {
+        localNewsViewModel.getArticleLiveData().observe(getActivity(), new Observer<List<Article>>() {
             @Override
             public void onChanged(List<Article> articles) {
                 isLoading = false;
@@ -137,10 +121,6 @@ public class LocalFragment extends Fragment{
     private void loadPage(int page) {
         Log.d(TAG, "API called " + page);
         localNewsViewModel.getArticleListTopHeadlines(page, SORT_BY_PUBLISHED_AT, getDeviceCountryCode());
-
-        Toast.makeText(getContext(),"is Local location null:"+getDeviceCountryCode(),Toast.LENGTH_LONG).show();
-        Log.d(TAG,"Is location null: "+countryName+"\nLocation: "+countryCode
-                /*locationIntent.getExtras().getDouble(LATITUDE,0)*/ );
     }
 
     private void onScrollListener() {
@@ -174,100 +154,132 @@ public class LocalFragment extends Fragment{
         localBinding.mainLocalRecyclerView.setAdapter(recViewAdapter);
     }
 
-    private void openSetting(){
-        Intent settingIntent = new Intent();
-        settingIntent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        Uri uri = Uri.fromParts("package", BuildConfig.APPLICATION_ID,null);
-        settingIntent.setData(uri);
-        settingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(settingIntent);
-    }
-    private ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            String name = componentName.getClassName();
-            if(name.endsWith("MyLocationService")){
-                locationService=((MyLocationService.LocationServiceBinder)iBinder).getService();
-                locationService.startTracking();
-                locReceiver=new MyLocationBroadcastReceiver();
-                getActivity().registerReceiver(locReceiver,intentFilter);
-                Log.d(TAG,"Location Ready "+locationService);
-            }
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            if(componentName.getClassName().equals("MyLocationService")){
-                locationService = null;
-            }
-            if(locReceiver==null){
-                Log.d(TAG,"Do not unregister receiver as it was never registered");
-            }else{
-                Log.d(TAG,"Unregister receiver");
-                getActivity().unregisterReceiver(locReceiver);
-                locReceiver=null;
-            }
-        }
-    };
-
     @SuppressLint("MissingPermission")
-    private String getDeviceCountryCode(){
+    private String getDeviceCountryCode() {
         String locationResult = "";
         //Get location data from Broadcast intent extra
-        locationMgr=(LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
+        locationMgr = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
         Location location = locationMgr.getLastKnownLocation(locationMgr.getBestProvider
-                (new Criteria(),false));
-       /* locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,
-                0,new MyLocationService.MyLocationListener());*/
+                (new Criteria(), false));
 
-
-        double latitude=location.getLatitude();
+        double latitude = location.getLatitude();
         double longitude = location.getLongitude();
-         double lat = locationIntent.getDoubleExtra(LATITUDE,0);
-        double lon= locationIntent.getDoubleExtra(LONGITUDE,0);
         //String provider = locationIntent.getStringExtra(LOCATION_PROVIDER);
 
-        Geocoder geocoder=new Geocoder(getContext());
-        if(geocoder!=null){
+        Geocoder geocoder = new Geocoder(getContext());
+        if (geocoder != null) {
             try {
-                List<Address> addressList = geocoder.getFromLocation(latitude,longitude,1);
-                Address address=addressList.get(0);
-                locationResult= address.getCountryCode();//Testing purpose
+                List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
+                Address address = addressList.get(0);
+                locationResult = address.getCountryCode();//Testing purpose
 
-                Log.d(TAG,"Lat:"+latitude+"lon:"+longitude);
+                Log.d(TAG, "Lat:" + latitude + "lon:" + longitude);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Log.d(TAG,"Country Code: "+countryCode+"\nCountry Name: "+countryName);
 
-        }else{
-           // Log.d(TAG,"Location is "+location);
-            localBinding.noContentLayout.noDataFoundLayout.setVisibility(View.VISIBLE);
+        } else {
+            // Log.d(TAG,"Location is "+location);
+            localBinding.noDataFoundLayout.noDataFoundContent.setVisibility(View.VISIBLE);
         }
         return locationResult;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        getActivity().registerReceiver(locReceiver,new IntentFilter(LOCATION_BROADCAST_ACTION));
+    private void tryAllowPermissionAgain() {
+        if (localBinding.noDataFoundLayout.noDataPermissionButton != null) {
+            localBinding.noDataFoundLayout.noDataPermissionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d(TAG, "Clicked");
+                    checkLocationPermissionResults(locationPermissions);
+                }
+            });
+        }
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        getActivity().registerReceiver(locReceiver,new IntentFilter(LOCATION_BROADCAST_ACTION));
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            //If granted after rationale window popped up
+            //checkLocationPermissionResults(permissions);
+            localBinding.noDataFoundLayout.noDataFoundContent.setVisibility(View.GONE);
+            localBinding.localSwipeRefreshLayout.setRefreshing(true);
+            localBinding.localSwipeRefreshLayout.setEnabled(true);
+            setObserver();
+            loadPage(currentPageNum);
+            swipeToRefreshListener();
+        }else {
+            // Permission was denied...if "Never ask again" is checked and confirmed,
+            // it will automatically be PERMISSION_DENIED
+            localBinding.localSwipeRefreshLayout.setRefreshing(false);
+            localBinding.localSwipeRefreshLayout.setEnabled(false);
+            localBinding.noDataFoundLayout.noDataFoundContent.setVisibility(View.VISIBLE);
+            tryAllowPermissionAgain();
+            Log.d(TAG,"Location permission denied");
+        }
     }
 
-    @Override
-    public void onStop() {
-        getActivity().unregisterReceiver(locReceiver);
-        super.onStop();
+    private void checkLocationPermissionResults(String[] permissions) {
+
+        //Deeply check permission results
+        permMgr.checkPermission(getContext(), permissions[0], new PermissionManager.PermissionRequestListener() {
+            @Override
+            public void onNeedPermission() {
+                isPermissionGranted = false;
+                requestPermissions(permissions, 100);
+            }
+
+            @Override
+            public void onPermissionPreDenied() {
+                //OK
+                isPermissionGranted = false;
+                localBinding.noDataFoundLayout.noDataFoundContent.setVisibility(View.VISIBLE);
+                showLocationRational(permissions);
+                tryAllowPermissionAgain();
+            }
+
+            @Override
+            public void onPermissionPreDeniedWithNeverAskAgain() {
+                isPermissionGranted = false;
+                //localBinding.noDataFoundLayout.noDataFoundContent.setVisibility(View.VISIBLE);
+                localBinding.noDataFoundLayout.noDataPermissionButton.setText
+                        ("Now TAP ME to enable location access from settings");
+                Log.d(TAG,"change text");
+                utility.dialogToOpenSetting(getContext(),"Location Permission Denied",
+                        "Click GO TO SETTINGS to enable location permission, " +
+                                "then refresh the page by tapping on the button on bottom navigation");
+
+            }
+
+            @Override
+            public void onPermissionGranted() {
+                isPermissionGranted=true;
+                setObserver();
+                loadPage(currentPageNum);
+                swipeToRefreshListener();
+                localBinding.noDataFoundLayout.noDataFoundContent.setVisibility(View.GONE);
+            }
+        });
+       //return isPermissionGranted;
     }
 
-   /* @Override
-    public void onDestroy() {
-        super.onDestroy();
-        getActivity().unregisterReceiver(locReceiver);
-    }*/
+    public void showLocationRational(String[] permissions) {
+        new AlertDialog.Builder(getContext()).setTitle("Location permission denied")
+                .setMessage("Without this permission the APP is unable to display contents on this page." +
+                        "Are you sure you want to deny this permission?").setCancelable(false)
+                .setNegativeButton("I'M SURE", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+
+                    }
+                }).setPositiveButton("RETRY", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                requestPermissions(permissions, 100);
+                dialogInterface.dismiss();
+            }
+        }).show();
+    }
 }

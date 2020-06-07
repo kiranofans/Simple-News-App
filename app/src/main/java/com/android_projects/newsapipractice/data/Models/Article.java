@@ -1,7 +1,7 @@
 package com.android_projects.newsapipractice.data.Models;
 
-import com.android_projects.newsapipractice.Adapter.BaseModel;
-import com.android_projects.newsapipractice.Adapter.Constants;
+import com.android_projects.newsapipractice.View.Adapter.BaseModel;
+import com.android_projects.newsapipractice.View.Adapter.Constants;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

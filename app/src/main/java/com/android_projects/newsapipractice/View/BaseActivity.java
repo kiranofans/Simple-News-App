@@ -1,6 +1,5 @@
 package com.android_projects.newsapipractice.View;
 
-import android.Manifest;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -27,6 +26,8 @@ import com.android_projects.newsapipractice.View.Fragments.LocalFragment;
 import com.android_projects.newsapipractice.View.Fragments.PopularFragment;
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.Utils.Utility;
+import com.android_projects.newsapipractice.View.Managers.PermissionManager;
+import com.android_projects.newsapipractice.View.Managers.SharedPrefManager;
 import com.android_projects.newsapipractice.databinding.ActivityMainBinding;
 import com.android_projects.newsapipractice.databinding.NotificationBadgeLayoutBinding;
 import com.google.android.material.badge.BadgeDrawable;
@@ -37,8 +38,8 @@ public class BaseActivity extends AppCompatActivity {
     private final String TAG = BaseActivity.class.getSimpleName();
     private ActivityMainBinding mainBinding;
 
-    public String coarseLocationPermission = Manifest.permission.ACCESS_COARSE_LOCATION;
-    public String fineLocationPermission = Manifest.permission.ACCESS_FINE_LOCATION;
+    private SharedPrefManager sharedPrefMgr;
+    private PermissionManager permMgr;
 
     private NotificationBadgeLayoutBinding badgeBinding;
     private BadgeDrawable badgeDrawable;
@@ -46,22 +47,27 @@ public class BaseActivity extends AppCompatActivity {
     private BottomNavigationMenuView bottomNavMenuView;
     private View notificationBadge;
     private boolean isBadgeVisible=false;
-    private final int LOCATION_PERM_RC = 101;
+    private final int LOCATION_PERMS_RC = 101;
+    private final int WRITE_EXTERNAL_STORAGE_RC=102;
+    private final int ALL_PERMISSIONS=100;
 
     private Utility utility;
 
     public static String countryCode="";
-    public boolean isGranted;
+    public boolean isLocationPermGranted,isWriteExternalPermGranted;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         utility=new Utility();
+        permMgr =new PermissionManager(this);
 
         requestLocationPermission();
         getSupportActionBar().setIcon(android.R.drawable.stat_sys_headset);
     }
 
+    private void initPermissionUtils(){
+    }
     public BottomNavigationView.OnNavigationItemSelectedListener mNavItemSelectedListener = new
             BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
@@ -106,7 +112,7 @@ public class BaseActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void badgeNotification(Notification notification, int count){
+    /*private void badgeNotification(Notification notification, int count){
         Intent notificationIntent = new Intent(this, MyNotificationPublisher.class);
         notificationIntent.putExtra(MyNotificationPublisher.BADGE_CHANNEL_IDS_NAME,1);
         notificationIntent.putExtra(MyNotificationPublisher.BADGE_NOTIFICATION_ID,notification);
@@ -117,7 +123,7 @@ public class BaseActivity extends AppCompatActivity {
         setBadge(count,R.id.nav_popular,pendingIntent);
         setBadge(count,R.id.nav_local,pendingIntent);
 
-    }
+    }*/
     public void setBadge(int count, int resId, PendingIntent pendingIntent){
         badgeDrawable = mainBinding.mainBottomNavigation.getOrCreateBadge(resId);
 
@@ -141,17 +147,23 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     private void requestLocationPermission() {
-        isGranted = ContextCompat.checkSelfPermission(this, coarseLocationPermission) == PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, fineLocationPermission) == PackageManager.PERMISSION_GRANTED;
-        if (isGranted) {
-            Log.d(TAG, "Permission granted!");
-        } else {
-            Log.d(TAG, "Permission denied!");
+        //Request permissions
+        String externalStoragePerm = permMgr.externalStoragePermission;
+        String[] permissionTypes = {externalStoragePerm, permMgr.coarseLocationPerm, permMgr.fineLocationPerm};
+
+        isLocationPermGranted = ContextCompat.checkSelfPermission(this, permMgr.coarseLocationPerm) == PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, permMgr.fineLocationPerm) == PackageManager.PERMISSION_GRANTED;
+        isWriteExternalPermGranted = ContextCompat.checkSelfPermission(this, externalStoragePerm)
+                == PackageManager.PERMISSION_GRANTED;
+
+        if (isLocationPermGranted && isWriteExternalPermGranted) {
+            Log.d(TAG, "All permissions granted!");
+        }else{
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                ActivityCompat.requestPermissions(this, new String[]{
-                        coarseLocationPermission, fineLocationPermission}, LOCATION_PERM_RC);
+                ActivityCompat.requestPermissions(this, permissionTypes, ALL_PERMISSIONS);
             }
         }
+
     }
 
     @Override

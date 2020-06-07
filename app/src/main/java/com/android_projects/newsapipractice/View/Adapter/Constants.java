@@ -1,11 +1,11 @@
-package com.android_projects.newsapipractice.Adapter;
+package com.android_projects.newsapipractice.View.Adapter;
 
 import androidx.annotation.IntDef;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import static com.android_projects.newsapipractice.Adapter.Constants.ViewType.ARTICLE_TYPE;
+import static com.android_projects.newsapipractice.View.Adapter.Constants.ViewType.ARTICLE_TYPE;
 
 public class Constants {
 

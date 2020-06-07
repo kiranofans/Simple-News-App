@@ -1,4 +1,4 @@
-package com.android_projects.newsapipractice.Adapter;
+package com.android_projects.newsapipractice.View.Adapter;
 
 import android.view.ViewGroup;
 

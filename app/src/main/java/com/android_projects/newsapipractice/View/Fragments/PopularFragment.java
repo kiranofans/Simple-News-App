@@ -17,7 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android_projects.newsapipractice.Adapter.NewsRecyclerViewAdapter;
+import com.android_projects.newsapipractice.View.Adapter.NewsRecyclerViewAdapter;
 import com.android_projects.newsapipractice.View.PaginationListener;
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
