@@ -92,20 +92,14 @@ public class LoginActivity extends AppCompatActivity{
             }
         });
 
-        loginBinding.buttonFacebookLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Intent fbIntent = ;
-                LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this,
-                        Arrays.asList("public_profile", "user_friends"));
-                //startActivityForResult(fbIntent,RC_FACEBOOK_LOG_IN);
-            }
+        loginBinding.buttonFacebookLogin.setOnClickListener((View v)-> {
+            //Intent fbIntent = ;
+            LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this,
+                    Arrays.asList("public_profile", "user_friends"));
+            //startActivityForResult(fbIntent,RC_FACEBOOK_LOG_IN);
         });
     }
 
-    private void facebookLoginCallback(){
-
-    }
     private void googleLogin(){
         googleClientID=getString(R.string.google_server_client_id);
         //If requestServerAuthCode() is called, you don't have to call requestIdToken
@@ -122,12 +116,9 @@ public class LoginActivity extends AppCompatActivity{
         //Build a GoogleSignInClient with the options specified by gso
         googleSignInClient = GoogleSignIn.getClient(this,gso);
 
-        loginBinding.buttonGoogleLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent signInIntent = googleSignInClient.getSignInIntent();
-                startActivityForResult(signInIntent,RC_GOOGLE_SIGN_IN);
-            }
+        loginBinding.buttonGoogleLogin.setOnClickListener((View v)-> {
+            Intent signInIntent = googleSignInClient.getSignInIntent();
+            startActivityForResult(signInIntent,RC_GOOGLE_SIGN_IN);
         });
     }
 
@@ -137,7 +128,6 @@ public class LoginActivity extends AppCompatActivity{
         if(requestCode == RC_GOOGLE_SIGN_IN){
             //This works with GoogleApiClient's auth intent
            // GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleGoogleSignInResult(task/*,result*/);
             Toast.makeText(getApplicationContext(),"Logged in successfully",

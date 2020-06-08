@@ -1,14 +1,11 @@
 package com.android_projects.newsapipractice.View;
 
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,17 +16,14 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.android_projects.newsapipractice.R;
+import com.android_projects.newsapipractice.Utils.Utility;
 import com.android_projects.newsapipractice.View.Fragments.CategoriesFragment;
 import com.android_projects.newsapipractice.View.Fragments.HomeFragment;
 import com.android_projects.newsapipractice.View.Fragments.LocalFragment;
 import com.android_projects.newsapipractice.View.Fragments.PopularFragment;
-import com.android_projects.newsapipractice.R;
-import com.android_projects.newsapipractice.Utils.Utility;
 import com.android_projects.newsapipractice.View.Managers.PermissionManager;
-import com.android_projects.newsapipractice.View.Managers.SharedPrefManager;
 import com.android_projects.newsapipractice.databinding.ActivityMainBinding;
-import com.android_projects.newsapipractice.databinding.NotificationBadgeLayoutBinding;
-import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -48,47 +42,44 @@ public class BaseActivity extends AppCompatActivity {
     private boolean isBadgeVisible=false;
     private final int LOCATION_PERMS_RC = 101;
     private final int WRITE_EXTERNAL_STORAGE_RC=102;*/
-    private final int ALL_PERMISSIONS=100;
+    private final int ALL_PERMISSIONS = 100;
 
     private Utility utility;
 
-    public boolean isLocationPermGranted,isWriteExternalPermGranted;
+    public boolean isLocationPermGranted, isWriteExternalPermGranted;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        utility=new Utility();
-        permMgr =new PermissionManager(this);
+        utility = new Utility();
+        permMgr = new PermissionManager(this);
 
         requestLocationPermission();
         getSupportActionBar().setIcon(android.R.drawable.stat_sys_headset);
     }
 
-    private void initPermissionUtils(){
-    }
-    public BottomNavigationView.OnNavigationItemSelectedListener mNavItemSelectedListener = new
-            BottomNavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    Fragment fragment = null;
-                    switch (item.getItemId()) {
-                        case R.id.nav_home:
-                            fragment = new HomeFragment();
-                            //Once clicked count=0
-                            break;
-                        case R.id.nav_popular:
-                            fragment = new PopularFragment();
-                            break;
-                        case R.id.nav_local:
-                            fragment = new LocalFragment();
-                            break;
-                        case R.id.nav_categories:
-                            fragment = new CategoriesFragment();
-                            break;
-                    }
-                    return setFragments(fragment);
-                }
-            };
+    public BottomNavigationView.OnNavigationItemSelectedListener mNavItemSelectedListener
+            = (@NonNull MenuItem item) -> {
+        Fragment fragment = null;
+        switch (item.getItemId()) {
+            case R.id.nav_home:
+                fragment = new HomeFragment();
+                //Once clicked count=0
+                break;
+            case R.id.nav_popular:
+                fragment = new PopularFragment();
+                break;
+            case R.id.nav_local:
+                fragment = new LocalFragment();
+                break;
+            case R.id.nav_categories:
+                fragment = new CategoriesFragment();
+                break;
+        }
+        return setFragments(fragment);
+
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -155,8 +146,8 @@ public class BaseActivity extends AppCompatActivity {
                 == PackageManager.PERMISSION_GRANTED;
 
         if (isLocationPermGranted && isWriteExternalPermGranted) {
-            utility.showDebugLog(TAG,"All permissions granted!");
-        }else{
+            utility.showDebugLog(TAG, "All permissions granted!");
+        } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 ActivityCompat.requestPermissions(this, permissionTypes, ALL_PERMISSIONS);
             }

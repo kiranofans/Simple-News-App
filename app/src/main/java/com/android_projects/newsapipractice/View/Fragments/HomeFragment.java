@@ -84,16 +84,13 @@ public class HomeFragment extends Fragment {
     @SuppressLint("FragmentLiveDataObserve")
     private void setObserver() {
         //List<Article> newList = new ArrayList<>();
-        viewModel.getArticleLiveData().observe(this, new Observer<List<Article>>() {
-            @Override
-            public void onChanged(List<Article> articles) {
-                isLoading = false;
-                articleList.addAll(articles);
-                Log.d(TAG, "onChanged: " + articleList.size());
+        viewModel.getArticleLiveData().observe(this, (List<Article> articles)-> {
+            isLoading = false;
+            articleList.addAll(articles);
+            Log.d(TAG, "onChanged: " + articleList.size());
 
-                homeBinding.swipeRefreshLayout.setRefreshing(false);
-                recyclerViewAdapter.notifyDataSetChanged();
-            }
+            homeBinding.swipeRefreshLayout.setRefreshing(false);
+            recyclerViewAdapter.notifyDataSetChanged();
         });
     }
 
@@ -134,43 +131,4 @@ public class HomeFragment extends Fragment {
         });
         recyclerViewAdapter.notifyDataSetChanged();
     }
-
- /*   private void setFragmentTransition(NewsRecyclerViewAdapter.ArticleHolder articleHolder, int pos) {
-
-        //Article articleMod = (Article) getActivity().getIntent().getSerializableExtra(EXTRA_KEY_ARTICLE);
-        String transName = getString(R.string.fragment_transition_name);
-
-
-        //Exit activity transition
-        Explode exitExplode = new Explode();
-        exitExplode.setDuration(FADE_DEFAULT_TIME);
-        this.setExitTransition(TransitionInflater.from(getContext()).inflateTransition(android.R.transition.move));
-        this.setAllowEnterTransitionOverlap(true);
-    }*/
-
-   /* @Override
-    public void onRecyclerViewImageClicked(NewsRecyclerViewAdapter.ArticleHolder articleHolder, int position, ListNewsBinding newsBinding) {
-       // Article articleMod = (Article) getActivity().getIntent().getSerializableExtra(EXTRA_KEY_ARTICLE);
-        String transName = getString(R.string.fragment_transition_name);
-        int pos = articleHolder.getAdapterPosition();
-        articleMod = (Article)getActivity().getIntent().getSerializableExtra(EXTRA_KEY_ARTICLE);
-
-        //Exit activity transition
-        Fade exitFade = new Fade();
-        exitFade.setDuration(FADE_DEFAULT_TIME);
-        setExitTransition(TransitionInflater.from(getContext()).inflateTransition(android.R.transition.move));
-        this.setAllowEnterTransitionOverlap(true);
-
-       *//* getWindow().setSharedElementEnterTransition(new DetailsTransition());
-        imgFragment.setEnterTransition(new Fade());
-        imgFragment.setSharedElementReturnTransition(new Fade());*//*
-
-       *//* getActivity().getSupportFragmentManager().beginTransaction().addSharedElement
-                (articleHolder.getBinding().articleImageView,transName+position)
-                .replace(R.id.main_fragment_container,imgFragment).addToBackStack(null).commit();*//*
-       //Intent imgIntent = new Intent(getContext(),ImageActivity.class);
-      // getActivity().startActivityFromFragment(this,imgIntent,101);
-
-    }*/
-
 }

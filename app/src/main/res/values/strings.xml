@@ -83,6 +83,7 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
+    <!--Secrets-->
     <string name="google_server_client_id">927157329080-u3kmqqlngtk79d0vj1pt8kq5mt5ce8lb.apps.googleusercontent.com</string>
     <string name="google_client_secret">ssMGge9ukL0GS4bf4BqD-P8B</string>>
 

@@ -38,7 +38,8 @@ public class NewsArticleViewModel extends AndroidViewModel {
     }
 
     public void getArticleListEverything(int page, String sortBy) {
-        callApiData = apiService.getEverything("Bearer " + API_KEY, requestPramsMap, 100, page);
+        callApiData = apiService.getEverything("Bearer " +
+                API_KEY, requestPramsMap, 100, page);
         requestPramsMap.put("sortBy", sortBy);
         requestPramsMap.put("domains", PARAMS_DOMAINS);
         requestPramsMap.put("language", LANGUAGE_ENGLISH);
@@ -48,7 +49,8 @@ public class NewsArticleViewModel extends AndroidViewModel {
     public void getArticleListTopHeadlines(int page, String sortBy, String countryCode) {
         requestPramsMap.put("sortBy", sortBy);
         requestPramsMap.put("country", countryCode);
-        callApiData = apiService.getTopHeadlines("Bearer " + API_KEY, requestPramsMap, 100, page);
+        callApiData = apiService.getTopHeadlines("Bearer " +
+                API_KEY, requestPramsMap, 100, page);
         repository.getMutableLiveData(callApiData, data -> articleLiveData.setValue(data));
     }
 

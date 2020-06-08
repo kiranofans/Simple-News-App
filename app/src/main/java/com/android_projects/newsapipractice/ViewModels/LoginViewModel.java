@@ -59,26 +59,25 @@ public class LoginViewModel extends ViewModel {
     }
 
     public LiveData<List<String>> loadFbUserProfile(AccessToken newAccessToken){
-        profileInfos = new ArrayList<>();
-        GraphRequest graphRequest = GraphRequest.newMeRequest(newAccessToken, new GraphRequest.GraphJSONObjectCallback() {
-            @Override
-            public void onCompleted(JSONObject object, GraphResponse response) {
-                try {
-                    Log.d("Request",response.getRawResponse());
-                    email = object.getString("email");
-                    facebookId = object.getString("id");
-                    picUrl = "http://graph.facebook.com/" + facebookId + "/picture?type=normal";
+        profileInfos = new ArrayList<>();//From
+        GraphRequest graphRequest = GraphRequest.newMeRequest(newAccessToken,
+                (JSONObject object, GraphResponse response)-> {
+            //Was calling GraphRequest.GraphJSONObjectCallback, then JSONObject and GraphResponse
+            try {
+                Log.d("Request",response.getRawResponse());
+                email = object.getString("email");
+                facebookId = object.getString("id");
+                picUrl = "http://graph.facebook.com/" + facebookId + "/picture?type=normal";
 
-                    id.setValue(facebookId); emailAddress.setValue(email);
-                    profilePicUrl.setValue(picUrl);
+                id.setValue(facebookId); emailAddress.setValue(email);
+                profilePicUrl.setValue(picUrl);
 
-                    profileInfos.add(facebookId); profileInfos.add(email);
-                    profileInfos.add(picUrl);
+                profileInfos.add(facebookId); profileInfos.add(email);
+                profileInfos.add(picUrl);
 
-                    allInfo.setValue(profileInfos);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                allInfo.setValue(profileInfos);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         });
 

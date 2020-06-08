@@ -93,14 +93,12 @@ public class PopularFragment extends Fragment{
     }
 
     private void setPopObserver(){
-        newsViewModel.getArticleLiveData().observe(this, new Observer<List<Article>>() {
-            @Override
-            public void onChanged(List<Article> articles) {
-                isLoading=false;
-                popularArticleList.addAll(articles);
-                popBinding.swipeRefreshLayout.setRefreshing(false);
-                recyclerViewAdapter.notifyDataSetChanged();
-            }
+        newsViewModel.getArticleLiveData().observe(getViewLifecycleOwner(),
+                (List<Article> articles)-> {
+            isLoading=false;
+            popularArticleList.addAll(articles);
+            popBinding.swipeRefreshLayout.setRefreshing(false);
+            recyclerViewAdapter.notifyDataSetChanged();
         });
     }
 

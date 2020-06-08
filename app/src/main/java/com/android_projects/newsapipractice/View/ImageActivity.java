@@ -26,7 +26,6 @@ import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.ActivityImageBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.facebook.share.model.ShareHashtag;
 import com.facebook.share.model.ShareLinkContent;
@@ -35,13 +34,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.SimpleTimeZone;
 
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_ARTICLE;
 
@@ -78,19 +73,19 @@ public class ImageActivity extends AppCompatActivity {
     }
 
     private void imgBottomButtons() {
-        imgBinding.imgBottomNav.imgBottomNavShare.setOnClickListener((View view)->{
+        imgBinding.imgBottomNav.imgBottomNavShare.setOnClickListener((View view) -> {
             if (!isArticleObjNull()) {
                 //utility.shareArticles(articleMod,ImageActivity.this,"Share image via");
                 String imgFilePath = Environment.DIRECTORY_DCIM;
-                File imgCacheDir = new File(imgFilePath,"NewsAppCache/");
+                File imgCacheDir = new File(imgFilePath, "NewsAppCache/");
                 shareImage(imgCacheDir);
             }
         });
 
-        imgBinding.imgBottomNav.imgBottomNavFacebook.setOnClickListener((View v)-> {
+        imgBinding.imgBottomNav.imgBottomNavFacebook.setOnClickListener((View v) -> {
             shareImgWithFB(fbShareDialog);
         });
-        imgBinding.imgBottomNav.imgBottomNavDownload.setOnClickListener((View v)->{
+        imgBinding.imgBottomNav.imgBottomNavDownload.setOnClickListener((View v) -> {
             startDownloadingImg();
         });
     }
@@ -103,8 +98,8 @@ public class ImageActivity extends AppCompatActivity {
     }
 
     private void downloadImage() {
-        String imgFileName = "IMG_"+utility.imgFileDateTimeConversion
-                ("ddMMyyy_HHmm")+".jpg";
+        String imgFileName = "IMG_" + utility.imgFileDateTimeConversion
+                ("ddMMyyy_HHmm") + ".jpg";
         //Pictures folder in Internal Storage
         String destinationPath = Environment.DIRECTORY_PICTURES;
         Uri url = Uri.parse(articleMod.getUrlToImage());
@@ -161,28 +156,28 @@ public class ImageActivity extends AppCompatActivity {
     }
 
     private void shareImage(final File imagePath) {
-        String fileName = "IMG_"+utility.imgFileDateTimeConversion
-                ("ddMMyyy_HHmm")+".png";
+        String fileName = "IMG_" + utility.imgFileDateTimeConversion
+                ("ddMMyyy_HHmm") + ".png";
         Intent imgShareIntent = new Intent(Intent.ACTION_SEND);//same as intent.setAction();
         imgShareIntent.setType("*/*");
         imgShareIntent.putExtra(Intent.EXTRA_SUBJECT, articleMod.getPublishedAt());
         imgShareIntent.putExtra(Intent.EXTRA_TEXT, articleMod.getTitle() + "\n" + articleMod.getUrl());
         boolean isSuccess;
-        if(Build.VERSION.SDK_INT>Build.VERSION_CODES.LOLLIPOP_MR1){
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
 
         }
-        if(!imagePath.exists()){
+        if (!imagePath.exists()) {
             //Create folder first
             imagePath.mkdirs();
-            isSuccess=imagePath.mkdirs();
-            Log.d(TAG,"Is Folder Created: "+isSuccess);
+            isSuccess = imagePath.mkdirs();
+            Log.d(TAG, "Is Folder Created: " + isSuccess);
         }
         Glide.with(getApplicationContext()).asBitmap().load(articleMod.getUrlToImage())
-                .into(new CustomTarget<Bitmap>(100,80) {
+                .into(new CustomTarget<Bitmap>(100, 80) {
                     @Override
                     public void onResourceReady(@NonNull Bitmap bitmapImg, @Nullable Transition<? super Bitmap> transition) {
                         //saveImageToBitmap(bitmapImg,imagePath);
-                        try{
+                        try {
                             OutputStream outStream = new FileOutputStream(imagePath.getAbsolutePath());
                             bitmapImg.compress(Bitmap.CompressFormat.PNG, 100, outStream);
                             Uri imgUri = Uri.fromFile(imagePath);
@@ -190,7 +185,7 @@ public class ImageActivity extends AppCompatActivity {
                             startActivity(Intent.createChooser(imgShareIntent, "Share Image Via"));
                             outStream.close();
 
-                        }catch (IOException e){
+                        } catch (IOException e) {
                             Log.d(TAG, e.getMessage() + "\nCause: " + e.getCause());
                         }
 
@@ -244,11 +239,11 @@ public class ImageActivity extends AppCompatActivity {
         }
     }
 
-    private void saveImageToBitmap(Bitmap bitmap,File imgPath){
+    private void saveImageToBitmap(Bitmap bitmap, File imgPath) {
         boolean isSuccess = false;
-        if(isSuccess){
-            try{
-                Log.d(TAG,"Saving img to "+imgPath.getAbsolutePath());
+        if (isSuccess) {
+            try {
+                Log.d(TAG, "Saving img to " + imgPath.getAbsolutePath());
                 OutputStream outStream = new FileOutputStream(imgPath.getAbsolutePath());
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream);
                 outStream.close();

@@ -59,7 +59,6 @@ public class ArticleActivity extends BaseActivity {
         Glide.with(this).load(articleObj.getUrlToImage()).into(mBinding.articleImgViewContent);
 
         SpannableStringBuilder strBuilder = new SpannableStringBuilder();
-       // int buildLength = strBuilder.length();
         strBuilder.append(articleObj.getUrl());
 
         if(isContentEmpty(articleObj) && mBinding.articleTvContent!=null){
@@ -71,11 +70,8 @@ public class ArticleActivity extends BaseActivity {
             mBinding.articleTvContent.setVisibility(View.VISIBLE);
         }
 
-        mBinding.articleTvSourceLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(articleObj.getUrl())));
-            }
+        mBinding.articleTvSourceLink.setOnClickListener((View v)->{
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(articleObj.getUrl())));
         });
     }
 

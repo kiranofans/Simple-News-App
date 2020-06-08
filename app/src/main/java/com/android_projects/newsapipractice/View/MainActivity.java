@@ -31,12 +31,12 @@ public class MainActivity extends BaseActivity{
         mainBinding.mainBottomNavigation.setOnNavigationItemSelectedListener(mNavItemSelectedListener);
     }
 
-    private Notification getNotification(){
+    /*private Notification getNotification(){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this,
                 default_notification_channel_id);
         builder.setChannelId(BADGE_CHANNEL_ID);
         return builder.build();
-    }
+    }*/
 
     @Override
     public void onBackPressed() {

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
@@ -14,7 +13,6 @@ import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.databinding.ActivityMyAccountBinding;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import static com.android_projects.newsapipractice.View.LoginActivity.googleSignInClient;
@@ -54,28 +52,21 @@ public class MyAccountActivity extends AppCompatActivity {
 
     private void getGoogleAccountData(GoogleSignInAccount account) {
         String username = account.getDisplayName();
-        String email = account.getEmail();
+        //String email = account.getEmail();
 
         accountBinding.accountAppBar.accountDisplayName.setText(username);
         Glide.with(this).load(account.getPhotoUrl()).override(220, 220).circleCrop()
                 .into(accountBinding.accountAppBar.accountImgviewAvatar);
-
-
     }
-    private void logoutButton(){
-            accountBinding.accountAppBar.accountBtnLogout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    googleSignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            Intent intent = new Intent(MyAccountActivity.this, LoginActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
-                            finish();
-                        }
-                    });
-                }
+
+    private void logoutButton() {
+        accountBinding.accountAppBar.accountBtnLogout.setOnClickListener((View v) -> {
+            googleSignInClient.signOut().addOnCompleteListener((Task<Void> task) -> {
+                Intent intent = new Intent(MyAccountActivity.this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
             });
+        });
     }
 }
