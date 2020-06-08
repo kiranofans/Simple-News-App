@@ -78,30 +78,20 @@ public class ImageActivity extends AppCompatActivity {
     }
 
     private void imgBottomButtons() {
-        imgBinding.imgBottomNav.imgBottomNavShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!isArticleObjNull()) {
-                    //utility.shareArticles(articleMod,ImageActivity.this,"Share image via");
-
-                    String imgFilePath = Environment.DIRECTORY_DCIM;
-                    File imgCacheDir = new File(imgFilePath,"NewsAppCache/");
-                    shareImage(imgCacheDir);
-                }
+        imgBinding.imgBottomNav.imgBottomNavShare.setOnClickListener((View view)->{
+            if (!isArticleObjNull()) {
+                //utility.shareArticles(articleMod,ImageActivity.this,"Share image via");
+                String imgFilePath = Environment.DIRECTORY_DCIM;
+                File imgCacheDir = new File(imgFilePath,"NewsAppCache/");
+                shareImage(imgCacheDir);
             }
         });
 
-        imgBinding.imgBottomNav.imgBottomNavFacebook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                shareImgWithFB(fbShareDialog);
-            }
+        imgBinding.imgBottomNav.imgBottomNavFacebook.setOnClickListener((View v)-> {
+            shareImgWithFB(fbShareDialog);
         });
-        imgBinding.imgBottomNav.imgBottomNavDownload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startDownloadingImg();
-            }
+        imgBinding.imgBottomNav.imgBottomNavDownload.setOnClickListener((View v)->{
+            startDownloadingImg();
         });
     }
 

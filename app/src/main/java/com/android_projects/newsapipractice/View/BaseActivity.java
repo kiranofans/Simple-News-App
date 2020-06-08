@@ -1,6 +1,5 @@
 package com.android_projects.newsapipractice.View;
 
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -38,22 +37,21 @@ public class BaseActivity extends AppCompatActivity {
     private final String TAG = BaseActivity.class.getSimpleName();
     private ActivityMainBinding mainBinding;
 
-    private SharedPrefManager sharedPrefMgr;
+    //private SharedPrefManager sharedPrefMgr;
     private PermissionManager permMgr;
 
-    private NotificationBadgeLayoutBinding badgeBinding;
-    private BadgeDrawable badgeDrawable;
+    /*private NotificationBadgeLayoutBinding badgeBinding;
+    private BadgeDrawable badgeDrawable;*/
 
     private BottomNavigationMenuView bottomNavMenuView;
-    private View notificationBadge;
+    /* private View notificationBadge;
     private boolean isBadgeVisible=false;
     private final int LOCATION_PERMS_RC = 101;
-    private final int WRITE_EXTERNAL_STORAGE_RC=102;
+    private final int WRITE_EXTERNAL_STORAGE_RC=102;*/
     private final int ALL_PERMISSIONS=100;
 
     private Utility utility;
 
-    public static String countryCode="";
     public boolean isLocationPermGranted,isWriteExternalPermGranted;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -124,7 +122,7 @@ public class BaseActivity extends AppCompatActivity {
         setBadge(count,R.id.nav_local,pendingIntent);
 
     }*/
-    public void setBadge(int count, int resId, PendingIntent pendingIntent){
+   /* public void setBadge(int count, int resId, PendingIntent pendingIntent){
         badgeDrawable = mainBinding.mainBottomNavigation.getOrCreateBadge(resId);
 
         badgeDrawable.setNumber(count);
@@ -134,7 +132,7 @@ public class BaseActivity extends AppCompatActivity {
             badgeDrawable.setVisible(false);
             //badgeDrawable.setVisible(false);
         }
-    }
+    }*/
 
     public boolean setFragments(Fragment fragment) {
         if (fragment != null) {
@@ -157,7 +155,7 @@ public class BaseActivity extends AppCompatActivity {
                 == PackageManager.PERMISSION_GRANTED;
 
         if (isLocationPermGranted && isWriteExternalPermGranted) {
-            Log.d(TAG, "All permissions granted!");
+            utility.showDebugLog(TAG,"All permissions granted!");
         }else{
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 ActivityCompat.requestPermissions(this, permissionTypes, ALL_PERMISSIONS);

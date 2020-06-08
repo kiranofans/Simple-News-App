@@ -1,20 +1,29 @@
 package com.android_projects.newsapipractice.Utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Criteria;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 
 import com.android_projects.newsapipractice.BuildConfig;
+import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.facebook.AccessToken;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -22,16 +31,21 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+
+import static android.content.Context.LOCATION_SERVICE;
 
 public class Utility {
     private final String TAG = Utility.class.getSimpleName();
 
-    public boolean isLoggedInWithGoogle(Context context){
+    //Sign in check
+    public boolean isLoggedInWithGoogle(Context context) {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(context);
         if (account != null) {
-            Log.d(TAG,"Already logged in with Google");
+            Log.d(TAG, "Already logged in with Google");
             return true;
         } else {
             Log.d(TAG, "Not logged in yet");
@@ -39,51 +53,107 @@ public class Utility {
         }
     }
 
-    public void handleGoogleSignInResult(Task<GoogleSignInAccount> completeTask/*, GoogleSignInResult result*/){
-        try{
+    public void handleGoogleSignInResult(Task<GoogleSignInAccount> completeTask/*, GoogleSignInResult result*/) {
+        try {
             GoogleSignInAccount googleAccount = completeTask.getResult(ApiException.class);
-            if(googleAccount.getIdToken()!=null){
-                Log.d(TAG,"Sign in result ok");
+            if (googleAccount.getIdToken() != null) {
+                Log.d(TAG, "Sign in result ok");
                 //Update UI
             }
 
 
-        }catch (ApiException e){
+        } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
             //Update UI
 
         }
     }
-    public boolean isLoggedInWithFB( AccessToken accessToken){
-        if(accessToken==null){
+
+    public boolean isLoggedInWithFB(AccessToken accessToken) {
+        if (accessToken == null) {
             return false;
         }
-        Log.d(TAG,"Already logged in with Facebook");
+        Log.d(TAG, "Already logged in with Facebook");
         return true;
     }
 
-    public void showToastMessage(Context context,String message,int length){
-        Toast.makeText(context, message,length).show();
-    }
-    public void shareArticles(Article obj,Context context,String shareStr){
+    //Share content methods
+    public void shareArticles(Article obj, Context context, String shareStr) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
 
         //Pass your sharing content to the "putExtra" method of the Intent class
         shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT,obj.getTitle());
-        shareIntent.putExtra(Intent.EXTRA_TEXT,obj.getTitle()+" "+obj.getUrl());
-        context.startActivity(Intent.createChooser(shareIntent,shareStr));
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, obj.getTitle());
+        shareIntent.putExtra(Intent.EXTRA_TEXT, obj.getTitle() + " " + obj.getUrl());
+        context.startActivity(Intent.createChooser(shareIntent, shareStr));
     }
-    public String imgFileDateTimeConversion(String dateTimePattern){
+
+    //Date time conversions
+    public String imgFileDateTimeConversion(String dateTimePattern) {
         return new SimpleDateFormat(dateTimePattern).format(new Date());
     }
-    public String articleDateTimeConversion(String publishDateTime){
+
+    public String articleDateTimeConversion(String publishDateTime) {
         //Need to convert to local time firs
         return new SimpleDateFormat("EEEE, dd MMMM yyyy").format(publishDateTime);
     }
 
-    public void showWriteExternalStorageRational(Activity activityContext, String[] permissionArray,int requestCode){
+    //Permission check
+    private void openAppSettings(Context context) {
+        Intent settingIntent = new Intent();
+        settingIntent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null);
+        settingIntent.setData(uri);
+        settingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(settingIntent);
+    }
+
+    public void dialogToOpenSetting(Context context, String title, String message, String settingPerms, Button btn) {
+        new AlertDialog.Builder(context).setTitle(title).setMessage(message).setCancelable(false)
+                .setNegativeButton("NOT NOW", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                }).setPositiveButton("GO TO SETTINGS", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                openAppSettings(context);
+                dialogInterface.dismiss();
+                if (isSettingAccessEnabled(context, settingPerms)) {
+                    changePermBtnTextIfShown(btn, context.getString(R.string.local_refresh));
+                }
+            }
+        }).show();
+    }
+
+    public void changePermBtnTextIfShown(Button btn, String text) {
+        if (btn == null) {
+            return;
+        }
+        btn.setText(text);
+    }
+
+    public boolean isSettingAccessEnabled(Context context, String settingPermission) {
+        try {
+            PackageManager packageMgr = context.getPackageManager();
+            ApplicationInfo appInfo = packageMgr.getApplicationInfo(context.getPackageName(), 0);
+            AppOpsManager appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+            //OPSTR_COARSE or FINE Location will detect location access from settings
+            int mode = appOpsManager.checkOpNoThrow(settingPermission,
+                    appInfo.uid, appInfo.packageName);
+
+            Log.d(TAG, "is enabled: " + mode);
+
+            return (mode == AppOpsManager.MODE_ALLOWED);
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.d(TAG, "Permission Ignored");
+            return false;
+        }
+    }
+
+    public void showActivityPermissionRationale(Activity activityContext, String[] permissionArray, int requestCode) {
         new AlertDialog.Builder(activityContext).setTitle("Location permission denied")
                 .setMessage("You have to allow this permission to view Local News content").setCancelable(false)
                 .setNegativeButton("STILL DENY", new DialogInterface.OnClickListener() {
@@ -94,64 +164,41 @@ public class Utility {
                 }).setPositiveButton("RETRY", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                ActivityCompat.requestPermissions(activityContext,permissionArray,requestCode);
-                dialogInterface.dismiss();
-            }
-        }).show();
-    }
-    private void openSetting(Context context){
-        Intent settingIntent = new Intent();
-        settingIntent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        Uri uri = Uri.fromParts("package", BuildConfig.APPLICATION_ID,null);
-        settingIntent.setData(uri);
-        settingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(settingIntent);
-    }
-
-    public void dialogToOpenSetting(Context context,String title, String message){
-        new AlertDialog.Builder(context).setTitle(title).setMessage(message).setCancelable(false)
-                .setNegativeButton("NOT NOW", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                }).setPositiveButton("GO TO SETTINGS", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                openSetting(context);
+                ActivityCompat.requestPermissions(activityContext, permissionArray, requestCode);
                 dialogInterface.dismiss();
             }
         }).show();
     }
 
+    @SuppressLint("MissingPermission")
+    public String getDeviceCountryCode(LocationManager locationMgr, Activity context) {
+        String locationResult = "";
+        locationMgr = (LocationManager) context.getSystemService(LOCATION_SERVICE);
+        Location location = locationMgr.getLastKnownLocation(locationMgr.getBestProvider
+                (new Criteria(), false));
 
-    public boolean hasAllLocationPermGranted(int[] grantResults){
-        for(int grantResult:grantResults){
-            if(grantResult==PackageManager.PERMISSION_DENIED){
-                return false;
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+        Geocoder geocoder = new Geocoder(context);
+        if (geocoder != null) {
+            try {
+                List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
+                Address address = addressList.get(0);
+                locationResult = address.getCountryCode();//Testing purpose
+
+                Log.d(TAG, "Lat:" + latitude + "lon:" + longitude);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
-        return true;
-    }
-    public boolean hasLocationPermGranted(int requestCode, String[] permissions, int[] grantResults){
-        for(int grantResult:grantResults){
-            if(grantResult==PackageManager.PERMISSION_DENIED){
-                return false;
-            }
-        }
-        return true;
-    }
-    public boolean hasWriteExternalPermGranted(int[] grantResults){
-        if(grantResults.length>0 && grantResults[0]== PackageManager.PERMISSION_GRANTED){
-            return true;
-        }else{
-            return false;
-        }
+        return locationResult;
     }
 
-   /* public int getPermissionResult(int requestCode){
-        if(requestCode==100){
-            boolean isLocationGranted
-        }
-    }*/
+    //Others
+    public void showToastMessage(Context context, String message, int length) {
+        Toast.makeText(context, message, length).show();
+    }
+    public void showDebugLog(String LOG_TAG, String message){
+        Log.d(LOG_TAG,message);
+    }
 }

@@ -28,6 +28,6 @@ public class LocationUtil {
     }
     @SuppressLint("StringFormatInvalid")
     static String getLocationTitle(Context context){
-        return context.getString(R.string.location_update, DateFormat.getDateTimeInstance().format(new Date()));
+        return context.getString(R.string.local_location_update, DateFormat.getDateTimeInstance().format(new Date()));
     }
 }

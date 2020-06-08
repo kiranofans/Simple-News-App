@@ -36,8 +36,16 @@
     <string name="please_refresh">Network problem, please tap refresh</string>
     <string name="button_refresh">Refresh</string>
 
-    <!--Location updates-->
-    <string name="location_update">Location update</string>
+    <!--Local Fragment-->
+    <string name="local_location_update">Location update</string>
+    <string name="local_rationale_msg">Without this permission the APP is unable to display contents on this page.
+                        Are you sure you want to deny this permission?</string>
+    <string name="local_rationale_title">Location permission denied</string>
+    <string name="local_permission_denied">location Permission Denied</string>
+    <string name="local_enable_access_from_settings">Now TAP ME to enable location access from settings</string>
+    <string name="local_go_to_settings_msg">TAP on GO TO SETTINGS to enable location permission,
+                                then refresh the page by tapping on the button.</string>
+    <string name="local_refresh">Refresh Content</string>
 
     <!--Home fragment widgets-->
     <string name="button_return_to_top">See new articles</string>
@@ -45,7 +53,7 @@
     <!--RecyclerView-->
     <string name="fragment_transition_name">open_img_transition_name</string>
 
-    <!--Image Fragment-->
+    <!--Image Activity-->
     <string name="img_bottom_nav_share">Share</string>
     <string name="img_bottom_nav_tweet">Tweet</string>
     <string name="img_bottom_nav_facebook">Facebook</string>
@@ -77,4 +85,8 @@
 
     <string name="google_server_client_id">927157329080-u3kmqqlngtk79d0vj1pt8kq5mt5ce8lb.apps.googleusercontent.com</string>
     <string name="google_client_secret">ssMGge9ukL0GS4bf4BqD-P8B</string>>
+
+    <!--Permission Rationale dialog-->
+    <string name="rationale_neg_btn">I\'M SURE</string>
+    <string name="rationale_pos_btn">RETRY</string>
 </resources>
