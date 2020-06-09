@@ -24,9 +24,7 @@ public class LoginViewModel extends ViewModel {
     private MutableLiveData<List<String>> allInfo;
 
     private String email, facebookId, picUrl;
-
     private List<String> profileInfos;
-
 
     public LoginViewModel() {
         //Initialize MutableLiveData

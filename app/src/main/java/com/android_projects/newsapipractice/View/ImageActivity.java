@@ -98,7 +98,7 @@ public class ImageActivity extends AppCompatActivity {
     }
 
     private void downloadImage() {
-        String imgFileName = "IMG_" + utility.imgFileDateTimeConversion
+        String imgFileName = "IMG_" + utility.getLocalDateTime
                 ("ddMMyyy_HHmm") + ".jpg";
         //Pictures folder in Internal Storage
         String destinationPath = Environment.DIRECTORY_PICTURES;
@@ -156,7 +156,7 @@ public class ImageActivity extends AppCompatActivity {
     }
 
     private void shareImage(final File imagePath) {
-        String fileName = "IMG_" + utility.imgFileDateTimeConversion
+        String fileName = "IMG_" + utility.getNewDateTimeFormat
                 ("ddMMyyy_HHmm") + ".png";
         Intent imgShareIntent = new Intent(Intent.ACTION_SEND);//same as intent.setAction();
         imgShareIntent.setType("*/*");

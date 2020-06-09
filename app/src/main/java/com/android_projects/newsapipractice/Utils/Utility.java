@@ -31,10 +31,19 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
+
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -53,15 +62,13 @@ public class Utility {
         }
     }
 
-    public void handleGoogleSignInResult(Task<GoogleSignInAccount> completeTask/*, GoogleSignInResult result*/) {
+    public void handleGoogleSignInResult(Task<GoogleSignInAccount> completeTask) {
         try {
             GoogleSignInAccount googleAccount = completeTask.getResult(ApiException.class);
             if (googleAccount.getIdToken() != null) {
                 Log.d(TAG, "Sign in result ok");
                 //Update UI
             }
-
-
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
@@ -89,15 +96,55 @@ public class Utility {
         context.startActivity(Intent.createChooser(shareIntent, shareStr));
     }
 
-    //Date time conversions
-    public String imgFileDateTimeConversion(String dateTimePattern) {
-        return new SimpleDateFormat(dateTimePattern).format(new Date());
+    /**
+     * @param dateTimePattern
+     * @return a new instance of SimpleDateFormat with a new Date()
+     */
+    public String getNewDateTimeFormat(String dateTimePattern) {
+        //Convert source date time format to other format,
+        return new SimpleDateFormat(dateTimePattern, Locale.ENGLISH).format(new Date());
     }
 
-    public String articleDateTimeConversion(String publishDateTime) {
-        //Need to convert to local time firs
-        return new SimpleDateFormat("EEEE, dd MMMM yyyy").format(publishDateTime);
+    /**
+     * @param dateFormat
+     * @param timeStamp
+     * @return output date time string
+     * Convert Zulu time zone to Local time zone using Joda-Time
+     **/
+    public String convertZuluTimeToLocal(String dateFormat, String timeStamp) {
+        DateTime zuluDateTime;
+        String outputDateStr = null;
+
+        DateTimeFormatter formattedDate = DateTimeFormat.forPattern(dateFormat);
+        zuluDateTime = ISODateTimeFormat.dateTimeNoMillis().parseDateTime(timeStamp)
+                .toDateTime(DateTimeZone.getDefault());//OK
+
+        //Switch to other date time format,use formattedDate to print zuluDateTime
+        outputDateStr = formattedDate.print(zuluDateTime);
+        showDebugLog(TAG, outputDateStr);
+        return outputDateStr;
     }
+
+    /**
+     * @param dateFormat
+     * @return Date time string in local time zone
+     * To convert new Date() to local time
+     */
+    public String getLocalDateTime(String dateFormat) {
+        Date parsedDate = new Date();
+
+        //Source date time string
+        String dateTimeStr = getNewDateTimeFormat(dateFormat);
+        SimpleDateFormat currentFormat = new SimpleDateFormat(dateFormat, Locale.ENGLISH);
+        currentFormat.setTimeZone(TimeZone.getDefault());
+        try {
+            parsedDate = currentFormat.parse(dateTimeStr);
+        } catch (ParseException e) {
+            showDebugLog(TAG, e.getMessage() + "\nCause: " + e.getCause());
+        }
+        return currentFormat.format(parsedDate);
+    }
+
 
     //Permission check
     private void openAppSettings(Context context) {
@@ -109,21 +156,17 @@ public class Utility {
         context.startActivity(settingIntent);
     }
 
-    public void dialogToOpenSetting(Context context, String title, String message, String settingPerms, Button btn) {
+    public void dialogToOpenSetting(Context context, String title, String message,
+                                    String settingPerms, Button btn) {
         new AlertDialog.Builder(context).setTitle(title).setMessage(message).setCancelable(false)
-                .setNegativeButton("NOT NOW", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                }).setPositiveButton("GO TO SETTINGS", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                openAppSettings(context);
-                dialogInterface.dismiss();
-                if (isSettingAccessEnabled(context, settingPerms)) {
-                    changePermBtnTextIfShown(btn, context.getString(R.string.local_refresh));
-                }
+                .setNegativeButton("NOT NOW", (DialogInterface dialogInterface, int i) -> {
+                    dialogInterface.dismiss();
+                }).setPositiveButton("GO TO SETTINGS", (DialogInterface dialogInterface, int i) ->
+        {
+            openAppSettings(context);
+            dialogInterface.dismiss();
+            if (isSettingAccessEnabled(context, settingPerms)) {
+                changePermBtnTextIfShown(btn, context.getString(R.string.local_refresh));
             }
         }).show();
     }
@@ -156,17 +199,13 @@ public class Utility {
     public void showActivityPermissionRationale(Activity activityContext, String[] permissionArray, int requestCode) {
         new AlertDialog.Builder(activityContext).setTitle("Location permission denied")
                 .setMessage("You have to allow this permission to view Local News content").setCancelable(false)
-                .setNegativeButton("STILL DENY", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                }).setPositiveButton("RETRY", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                ActivityCompat.requestPermissions(activityContext, permissionArray, requestCode);
-                dialogInterface.dismiss();
-            }
+                .setNegativeButton("STILL DENY", (DialogInterface dialogInterface, int i) ->
+                {
+                    dialogInterface.dismiss();
+                }).setPositiveButton("RETRY", (DialogInterface dialogInterface, int i) ->
+        {
+            ActivityCompat.requestPermissions(activityContext, permissionArray, requestCode);
+            dialogInterface.dismiss();
         }).show();
     }
 
@@ -198,7 +237,8 @@ public class Utility {
     public void showToastMessage(Context context, String message, int length) {
         Toast.makeText(context, message, length).show();
     }
-    public void showDebugLog(String LOG_TAG, String message){
-        Log.d(LOG_TAG,message);
+
+    public void showDebugLog(String LOG_TAG, String message) {
+        Log.d(LOG_TAG, message);
     }
 }

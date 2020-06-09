@@ -15,10 +15,10 @@ import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android_projects.newsapipractice.View.ArticleActivity;
-import com.android_projects.newsapipractice.View.ImageActivity;
 import com.android_projects.newsapipractice.Utils.DataDiffCallback;
 import com.android_projects.newsapipractice.Utils.Utility;
+import com.android_projects.newsapipractice.View.ArticleActivity;
+import com.android_projects.newsapipractice.View.ImageActivity;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.ButtonReturnToTopBinding;
 import com.android_projects.newsapipractice.databinding.ListNewsBinding;
@@ -37,6 +37,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
 
     private List<Article> articleList;
     private Context context;
+
     public boolean isLoading = false;//To determine if load the data or not
 
     @NonNull
@@ -94,14 +95,15 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
     public class ArticleHolder extends BaseViewHolder<Article> {
         private ListNewsBinding holderBinding;
         private ButtonReturnToTopBinding goToTopBinding;
-        private Utility utility;
+        private Utility utility = new Utility();
 
         ShareDialog shareDialog = new ShareDialog((Activity) context);
 
         private int position;
         List<Object> payloads = new ArrayList<>();
 
-        private Intent articleIntent,imageIntent;
+        private Intent articleIntent, imageIntent;
+
         /**
          * Set the article data
          **/
@@ -114,16 +116,20 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
 
         @Override
         protected void clearListData() {
-
         }
 
-        public ListNewsBinding getBinding(){
+        public ListNewsBinding getBinding() {
             return holderBinding;
         }
+
         @Override
         public void bind(Article object) {
+            //Convert UTC+0 to local time zone and siwtched to "MMM d, yyyy HH:mm a" format
+            String newDateFormat = utility.convertZuluTimeToLocal
+                    ("MMM d, yyyy HH:mm a", object.getPublishedAt());
+
             holderBinding.articleTvSource.setText(object.getSource().getName());
-            holderBinding.articleTvPublishDate.setText(object.getPublishedAt());//can be converted to local timezone
+            holderBinding.articleTvPublishDate.setText(newDateFormat);
             holderBinding.articleTitle.setText(object.getTitle());
             itemOnClick(object);
             setImgOnClick(object);
@@ -146,97 +152,80 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
 
         private void showFooter() {
             if (isLoading) {
-                Toast.makeText(context,"isLoading", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "isLoading", Toast.LENGTH_SHORT).show();
                 //binding.recyclerViewFooter.setVisibility(View.VISIBLE);
             } else {
-                Toast.makeText(context,"isNotLoading", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "isNotLoading", Toast.LENGTH_SHORT).show();
                 //binding.recyclerViewFooter.setVisibility(View.GONE);
             }
         }
 
         private void itemOnClick(Article object) {
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION) {
-                        Log.d("TAG", position + " clicked");
-                        articleIntent = new Intent(context, ArticleActivity.class);
-                        articleIntent.putExtra(EXTRA_KEY_ARTICLE, object);
+            itemView.setOnClickListener((View v) -> {
+                position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    Log.d("TAG", position + " clicked");
+                    articleIntent = new Intent(context, ArticleActivity.class);
+                    articleIntent.putExtra(EXTRA_KEY_ARTICLE, object);
 
-                        context.startActivity(articleIntent);
-                    }
+                    context.startActivity(articleIntent);
                 }
+
             });
 
         }
 
-        private void setImgOnClick(Article object){
-            //ImageActivity imgFrag = ImageActivity.newInstance(position);
-            holderBinding.articleImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    position = getAdapterPosition();
-                    Log.d(TAG, "Image clicked "+position);
-                    if(position!=RecyclerView.NO_POSITION){
-                        imageIntent = new Intent(context, ImageActivity.class);
-                        imageIntent.putExtra(EXTRA_KEY_ARTICLE,object);
+        private void setImgOnClick(Article object) {
+            holderBinding.articleImageView.setOnClickListener((View v) -> {
+                position = getAdapterPosition();
+                Log.d(TAG, "Image clicked " + position);
+                if (position != RecyclerView.NO_POSITION) {
+                    imageIntent = new Intent(context, ImageActivity.class);
+                    imageIntent.putExtra(EXTRA_KEY_ARTICLE, object);
 
-                        String transName = "Image_"+position;
-                        ViewCompat.setTransitionName(holderBinding.articleImageView,transName);
-                        //mListener.onRecyclerViewImageClicked(holder,position, holderBinding);
-
-                        context.startActivity(imageIntent);
-                    }
+                    String transName = "Image_" + position;
+                    ViewCompat.setTransitionName(holderBinding.articleImageView, transName);
+                    context.startActivity(imageIntent);
                 }
             });
         }
 
-        private void facebookLinkShare(Article obj){
+        private void facebookLinkShare(Article obj) {
             String newsSource = obj.getSource().getName();
             ShareLinkContent shareLinkContent = new ShareLinkContent.Builder().setShareHashtag(
-                    new ShareHashtag.Builder().setHashtag("#"+newsSource).build())
+                    new ShareHashtag.Builder().setHashtag("#" + newsSource).build())
                     .setQuote(obj.getDescription())
                     .setContentUrl(Uri.parse(obj.getUrl())).build();
-            if(shareDialog.canShow(ShareLinkContent.class)){
+            if (shareDialog.canShow(ShareLinkContent.class)) {
                 shareDialog.show(shareLinkContent);
             }
         }
 
-        private void twitterShare(Article obj){
+        private void twitterShare(Article obj) {
             //May apply webView later
-            String twitterUrl = "https://twitter.com/intent/tweet?text="+
-                    obj.getTitle()+"&url="+ obj.getUrl();
+            String twitterUrl = "https://twitter.com/intent/tweet?text=" +
+                    obj.getTitle() + "&url=" + obj.getUrl();
             Uri twitterUri = Uri.parse(twitterUrl);
-            context.startActivity(new Intent(Intent.ACTION_VIEW,twitterUri));
+            context.startActivity(new Intent(Intent.ACTION_VIEW, twitterUri));
         }
 
         private void setCardBtnOnClicks(Article obj) {
             position = getAdapterPosition();
-            holderBinding.btnShare.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.d(TAG, "Share button clicked "+position);
-                    utility=new Utility();
-                    utility.shareArticles(obj,itemView.getContext(),"Share Via ");
-                }
+            holderBinding.btnShare.setOnClickListener((View v) -> {
+                Log.d(TAG, "Share button clicked " + position);
+                utility = new Utility();
+                utility.shareArticles(obj, itemView.getContext(), "Share Via ");
             });
-            holderBinding.btnShareFacebook.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.d(TAG, "Facebook clicked "+position);
-                    facebookLinkShare(obj);
-                }
+            holderBinding.btnShareFacebook.setOnClickListener((View v) -> {
+                Log.d(TAG, "Facebook clicked " + position);
+                facebookLinkShare(obj);
             });
 
-            holderBinding.btnShareTwitter.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.d(TAG, "Twitter clicked "+position);
-                    twitterShare(obj);
-                    //Toast.makeText(view.getContext(), "Twitter", Toast.LENGTH_SHORT).show();
+            holderBinding.btnShareTwitter.setOnClickListener((View v) -> {
+                Log.d(TAG, "Twitter clicked " + position);
+                twitterShare(obj);
+                //Toast.makeText(view.getContext(), "Twitter", Toast.LENGTH_SHORT).show();
 
-                }
             });
         }
     }

@@ -119,4 +119,7 @@ dependencies {
     //Google APIs
     implementation "com.google.android.gms:play-services-auth:18.0.0"
     implementation "com.google.android.gms:play-services-plus:17.0.0"
+
+    //Joda Time
+    implementation "joda-time:joda-time:2.10.6"
 }
