@@ -88,6 +88,8 @@
     <string name="google_client_secret">ssMGge9ukL0GS4bf4BqD-P8B</string>>
 
     <!--Permission Rationale dialog-->
-    <string name="rationale_neg_btn">I\'M SURE</string>
-    <string name="rationale_pos_btn">RETRY</string>
+    <string name="perm_rationale_neg_btn">I\'M SURE</string>
+    <string name="perm_rationale_pos_btn">RETRY</string>
+    <string name="perm_pos_setting">GO TO SETTINGS</string>
+    <string name="perms_neg_not_now">NOT NOW</string>
 </resources>

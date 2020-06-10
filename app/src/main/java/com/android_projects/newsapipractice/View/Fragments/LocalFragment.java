@@ -18,7 +18,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -218,11 +217,11 @@ public class LocalFragment extends Fragment {
 
     public void showLocationRational(String[] permissions, String title, String message) {
         new AlertDialog.Builder(getContext()).setTitle(title).setMessage(message)
-                .setCancelable(false).setNegativeButton(getString(R.string.rationale_neg_btn),
+                .setCancelable(false).setNegativeButton(getString(R.string.perm_rationale_neg_btn),
                 (DialogInterface dialogInterface, int i) -> {
                     dialogInterface.dismiss();
 
-                }).setPositiveButton(getString(R.string.rationale_pos_btn),
+                }).setPositiveButton(getString(R.string.perm_rationale_pos_btn),
                 (DialogInterface dialogInterface, int i) -> {
                     requestPermissions(permissions, 100);
                     dialogInterface.dismiss();
