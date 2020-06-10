@@ -25,6 +25,7 @@ import androidx.core.app.ActivityCompat;
 import com.android_projects.newsapipractice.BuildConfig;
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.data.Models.Article;
+import com.android_projects.newsapipractice.data.Models.TextModel;
 import com.facebook.AccessToken;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -50,6 +51,7 @@ import static android.content.Context.LOCATION_SERVICE;
 public class Utility {
     private final String TAG = Utility.class.getSimpleName();
 
+    private TextModel txtObject=new TextModel();
     //Sign in check
     public boolean isLoggedInWithGoogle(Context context) {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(context);
@@ -158,7 +160,8 @@ public class Utility {
 
     public void dialogToOpenSetting(Context context, String title, String message,
                                     String settingPerms, Button btn) {
-        new AlertDialog.Builder(context).setTitle(title).setMessage(message).setCancelable(false)
+        new AlertDialog.Builder(context).setTitle(title).setMessage(message)
+                .setCancelable(false)
                 .setNegativeButton("NOT NOW", (DialogInterface dialogInterface, int i) -> {
                     dialogInterface.dismiss();
                 }).setPositiveButton("GO TO SETTINGS", (DialogInterface dialogInterface, int i) ->
