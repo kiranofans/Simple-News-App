@@ -109,7 +109,7 @@ public class Utility {
      * @param dateFormat
      * @param timeStamp
      * @return output date time string
-     * Convert Zulu time zone to Local time zone using Joda-Time
+     * Convert Zulu time zone to local time zone using Joda-Time
      **/
     public String convertZuluTimeToLocal(String dateFormat, String timeStamp) {
         DateTime zuluDateTime;

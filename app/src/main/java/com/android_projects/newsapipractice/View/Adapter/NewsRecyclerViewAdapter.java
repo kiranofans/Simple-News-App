@@ -124,9 +124,9 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
 
         @Override
         public void bind(Article object) {
-            //Convert UTC+0 to local time zone and siwtched to "MMM d, yyyy HH:mm a" format
+            //Convert UTC+0 to local time zone and switched to "MMM d, yyyy KK:mm a" 12 hours format
             String newDateFormat = utility.convertZuluTimeToLocal
-                    ("MMM d, yyyy HH:mm a", object.getPublishedAt());
+                    ("MMM d, yyyy KK:mm a", object.getPublishedAt());
 
             holderBinding.articleTvSource.setText(object.getSource().getName());
             holderBinding.articleTvPublishDate.setText(newDateFormat);
