@@ -92,4 +92,8 @@
     <string name="perm_rationale_pos_btn">RETRY</string>
     <string name="perm_pos_setting">GO TO SETTINGS</string>
     <string name="perms_neg_not_now">NOT NOW</string>
+
+    <!--Date time handling-->
+    <string name="date_time_today">Today at</string>
+    <string name="date_time_yesterday">Yesterday at</string>
 </resources>

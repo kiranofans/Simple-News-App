@@ -42,7 +42,6 @@ import org.joda.time.format.ISODateTimeFormat;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -53,7 +52,8 @@ import static android.content.Context.LOCATION_SERVICE;
 public class Utility {
     private final String TAG = Utility.class.getSimpleName();
 
-    private TextModel txtObject=new TextModel();
+    private TextModel txtObject = new TextModel();
+
     //Sign in check
     public boolean isLoggedInWithGoogle(Context context) {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(context);
@@ -116,10 +116,10 @@ public class Utility {
      * Convert Zulu time zone to local time zone, switching to other date time format,
      * and parsing to today or yesterday strings using Joda-Time
      **/
-    public String getFinalTimeStamp(String dateFormat, String timeStamp) {
+    public String getFinalTimeStamp(Context context, String dateFormat, String timeStamp) {
         DateTime zuluDateTime;
         String outputDateStr;
-        DateTime today= new DateTime();
+        DateTime today = new DateTime();
         DateTime yesterday = today.minusDays(1);
 
         DateTimeFormatter formattedDate = DateTimeFormat.forPattern(dateFormat);
@@ -128,14 +128,16 @@ public class Utility {
 
         //New format to convert to today or yesterday
         DateTimeFormatter newDateTimeStr = DateTimeFormat.forPattern("hh:mm a");
-        LocalDate zuluLocalDate =  zuluDateTime.toLocalDate();
-        if(zuluLocalDate.equals(today.toLocalDate())){//Use zuluDateTime to compare
-            outputDateStr="Today at "+newDateTimeStr.print(zuluDateTime);
-        }else if(zuluLocalDate.equals(yesterday.toLocalDate())){
-            outputDateStr="Yesterday at "+newDateTimeStr.print(zuluDateTime);
-        }else{
+        LocalDate zuluLocalDate = zuluDateTime.toLocalDate();
+        if (zuluLocalDate.equals(today.toLocalDate())) {//Use zuluDateTime to compare
+            outputDateStr = context.getString(R.string.date_time_today)
+                    + " " + newDateTimeStr.print(zuluDateTime);
+        } else if (zuluLocalDate.equals(yesterday.toLocalDate())) {
+            outputDateStr = context.getString(R.string.date_time_yesterday)
+                    + " " + newDateTimeStr.print(zuluDateTime);
+        } else {
             //Otherwise, show converted customized date time format
-            outputDateStr=formattedDate.print(zuluDateTime);
+            outputDateStr = formattedDate.print(zuluDateTime);
         }
         showDebugLog(TAG, outputDateStr);
         return outputDateStr;
