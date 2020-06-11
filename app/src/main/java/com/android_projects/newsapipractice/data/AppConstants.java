@@ -4,8 +4,6 @@ public class AppConstants {
     public static final String EXTRA_KEY_SOURCE_ID = "EXTRA_KEY_SOURCE_ID";
     public static final String EXTRA_KEY_SOURCE_NAME = "EXTRA_KEY_SOURCE_NAME";
     public static final String EXTRA_KEY_ARTICLE = "EXTRA_KEY_ARTICLE";
-    public static final String EXTRA_KEY_LATITUDE="LATITUDE";
-    public static final String EXTRA_KEY_LONGITUDE="LONGITUDE";
 
     public static final String LANGUAGE_ENGLISH="en";
     public static final String LANGUAGE_SPANISH = "es";
