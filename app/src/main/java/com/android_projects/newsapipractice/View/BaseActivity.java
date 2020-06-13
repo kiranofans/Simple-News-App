@@ -1,7 +1,9 @@
 package com.android_projects.newsapipractice.View;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -24,24 +26,17 @@ import com.android_projects.newsapipractice.View.Fragments.LocalFragment;
 import com.android_projects.newsapipractice.View.Fragments.PopularFragment;
 import com.android_projects.newsapipractice.View.Managers.PermissionManager;
 import com.android_projects.newsapipractice.databinding.ActivityMainBinding;
+import com.android_projects.newsapipractice.network.NetworkConnectivityReceiver;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity{
     private final String TAG = BaseActivity.class.getSimpleName();
     private ActivityMainBinding mainBinding;
 
-    //private SharedPrefManager sharedPrefMgr;
     private PermissionManager permMgr;
 
-    /*private NotificationBadgeLayoutBinding badgeBinding;
-    private BadgeDrawable badgeDrawable;*/
-
     private BottomNavigationMenuView bottomNavMenuView;
-    /* private View notificationBadge;
-    private boolean isBadgeVisible=false;
-    private final int LOCATION_PERMS_RC = 101;
-    private final int WRITE_EXTERNAL_STORAGE_RC=102;*/
     private final int ALL_PERMISSIONS = 100;
 
     private Utility utility;
@@ -55,7 +50,7 @@ public class BaseActivity extends AppCompatActivity {
         utility = new Utility();
         permMgr = new PermissionManager(this);
 
-        requestLocationPermission();
+        requestPermissions();
         getSupportActionBar().setIcon(android.R.drawable.stat_sys_headset);
     }
 
@@ -101,30 +96,6 @@ public class BaseActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /*private void badgeNotification(Notification notification, int count){
-        Intent notificationIntent = new Intent(this, MyNotificationPublisher.class);
-        notificationIntent.putExtra(MyNotificationPublisher.BADGE_CHANNEL_IDS_NAME,1);
-        notificationIntent.putExtra(MyNotificationPublisher.BADGE_NOTIFICATION_ID,notification);
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,
-                notificationIntent,PendingIntent.FLAG_UPDATE_CURRENT);
-        setBadge(count,R.id.nav_home,pendingIntent);
-        setBadge(count,R.id.nav_popular,pendingIntent);
-        setBadge(count,R.id.nav_local,pendingIntent);
-
-    }*/
-   /* public void setBadge(int count, int resId, PendingIntent pendingIntent){
-        badgeDrawable = mainBinding.mainBottomNavigation.getOrCreateBadge(resId);
-
-        badgeDrawable.setNumber(count);
-        if(badgeDrawable.getNumber()>0){
-            badgeDrawable.setVisible(true);
-        }else {
-            badgeDrawable.setVisible(false);
-            //badgeDrawable.setVisible(false);
-        }
-    }*/
-
     public boolean setFragments(Fragment fragment) {
         if (fragment != null) {
             FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction()
@@ -135,7 +106,7 @@ public class BaseActivity extends AppCompatActivity {
         return false;
     }
 
-    private void requestLocationPermission() {
+    private void requestPermissions() {
         //Request permissions
         String externalStoragePerm = permMgr.externalStoragePermission;
         String[] permissionTypes = {externalStoragePerm, permMgr.coarseLocationPerm, permMgr.fineLocationPerm};
@@ -160,5 +131,4 @@ public class BaseActivity extends AppCompatActivity {
         super.onStart();
         utility.isLoggedInWithGoogle(getApplicationContext());
     }
-
 }

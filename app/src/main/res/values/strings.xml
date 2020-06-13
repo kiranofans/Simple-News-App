@@ -33,7 +33,7 @@
 
     <!--No content layout-->
     <string name="no_result_found">No result found</string>
-    <string name="please_refresh">Network problem, please tap refresh</string>
+    <string name="please_refresh">Network connection failed.\nNo mobile data or Wifi signal detected. Please try to reconnect.</string>
     <string name="button_refresh">Refresh</string>
 
     <!--Local Fragment-->

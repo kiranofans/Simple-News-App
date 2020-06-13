@@ -5,8 +5,8 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/activity_main_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -25,7 +25,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_constraintBottom_toTopOf="@+id/main_bottom_navigation" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+        <include layout="@layout/no_network_layout"
+            android:id="@+id/no_network_content"
+            android:visibility="gone"/>
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
     <!--Header and footers in recyclerView-->
 
