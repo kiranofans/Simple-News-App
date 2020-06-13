@@ -59,6 +59,9 @@
              android:text="@string/article_button_continue_reading"/>
      </androidx.constraintlayout.widget.ConstraintLayout>
      </androidx.core.widget.NestedScrollView>
+     <include layout="@layout/no_network_layout"
+         android:id="@+id/no_network_layout"
+         android:visibility="gone"/>
  </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>

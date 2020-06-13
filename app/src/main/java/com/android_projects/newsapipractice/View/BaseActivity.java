@@ -30,18 +30,23 @@ import com.android_projects.newsapipractice.network.NetworkConnectivityReceiver;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class BaseActivity extends AppCompatActivity{
+public class BaseActivity extends AppCompatActivity implements NetworkConnectivityReceiver.ConnectivityReceiverListener{
     private final String TAG = BaseActivity.class.getSimpleName();
+
+    //Views
     private ActivityMainBinding mainBinding;
-
-    private PermissionManager permMgr;
-
     private BottomNavigationMenuView bottomNavMenuView;
+
+    //Network
+    private NetworkConnectivityReceiver connReceiver;
+
+    //Permission
+    private PermissionManager permMgr;
     private final int ALL_PERMISSIONS = 100;
-
-    private Utility utility;
-
     public boolean isLocationPermGranted, isWriteExternalPermGranted;
+
+    //Others
+    public Utility utility;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,9 +54,11 @@ public class BaseActivity extends AppCompatActivity{
         mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         utility = new Utility();
         permMgr = new PermissionManager(this);
+        connReceiver = new NetworkConnectivityReceiver();
+        registerReceiver(new NetworkConnectivityReceiver(),
+                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
         requestPermissions();
-        getSupportActionBar().setIcon(android.R.drawable.stat_sys_headset);
     }
 
     public BottomNavigationView.OnNavigationItemSelectedListener mNavItemSelectedListener
@@ -130,5 +137,16 @@ public class BaseActivity extends AppCompatActivity{
     protected void onStart() {
         super.onStart();
         utility.isLoggedInWithGoogle(getApplicationContext());
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(Boolean isConnected) {
+       utility.showDebugLog(TAG,"Is network available:"+isConnected);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        connReceiver.connectivityReceiverListener = this;
     }
 }

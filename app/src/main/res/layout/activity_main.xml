@@ -28,7 +28,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
         <include layout="@layout/no_network_layout"
-            android:id="@+id/no_network_content"
+            android:id="@+id/no_network_layout"
             android:visibility="gone"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

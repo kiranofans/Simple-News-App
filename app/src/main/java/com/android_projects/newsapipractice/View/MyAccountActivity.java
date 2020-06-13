@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.databinding.DataBindingUtil;
@@ -17,18 +16,16 @@ import com.google.android.gms.tasks.Task;
 
 import static com.android_projects.newsapipractice.View.LoginActivity.googleSignInClient;
 
-public class MyAccountActivity extends AppCompatActivity {
+public class MyAccountActivity extends BaseActivity {
     private final String TAG = MyAccountActivity.class.getSimpleName();
 
     private ActivityMyAccountBinding accountBinding;
     private GoogleSignInAccount googleSignInAccount;
-    //private GoogleLoginViewModel googleLoginViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         accountBinding = DataBindingUtil.setContentView(this, R.layout.activity_my_account);
-        //googleLoginViewModel = new ViewModelProvider(this).get(GoogleLoginViewModel.class);
 
         //Google Account extra
         googleSignInAccount = getIntent().getParcelableExtra("GOOGLE_CREDENTIALS");
@@ -68,5 +65,11 @@ public class MyAccountActivity extends AppCompatActivity {
                 finish();
             });
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();//set the back arrow onClick event
+        return true;
     }
 }

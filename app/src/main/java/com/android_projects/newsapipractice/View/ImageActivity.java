@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.android_projects.newsapipractice.R;
@@ -40,7 +39,7 @@ import java.io.OutputStream;
 
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_ARTICLE;
 
-public class ImageActivity extends AppCompatActivity {
+public class ImageActivity extends BaseActivity {
     private final String TAG = ImageActivity.class.getSimpleName();
 
     private BroadcastReceiver onDownloadCompleteReceiver = null;

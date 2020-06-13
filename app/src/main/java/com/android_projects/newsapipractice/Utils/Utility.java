@@ -16,6 +16,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -251,6 +252,19 @@ public class Utility {
         }
         return locationResult;
     }
+
+    //Network handling
+    public void showNoNetworkUI(Boolean isConnected, View activityMain,View noNetworkLayout){
+        if (!isConnected) {
+            activityMain.setVisibility(View.GONE);
+            noNetworkLayout.setVisibility(View.VISIBLE);
+
+        } else {
+            activityMain.setVisibility(View.VISIBLE);
+            noNetworkLayout.setVisibility(View.GONE);
+        }
+    }
+
 
     //Others
     public void showToastMessage(Context context, String message, int length) {
