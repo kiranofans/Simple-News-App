@@ -83,9 +83,8 @@ dependencies {
     //AndroidX coordinator layout
     implementation "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
 
-    //Lifecycle
+    //Lifecycle (don't need to apply compiler if using java 8)
     def lifecycle_version = "2.2.0"
-    def arch_version = "2.1.0"
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
 
@@ -101,14 +100,8 @@ dependencies {
     implementation "com.github.tbruyelle:rxpermissions:0.10.2"
     implementation "io.reactivex.rxjava2:rxjava:2.2.10"
 
-    //Event bus library
-    implementation 'org.greenrobot:eventbus:3.1.1'
-
     //PhotoView
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
-
-    //ImageZoom
-    implementation "com.github.okaybroda:ImageZoom:1.1.0"
 
     //Facebook APIs
     def fb_api_version = "7.0.0"
