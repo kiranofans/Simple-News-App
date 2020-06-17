@@ -15,6 +15,7 @@ import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.Utils.DataDiffCallback;
 import com.android_projects.newsapipractice.Utils.Utility;
 import com.android_projects.newsapipractice.View.ArticleActivity;
@@ -38,7 +39,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
     private List<Article> articleList;
     private Context context;
 
-    public boolean isLoading = false;//To determine if load the data or not
+    //public boolean isLoading = false;//To determine if loading the data or not
 
     @NonNull
     @Override
@@ -133,31 +134,9 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
             holderBinding.articleTitle.setText(object.getTitle());
             itemOnClick(object);
             setImgOnClick(object);
-            //showFooter();
             Glide.with(context).load(object.getUrlToImage()).into(holderBinding.articleImageView);
             setCardBtnOnClicks(object);
-            /*if (payloads.isEmpty()) {
-                Log.d(TAG,"Payloads is empty");
-                return;
-            } else {
-                Bundle bundle = (Bundle) payloads.get(0);
-                for (String key : bundle.keySet()) {
-                    if (key.equals(KEY_ARTICLE_NAMES)) {
-                        //binding.goToTopButton.setVisibility(View.VISIBLE);
-                        Log.d(TAG, "RecyclerView: New Articles");
-                    }
-                }
-            }*/
-        }
 
-        private void showFooter() {
-            if (isLoading) {
-                Toast.makeText(context, "isLoading", Toast.LENGTH_SHORT).show();
-                //binding.recyclerViewFooter.setVisibility(View.VISIBLE);
-            } else {
-                Toast.makeText(context, "isNotLoading", Toast.LENGTH_SHORT).show();
-                //binding.recyclerViewFooter.setVisibility(View.GONE);
-            }
         }
 
         private void itemOnClick(Article object) {
@@ -172,19 +151,15 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
                 }
 
             });
-
         }
 
         private void setImgOnClick(Article object) {
             holderBinding.articleImageView.setOnClickListener((View v) -> {
                 position = getAdapterPosition();
-                Log.d(TAG, "Image clicked " + position);
                 if (position != RecyclerView.NO_POSITION) {
                     imageIntent = new Intent(context, ImageActivity.class);
                     imageIntent.putExtra(EXTRA_KEY_ARTICLE, object);
 
-                    String transName = "Image_" + position;
-                    ViewCompat.setTransitionName(holderBinding.articleImageView, transName);
                     context.startActivity(imageIntent);
                 }
             });
@@ -204,17 +179,13 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
         private void setCardBtnOnClicks(Article obj) {
             position = getAdapterPosition();
             holderBinding.btnShare.setOnClickListener((View v) -> {
-                Log.d(TAG, "Share button clicked " + position);
-                utility = new Utility();
-                utility.shareArticles(obj, itemView.getContext(), "Share Via ");
+                utility.shareText(obj, itemView.getContext(), v.getContext().getString(R.string.share_via));
             });
             holderBinding.btnShareFacebook.setOnClickListener((View v) -> {
-                Log.d(TAG, "Facebook clicked " + position);
                 facebookLinkShare(obj);
             });
 
             holderBinding.btnShareTwitter.setOnClickListener((View v) -> {
-                Log.d(TAG, "Twitter clicked " + position);
                 utility.twitterShare(itemView.getContext(),obj);
 
             });

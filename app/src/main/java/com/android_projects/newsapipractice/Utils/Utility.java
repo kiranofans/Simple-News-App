@@ -26,7 +26,6 @@ import androidx.core.app.ActivityCompat;
 import com.android_projects.newsapipractice.BuildConfig;
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.data.Models.Article;
-import com.android_projects.newsapipractice.data.Models.TextModel;
 import com.facebook.AccessToken;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -52,8 +51,6 @@ import static android.content.Context.LOCATION_SERVICE;
 
 public class Utility {
     private final String TAG = Utility.class.getSimpleName();
-
-    private TextModel txtObject = new TextModel();
 
     //Sign in check
     public boolean isLoggedInWithGoogle(Context context) {
@@ -91,7 +88,7 @@ public class Utility {
     }
 
     //Share content methods
-    public void shareArticles(Article obj, Context context, String shareStr) {
+    public void shareText(Article obj, Context context, String shareStr) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
 
         //Pass your sharing content to the "putExtra" method of the Intent class

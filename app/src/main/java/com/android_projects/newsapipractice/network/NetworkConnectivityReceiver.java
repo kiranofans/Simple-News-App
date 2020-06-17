@@ -30,11 +30,9 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
                 NetworkCapabilities capability = connMgr.getNetworkCapabilities
                         (connMgr.getActiveNetwork());
                 if (capability != null) {
-                    if (capability.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
-                        return true;
-                    } else if (capability.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-                        return true;
-                    }  else if (capability.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)){
+                    if (capability.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)||
+                            capability.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)||
+                            capability.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
                         return true;
                     }
                 }
@@ -50,7 +48,7 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
                 }
             }
         }
-        Log.i("update_statut","Network availability: FALSE ");
+        Log.i(TAG,"Network availability: FALSE ");
         return false;
     }
     public interface ConnectivityReceiverListener{

@@ -25,7 +25,7 @@
             </intent-filter>
         </receiver>
         <activity android:name=".View.MyAccountActivity"
-            android:label="@string/top_mene_setting"
+            android:label="@string/top_menu_setting"
             android:theme="@style/FullscreenTheme"></activity>
         <activity android:name=".View.LoginActivity" />
         <activity
