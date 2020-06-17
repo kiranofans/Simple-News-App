@@ -271,7 +271,7 @@ public class Utility {
 
 
     //Others
-    public void showToastMessage(Context context, String message, int length) {
+    public void showToastMsg(Context context, String message, int length) {
         Toast.makeText(context, message, length).show();
     }
 

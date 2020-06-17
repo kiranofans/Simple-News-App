@@ -37,12 +37,13 @@ import java.util.List;
 public class LocalFragment extends Fragment {
     private final String TAG = LocalFragment.class.getSimpleName();
 
-    private Utility utility;
-
     private View v;
     private FragmentLocalBinding localBinding;
     private NewsArticleViewModel localNewsViewModel;
+    private NewsRecyclerViewAdapter recViewAdapter;
+    private LinearLayoutManager layoutManager;
 
+    private Utility utility;
     private LocationManager locationMgr;
     private PermissionManager permMgr;
 
@@ -50,11 +51,6 @@ public class LocalFragment extends Fragment {
     private int currentPageNum = 1;
     private boolean isLoading = false;
     private boolean isLastPage = false;
-
-    private NewsRecyclerViewAdapter recViewAdapter;
-    private LinearLayoutManager layoutManager;
-
-    private String[] locationPermissions;
 
     private List<Article> localNewsList;
 
@@ -68,7 +64,6 @@ public class LocalFragment extends Fragment {
         localBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_local, container, false);
         utility = new Utility();
         permMgr = new PermissionManager(getContext());
-        locationPermissions = new String[]{permMgr.coarseLocationPerm, permMgr.fineLocationPerm};
         localNewsList = new ArrayList<>();
 
         return v = localBinding.getRoot();
@@ -82,7 +77,7 @@ public class LocalFragment extends Fragment {
                 .getString(R.string.title_local_news));
 
         setRecyclerView(view);
-        checkLocationPermissionResults(locationPermissions);//Permission granted,display content
+        checkLocationPermissionResults(permMgr.locationPermissions);//Permission granted,display content
         onScrollListener();
     }
 
@@ -148,7 +143,7 @@ public class LocalFragment extends Fragment {
         if (localBinding.noDataFoundLayout.noDataPermissionButton != null) {
             localBinding.noDataFoundLayout.noDataPermissionButton.setOnClickListener((View v) -> {
                 utility.showDebugLog(TAG, "Clicked");
-                checkLocationPermissionResults(locationPermissions);
+                checkLocationPermissionResults(permMgr.locationPermissions);
             });
         }
     }
@@ -199,7 +194,6 @@ public class LocalFragment extends Fragment {
                 Button btn = localBinding.noDataFoundLayout.noDataPermissionButton;
                 localBinding.noDataFoundLayout.noDataPermissionButton.setText
                         (getString(R.string.local_enable_access_from_settings));
-                Log.d(TAG, "change text");
                 utility.dialogToOpenSetting(v.getContext(), getString(R.string.local_permission_denied),
                         getString(R.string.local_go_to_settings_msg),
                         AppOpsManager.OPSTR_COARSE_LOCATION, btn);
@@ -215,8 +209,8 @@ public class LocalFragment extends Fragment {
         });
     }
 
-    public void showLocationRational(String[] permissions, String title, String message) {
-        new AlertDialog.Builder(getContext()).setTitle(title).setMessage(message)
+    private void showLocationRational(String[] permissions, String title, String message) {
+        new AlertDialog.Builder(v.getContext()).setTitle(title).setMessage(message)
                 .setCancelable(false).setNegativeButton(getString(R.string.perm_rationale_neg_btn),
                 (DialogInterface dialogInterface, int i) -> {
                     dialogInterface.dismiss();

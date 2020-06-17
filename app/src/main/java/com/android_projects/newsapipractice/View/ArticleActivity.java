@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.view.View;
 
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 
 import com.android_projects.newsapipractice.R;
@@ -18,6 +19,7 @@ import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_A
 public class ArticleActivity extends BaseActivity {
     private final String TAG = ArticleActivity.class.getSimpleName();
 
+    //Views
     private ActivityArticleBinding mBinding;
 
     private Article articleObj;
@@ -27,7 +29,6 @@ public class ArticleActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_article);
         articleObj = (Article) getIntent().getSerializableExtra(EXTRA_KEY_ARTICLE);
-        //PhotoViewAttacher photoViewAttacher = new PhotoViewAttacher(mBinding.articleImgViewContent);
 
         getObjectExtra();
     }
@@ -56,7 +57,7 @@ public class ArticleActivity extends BaseActivity {
 
         if (isContentEmpty(articleObj) && mBinding.articleTvContent != null) {
             mBinding.articleTvContent.setText(articleObj.getDescription());
-            if (articleObj.getDescription() == null || articleObj.getDescription() == "") {
+            if (articleObj.getDescription() == null || articleObj.getDescription().equals("")) {
                 mBinding.articleTvContent.setText(R.string.article_content_unavailable);
             }
         } else {
@@ -69,14 +70,14 @@ public class ArticleActivity extends BaseActivity {
     }
 
     private boolean isContentEmpty(Article obj) {
-        if (obj.getContent() == null || obj.getContent() == "") {
+        if (obj.getContent() == null || obj.getContent().equals("")) {
             return true;
         }
         return false;
     }
 
     private boolean isAuthorEmpty(Article obj) {
-        if (obj.getAuthor() == null || obj.getAuthor() == "") {
+        if (obj.getAuthor() == null || obj.getAuthor().equals("")) {
             return true;
         }
         return false;

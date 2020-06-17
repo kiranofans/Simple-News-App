@@ -6,11 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -22,14 +20,11 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 
 import com.android_projects.newsapipractice.R;
-import com.android_projects.newsapipractice.Utils.Utility;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.ActivityImageBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.facebook.share.model.ShareHashtag;
 import com.facebook.share.model.ShareLinkContent;
@@ -38,11 +33,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URI;
 
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_ARTICLE;
 
@@ -52,12 +44,10 @@ public class ImageActivity extends BaseActivity {
     //Views
     private ActivityImageBinding imgBinding;
 
-    //Download Manager
+    //Download Manager & image share
     private BroadcastReceiver onDownloadCompleteReceiver = null;
     private final String IMG_DATE_FORMAT = "ddMMyyy_HHmm";
     private String imgURL;
-
-    //Share
     private ShareDialog fbShareDialog;
 
     //Google sign in
@@ -65,18 +55,14 @@ public class ImageActivity extends BaseActivity {
 
     private Article articleMod;
 
-    //Others
-    private Utility utility;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         imgBinding = DataBindingUtil.setContentView(this, R.layout.activity_image);
         articleMod = (Article) getIntent().getSerializableExtra(EXTRA_KEY_ARTICLE);
         fbShareDialog = new ShareDialog(this);
-        utility = new Utility();
-
         imgURL = articleMod.getUrlToImage();
+
         getSerializable();
         imgBottomButtons();
     }
@@ -145,7 +131,7 @@ public class ImageActivity extends BaseActivity {
                     String downloadText = "Image for the article '" + articleMod.getTitle() +
                             "' download completed!" + "\nSaved image to " + mDir;
 
-                    utility.showToastMessage(context, downloadText, Toast.LENGTH_LONG);
+                    utility.showToastMsg(context, downloadText, Toast.LENGTH_LONG);
                     Log.d(TAG, "Image finally saved to " + mDir);
                     //the image finally saved to Pictures/SimpleNewsApp/IMG_[time].jpg
                     //The absolute path is: /Pictures/SimpleNewsApp/Img_[time].jpg
@@ -161,10 +147,10 @@ public class ImageActivity extends BaseActivity {
 
         if (account != null) {
             Log.d(TAG, "Access Token is OK\n" + account.getIdToken());
-            utility.showToastMessage(getApplicationContext(), "Start downloading...", Toast.LENGTH_SHORT);
+            utility.showToastMsg(getApplicationContext(), "Start downloading...", Toast.LENGTH_SHORT);
             downloadImage();
         } else {
-            utility.showToastMessage(getApplicationContext(),
+            utility.showToastMsg(getApplicationContext(),
                     "Sorry, You have to sign in to use this feature", Toast.LENGTH_LONG);
         }
     }
@@ -217,22 +203,6 @@ public class ImageActivity extends BaseActivity {
         return false;
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();//set the back arrow onClick event
-        return true;
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        try {
-            this.unregisterReceiver(onDownloadCompleteReceiver);
-        } catch (IllegalArgumentException e) {
-            Log.d(TAG, e.getMessage() + "\nCause: " + e.getCause());
-        }
-    }
-
     private Uri getLocalBitmapUri(Bitmap bitmap) {
         Uri bmpUri = null;
         String cachePath = this.getExternalCacheDir().getAbsolutePath();
@@ -266,5 +236,21 @@ public class ImageActivity extends BaseActivity {
             Log.d(TAG, e.getMessage() + "\nCause: " + e.getCause());
         }
         return bmpUri;
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();//set the back arrow onClick event
+        return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            this.unregisterReceiver(onDownloadCompleteReceiver);
+        } catch (IllegalArgumentException e) {
+            Log.d(TAG, e.getMessage() + "\nCause: " + e.getCause());
+        }
     }
 }

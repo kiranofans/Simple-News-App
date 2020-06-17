@@ -36,14 +36,11 @@ public class LoginActivity extends BaseActivity {
     private final String TAG = LoginActivity.class.getSimpleName();
 
     private ActivityLoginBinding loginBinding;
-    //private static String username, email, userID, userAvatarUrl = "None";
 
     //Google sign in
     private GoogleSignInOptions gso;
     public static GoogleSignInClient googleSignInClient;
-    //private GoogleApiClient googleApiClient;
     private String googleClientID;
-    //private final String googleClientSecret=getString(R.string.google_client_secret);
     private final int RC_GOOGLE_SIGN_IN = 202;
     public static String googleIdToken;
 
@@ -119,8 +116,6 @@ public class LoginActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_GOOGLE_SIGN_IN) {
-            //This works with GoogleApiClient's auth intent
-            // GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleGoogleSignInResult(task);
             utility.showDebugLog(TAG, "Logged in succeed");
@@ -159,10 +154,11 @@ public class LoginActivity extends BaseActivity {
 
         if (isLoggedInToFB) {
             onLoggedInWithFacebook(isLoggedInToFB);
-            Toast.makeText(getApplicationContext(), "Already logged in with Facebook",
-                    Toast.LENGTH_SHORT).show();
+            utility.showToastMsg(getApplicationContext(),
+                    "Already logged in with Facebook", Toast.LENGTH_SHORT);
         } else {
-            Toast.makeText(getApplicationContext(), "Not logged in with Facebook ", Toast.LENGTH_SHORT).show();
+            utility.showToastMsg(getApplicationContext(),
+                    "Not logged in with Facebook ", Toast.LENGTH_SHORT);
         }
 
     }
@@ -198,6 +194,6 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void onNetworkConnectionChanged(Boolean isConnected) {
-        utility.showToastMessage(getApplicationContext(), "No Internet connection", Toast.LENGTH_LONG);
+        utility.showToastMsg(getApplicationContext(), "No Internet connection", Toast.LENGTH_LONG);
     }
 }
