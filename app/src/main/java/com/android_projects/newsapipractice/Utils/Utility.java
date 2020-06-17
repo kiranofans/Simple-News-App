@@ -101,6 +101,13 @@ public class Utility {
         context.startActivity(Intent.createChooser(shareIntent, shareStr));
     }
 
+    public void twitterShare(Context context,Article obj) {
+        //May apply webView later
+        String twitterUrl = "https://twitter.com/intent/tweet?text=" +
+                obj.getTitle() + "&url=" + obj.getUrl();
+        Uri twitterUri = Uri.parse(twitterUrl);
+        context.startActivity(new Intent(Intent.ACTION_VIEW, twitterUri));
+    }
     /**
      * @param dateTimePattern
      * @return a new instance of SimpleDateFormat with a new Date()

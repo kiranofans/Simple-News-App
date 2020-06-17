@@ -201,14 +201,6 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
             }
         }
 
-        private void twitterShare(Article obj) {
-            //May apply webView later
-            String twitterUrl = "https://twitter.com/intent/tweet?text=" +
-                    obj.getTitle() + "&url=" + obj.getUrl();
-            Uri twitterUri = Uri.parse(twitterUrl);
-            context.startActivity(new Intent(Intent.ACTION_VIEW, twitterUri));
-        }
-
         private void setCardBtnOnClicks(Article obj) {
             position = getAdapterPosition();
             holderBinding.btnShare.setOnClickListener((View v) -> {
@@ -223,8 +215,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
 
             holderBinding.btnShareTwitter.setOnClickListener((View v) -> {
                 Log.d(TAG, "Twitter clicked " + position);
-                twitterShare(obj);
-                //Toast.makeText(view.getContext(), "Twitter", Toast.LENGTH_SHORT).show();
+                utility.twitterShare(itemView.getContext(),obj);
 
             });
         }
