@@ -104,7 +104,6 @@ public class HomeFragment extends Fragment {
         homeBinding.mainHomeRecyclerView.setLayoutManager(layoutManager);
         homeBinding.mainHomeRecyclerView.setItemAnimator(new DefaultItemAnimator());
         homeBinding.mainHomeRecyclerView.setAdapter(recyclerViewAdapter);
-        recyclerViewAdapter.updateList(articleList);
     }
 
     private void onScrollListener() {

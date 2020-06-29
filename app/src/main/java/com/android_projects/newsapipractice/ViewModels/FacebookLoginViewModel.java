@@ -17,8 +17,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LoginViewModel extends ViewModel {
-    private final String TAG = LoginViewModel.class.getSimpleName();
+public class FacebookLoginViewModel extends ViewModel {
+    private final String TAG = FacebookLoginViewModel.class.getSimpleName();
 
     private MutableLiveData<String> id,emailAddress,profilePicUrl;
     private MutableLiveData<List<String>> allInfo;
@@ -26,7 +26,7 @@ public class LoginViewModel extends ViewModel {
     private String email, facebookId, picUrl;
     private List<String> profileInfos;
 
-    public LoginViewModel() {
+    public FacebookLoginViewModel() {
         //Initialize MutableLiveData
         id = new MutableLiveData<>();
         emailAddress = new MutableLiveData<>();

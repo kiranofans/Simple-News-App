@@ -25,7 +25,6 @@ import com.facebook.share.model.ShareHashtag;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_ARTICLE;
@@ -72,24 +71,6 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
         notifyDataSetChanged();
     }
 
-    public void add(Article articleResponse) {
-        articleList.add(articleResponse);
-        notifyItemInserted(articleList.size() - 1);
-    }
-
-    public void addAll(List<Article> articles) {
-        for (Article response : articles) {
-            add(response);
-        }
-    }
-
-    public void updateList(List<Article> newList) {
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DataDiffCallback(this.articleList, newList));
-        diffResult.dispatchUpdatesTo(this);
-        String result = diffResult.toString();
-        Log.d(TAG, "Diff result: " + result);
-    }
-
     public class ArticleHolder extends BaseViewHolder<Article> {
         private ListNewsBinding holderBinding;
         private ButtonReturnToTopBinding goToTopBinding;
@@ -98,7 +79,6 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
         ShareDialog shareDialog = new ShareDialog((Activity) context);
 
         private int position;
-        List<Object> payloads = new ArrayList<>();
 
         private Intent articleIntent, imageIntent;
 

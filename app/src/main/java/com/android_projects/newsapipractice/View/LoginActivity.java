@@ -11,7 +11,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android_projects.newsapipractice.R;
-import com.android_projects.newsapipractice.ViewModels.LoginViewModel;
+import com.android_projects.newsapipractice.ViewModels.FacebookLoginViewModel;
 import com.android_projects.newsapipractice.databinding.ActivityLoginBinding;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -48,7 +48,7 @@ public class LoginActivity extends BaseActivity {
     private final int RC_FACEBOOK_LOG_IN = 201;
     private boolean isLoggedInToFB = false;
     private AccessToken fbAccessToken;
-    private LoginViewModel fbLoginViewModel;
+    private FacebookLoginViewModel fbLoginViewModel;
     private final String PARAM_EMAIL = "email";
     private CallbackManager fbCallbackMgr;
 
@@ -56,7 +56,7 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         loginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
-        fbLoginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+        fbLoginViewModel = new ViewModelProvider(this).get(FacebookLoginViewModel.class);
 
         googleLogin();
         facebookLogin();
