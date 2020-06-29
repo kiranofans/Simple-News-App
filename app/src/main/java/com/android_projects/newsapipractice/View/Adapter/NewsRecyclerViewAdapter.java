@@ -8,15 +8,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android_projects.newsapipractice.R;
-import com.android_projects.newsapipractice.Utils.DataDiffCallback;
 import com.android_projects.newsapipractice.Utils.Utility;
 import com.android_projects.newsapipractice.View.ArticleActivity;
 import com.android_projects.newsapipractice.View.ImageActivity;
