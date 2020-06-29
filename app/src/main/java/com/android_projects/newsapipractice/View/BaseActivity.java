@@ -14,7 +14,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -25,24 +24,18 @@ import com.android_projects.newsapipractice.View.Fragments.HomeFragment;
 import com.android_projects.newsapipractice.View.Fragments.LocalFragment;
 import com.android_projects.newsapipractice.View.Fragments.PopularFragment;
 import com.android_projects.newsapipractice.View.Managers.PermissionManager;
-import com.android_projects.newsapipractice.databinding.ActivityMainBinding;
 import com.android_projects.newsapipractice.network.NetworkConnectivityReceiver;
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class BaseActivity extends AppCompatActivity implements NetworkConnectivityReceiver.ConnectivityReceiverListener{
+public class BaseActivity extends AppCompatActivity implements NetworkConnectivityReceiver.ConnectivityReceiverListener {
     private final String TAG = BaseActivity.class.getSimpleName();
-
-    //Views
-    private ActivityMainBinding mainBinding;
-    private BottomNavigationMenuView bottomNavMenuView;
 
     //Network
     private NetworkConnectivityReceiver connReceiver;
 
     //Permission
     private PermissionManager permMgr;
-    private final int ALL_PERMISSIONS = 100;
+    public final int ALL_PERMISSIONS = 100;
     public boolean isLocationPermGranted, isWriteExternalPermGranted;
 
     //Others
@@ -51,7 +44,7 @@ public class BaseActivity extends AppCompatActivity implements NetworkConnectivi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
         utility = new Utility();
         permMgr = new PermissionManager(this);
         connReceiver = new NetworkConnectivityReceiver();
@@ -67,7 +60,6 @@ public class BaseActivity extends AppCompatActivity implements NetworkConnectivi
         switch (item.getItemId()) {
             case R.id.nav_home:
                 fragment = new HomeFragment();
-                //Once clicked count=0
                 break;
             case R.id.nav_popular:
                 fragment = new PopularFragment();
@@ -141,7 +133,7 @@ public class BaseActivity extends AppCompatActivity implements NetworkConnectivi
 
     @Override
     public void onNetworkConnectionChanged(Boolean isConnected) {
-       utility.showDebugLog(TAG,"Is network available:"+isConnected);
+        utility.showDebugLog(TAG, "Is network available:" + isConnected);
     }
 
     @Override

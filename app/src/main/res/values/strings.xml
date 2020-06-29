@@ -40,8 +40,7 @@
     <string name="local_rationale_title">Location permission denied</string>
     <string name="local_permission_denied">location Permission Denied</string>
     <string name="local_enable_access_from_settings">Now TAP ME to enable location access from settings</string>
-    <string name="local_go_to_settings_msg">TAP on GO TO SETTINGS to enable location permission,
-                                then refresh the page by tapping on the button.</string>
+
     <string name="local_refresh">Refresh Content</string>
 
     <!--Home fragment widgets-->
@@ -60,6 +59,8 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <string name="img_please_sign_in">Sorry, but you also have to sign in before using this feature.</string>
 
     <string name="facebook_app_id">885032648644877</string>
     <string name="fb_login_protocol_scheme">fb885032648644877</string>
@@ -84,11 +85,15 @@
     <string name="google_server_client_id">927157329080-u3kmqqlngtk79d0vj1pt8kq5mt5ce8lb.apps.googleusercontent.com</string>
     <string name="google_client_secret">ssMGge9ukL0GS4bf4BqD-P8B</string>>
 
-    <!--Permission Rationale dialog-->
+    <!--Permission-->
     <string name="perm_rationale_neg_btn">I\'M SURE</string>
     <string name="perm_rationale_pos_btn">RETRY</string>
     <string name="perm_pos_setting">GO TO SETTINGS</string>
     <string name="perms_neg_not_now">NOT NOW</string>
+    <string name="perm_write_external_storage_denied_title">Write External Storage Permission Denied</string>
+    <string name="perm_go_to_settings_msg">Now you have to enable this permission from settings. TAP on GO TO SETTINGS,
+        find the Permissions tab to enable this permission. Then, tap refresh button or relevant button</string>
+    <string name="perm_rationale_external_storage_msg">You have to allow this permission to enable the image downloading feature.</string>
 
     <!--Date time and others-->
     <string name="date_time_today">Today at</string>

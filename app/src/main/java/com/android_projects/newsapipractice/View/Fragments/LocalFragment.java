@@ -195,7 +195,7 @@ public class LocalFragment extends Fragment {
                 localBinding.noDataFoundLayout.noDataPermissionButton.setText
                         (getString(R.string.local_enable_access_from_settings));
                 utility.dialogToOpenSetting(v.getContext(), getString(R.string.local_permission_denied),
-                        getString(R.string.local_go_to_settings_msg),
+                        getString(R.string.perm_go_to_settings_msg),
                         AppOpsManager.OPSTR_COARSE_LOCATION, btn);
             }
 

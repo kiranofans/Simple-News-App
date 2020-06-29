@@ -14,8 +14,10 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.CountDownTimer;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -170,7 +172,7 @@ public class Utility {
 
 
     //Permission check
-    private void openAppSettings(Context context) {
+    public void openAppSettings(Context context) {
         Intent settingIntent = new Intent();
         settingIntent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         Uri uri = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null);
@@ -220,15 +222,17 @@ public class Utility {
         }
     }
 
-    public void showActivityPermissionRationale(Activity activityContext, String[] permissionArray, int requestCode) {
-        new AlertDialog.Builder(activityContext).setTitle("Location permission denied")
-                .setMessage("You have to allow this permission to view Local News content").setCancelable(false)
+    public void showActivityPermissionRationale(Activity activityContext,String title, String msg, String[] permissionArray) {
+      /*  final View v = LayoutInflater.from(activityContext).inflate(R.layout.alert_dialog_layout, null);
+        final AlertDialog alertDialog = new AlertDialog.Builder(activityContext).create();*/
+        new AlertDialog.Builder(activityContext).setTitle(title)
+                .setMessage(msg).setCancelable(false)
                 .setNegativeButton("STILL DENY", (DialogInterface dialogInterface, int i) ->
                 {
                     dialogInterface.dismiss();
                 }).setPositiveButton("RETRY", (DialogInterface dialogInterface, int i) ->
         {
-            ActivityCompat.requestPermissions(activityContext, permissionArray, requestCode);
+            ActivityCompat.requestPermissions(activityContext, permissionArray, 100);
             dialogInterface.dismiss();
         }).show();
     }
@@ -278,4 +282,25 @@ public class Utility {
     public void showDebugLog(String LOG_TAG, String message) {
         Log.d(LOG_TAG, message);
     }
+
+    public void showLongerToastMsg(Context context, String msg){
+        int durationInMilliSecs = 10000;
+        Toast mToast = Toast.makeText(context,msg,Toast.LENGTH_LONG);
+
+        CountDownTimer toastCountDown;
+        new CountDownTimer(Math.max(durationInMilliSecs,1000),100/* Tick duration */) {
+            @Override
+            public void onTick(long l) {
+                mToast.show();
+                mToast.getView().setOnClickListener((View v)->{
+                    mToast.cancel();
+                });
+            }
+
+            @Override
+            public void onFinish() {
+            }
+        }.start();
+    }
+
 }
