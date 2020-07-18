@@ -13,4 +13,5 @@
 .externalNativeBuild
 .cxx
 /keystore
+/api_keys_secrets
 #Use git rm -r --cached [file] to removefile from the index
