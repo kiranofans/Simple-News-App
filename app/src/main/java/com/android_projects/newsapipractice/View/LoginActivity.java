@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.android_projects.newsapipractice.BuildConfig;
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.ViewModels.FacebookLoginViewModel;
 import com.android_projects.newsapipractice.databinding.ActivityLoginBinding;
@@ -96,7 +97,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void googleLogin() {
-        googleClientID = getString(R.string.google_server_client_id);
+        googleClientID= BuildConfig.GOOGLE_SERVER_CLIENT_ID_DEBUG;
         //If requestServerAuthCode() is called, you don't have to call requestIdToken
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(googleClientID)/*.requestServerAuthCode(googleClientID)*/
