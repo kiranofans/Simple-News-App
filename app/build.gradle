@@ -59,7 +59,7 @@ android {
 
     }
     dataBinding.enabled = true
-    compileOptions {
+     compileOptions {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
@@ -119,7 +119,7 @@ dependencies {
     implementation "com.facebook.android:facebook-login:$fb_api_version"
     implementation "com.facebook.android:facebook-android-sdk:$fb_api_version"
     implementation "com.facebook.android:facebook-share:$fb_api_version"
-    implementation project(path: ':facebook')
+  //  implementation project(path: ':facebook')
 
     //Google APIs
     implementation "com.google.android.gms:play-services-auth:18.1.0"
