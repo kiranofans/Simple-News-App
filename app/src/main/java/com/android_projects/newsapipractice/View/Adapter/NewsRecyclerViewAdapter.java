@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android_projects.newsapipractice.R;
@@ -18,7 +17,6 @@ import com.android_projects.newsapipractice.Utils.Utility;
 import com.android_projects.newsapipractice.View.ArticleActivity;
 import com.android_projects.newsapipractice.View.ImageActivity;
 import com.android_projects.newsapipractice.data.Models.Article;
-import com.android_projects.newsapipractice.databinding.ButtonReturnToTopBinding;
 import com.android_projects.newsapipractice.databinding.ListNewsBinding;
 import com.bumptech.glide.Glide;
 import com.facebook.share.model.ShareHashtag;
@@ -35,7 +33,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
     private List<Article> articleList;
     private Context context;
 
-    //public boolean isLoading = false;//To determine if loading the data or not
+    public boolean isLoading = false;//To determine if loading the data or not
 
     @NonNull
     @Override
@@ -73,7 +71,6 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
 
     public class ArticleHolder extends BaseViewHolder<Article> {
         private ListNewsBinding holderBinding;
-        private ButtonReturnToTopBinding goToTopBinding;
         private Utility utility = new Utility();
 
         ShareDialog shareDialog = new ShareDialog((Activity) context);
