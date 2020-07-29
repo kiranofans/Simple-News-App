@@ -108,7 +108,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
 
             holderBinding.articleTvSource.setText(object.getSource().getName());
             holderBinding.articleTvPublishDate.setText(newDateFormat);
-            holderBinding.articleTitle.setText(getAdapterPosition()+": "+object.getTitle());
+            holderBinding.articleTitle.setText(object.getTitle());
             itemOnClick(object);
             setImgOnClick(object);
             Glide.with(context).load(object.getUrlToImage()).into(holderBinding.articleImageView);
