@@ -96,6 +96,7 @@ public class HomeFragment extends Fragment {
 
     private void loadPage(int page) {
         Log.d(TAG, "API called " + page);
+        isLastPage=false;
         homeBinding.swipeRefreshLayout.setRefreshing(true);
         viewModel.getArticleListEverything(page, SORT_BY_PUBLISHED_AT);
     }

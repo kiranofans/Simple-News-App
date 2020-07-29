@@ -8,7 +8,8 @@ public abstract class PaginationListener extends RecyclerView.OnScrollListener {
     private final String TAG = PaginationListener.class.getSimpleName();
 
     //private final int PAGE_START = 1;
-    private final int PAGE_SIZE = 100;
+    private final int PAGE_SIZE = 100; //for one page
+    private final int TOTAL_ITEM=100;//for total loaded items
 
     @NonNull
     private LinearLayoutManager layoutManager;
@@ -26,8 +27,12 @@ public abstract class PaginationListener extends RecyclerView.OnScrollListener {
         if (!isLoading() && !isLastPage()) {
             if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                     && firstVisibleItemPosition >= 0
-                    && totalItemCount >= PAGE_SIZE) {
+                    && totalItemCount >= PAGE_SIZE && totalItemCount < TOTAL_ITEM) {
+                /**
+                 * totalItemCount >= PAGE_SIZE && totalItemCount < TOTAL_ITEM
+                 * used to stop loading when 100 articles have been loaded */
                 loadMoreItems();
+
             }
         }
     }

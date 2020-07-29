@@ -39,7 +39,8 @@ public class NewsArticleViewModel extends AndroidViewModel {
 
     public void getArticleListEverything(int page, String sortBy) {
         callApiData = apiService.getEverything("Bearer " +
-                API_KEY, requestPramsMap, 100, page);//100 is the maximum
+                API_KEY, requestPramsMap, 100, page);//100 is the maximum no matter how many pages
+        //so need to add a footer when news meets 100 articles
         requestPramsMap.put("sortBy", sortBy);
         requestPramsMap.put("domains", PARAMS_DOMAINS);
         requestPramsMap.put("language", LANGUAGE_ENGLISH);
