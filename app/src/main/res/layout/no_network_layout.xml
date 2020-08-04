@@ -18,9 +18,9 @@
             app:layout_constraintBottom_toBottomOf="parent">
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@mipmap/ic_offline_80"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_no_netowrk_conn"
                 android:layout_gravity="center_horizontal"
                 app:layout_constraintBottom_toTopOf="@+id/no_network_txt"/>
 
@@ -29,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:textSize="20dp"
+                android:textSize="25sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="16dp"
                 app:layout_constraintTop_toTopOf="parent"

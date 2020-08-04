@@ -195,6 +195,9 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void onNetworkConnectionChanged(Boolean isConnected) {
-        utility.showToastMsg(getApplicationContext(), "No Internet connection", Toast.LENGTH_LONG);
+        if(!isConnected){
+            utility.showToastMsg(getApplicationContext(),
+                    "No Internet connection", Toast.LENGTH_LONG);
+        }
     }
 }
