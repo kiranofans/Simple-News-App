@@ -22,15 +22,16 @@ import com.android_projects.newsapipractice.View.PaginationListener;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.FragmentHomeBinding;
+import com.android_projects.newsapipractice.network.NetworkConnectivityReceiver;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements NetworkConnectivityReceiver.ConnectivityReceiverListener {
     private final String TAG = HomeFragment.class.getSimpleName();
 
     //Network
-    //private NetworkConnectivityReceiver connReceiver;
+    private NetworkConnectivityReceiver connReceiver;
 
     //UI
     private FragmentHomeBinding homeBinding;
@@ -83,7 +84,6 @@ public class HomeFragment extends Fragment {
     //Observer only refresh
     @SuppressLint("FragmentLiveDataObserve")
     private void setObserver() {
-        //List<Article> newList = new ArrayList<>();
         viewModel.getArticleLiveData().observe(this, (List<Article> articles) -> {
             isLoading = false;
             articleList.addAll(articles);
@@ -96,7 +96,7 @@ public class HomeFragment extends Fragment {
 
     private void loadPage(int page) {
         Log.d(TAG, "API called " + page);
-        isLastPage=false;
+        isLastPage = false;
         homeBinding.swipeRefreshLayout.setRefreshing(true);
         viewModel.getArticleListEverything(page, SORT_BY_PUBLISHED_AT);
     }
@@ -127,5 +127,15 @@ public class HomeFragment extends Fragment {
             }
         });
         recyclerViewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(Boolean isConnected) {
+        if (isConnected) {
+            setObserver();
+        } else {
+            homeBinding.swipeRefreshLayout.setRefreshing(false);
+            homeBinding.swipeRefreshLayout.setEnabled(false);
+        }
     }
 }

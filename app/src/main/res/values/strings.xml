@@ -90,6 +90,7 @@
     <string name="perm_go_to_settings_msg">Now you have to enable this permission from settings. TAP on GO TO SETTINGS,
         find the Permissions tab to enable this permission. Then, tap refresh button or relevant button</string>
     <string name="perm_rationale_external_storage_msg">You have to allow this permission to enable the image downloading feature.</string>
+    <string name="perm_tap_to_allow_location">TAP me to allow location permission, then try again</string>
 
     <!--Date time and others-->
     <string name="date_time_today">Today at</string>

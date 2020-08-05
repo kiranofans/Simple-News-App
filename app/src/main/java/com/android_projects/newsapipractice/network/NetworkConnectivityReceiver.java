@@ -10,33 +10,34 @@ import android.os.Build;
 import android.util.Log;
 
 public class NetworkConnectivityReceiver extends BroadcastReceiver {
-    private final String TAG=NetworkConnectivityReceiver.class.getSimpleName();
+    private final String TAG = NetworkConnectivityReceiver.class.getSimpleName();
 
     public static ConnectivityReceiverListener connectivityReceiverListener;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if(connectivityReceiverListener!=null){
+        if (connectivityReceiverListener != null) {
             connectivityReceiverListener.onNetworkConnectionChanged(isNetworkAvailable(context));
         }
     }
 
-    private boolean isNetworkAvailable(Context context){
-        if(context==null) return false;
+    private boolean isNetworkAvailable(Context context) {
+        if (context == null) return false;
         ConnectivityManager connMgr = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
-        if(connMgr!=null){
-            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+
+        if (connMgr != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 NetworkCapabilities capability = connMgr.getNetworkCapabilities
                         (connMgr.getActiveNetwork());
                 if (capability != null) {
-                    if (capability.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)||
-                            capability.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)||
+                    if (capability.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                            capability.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
                             capability.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
                         return true;
                     }
                 }
-            }else{
+            } else {
                 try {
                     NetworkInfo activeNetworkInfo = connMgr.getActiveNetworkInfo();
                     if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
@@ -44,14 +45,15 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
                         return true;
                     }
                 } catch (Exception e) {
-                    Log.i(TAG, e.getMessage()+"\nCause: "+e.getCause());
+                    Log.i(TAG, e.getMessage() + "\nCause: " + e.getCause());
                 }
             }
         }
-        Log.i(TAG,"Network availability: FALSE ");
+        Log.i(TAG, "Network availability: FALSE ");
         return false;
     }
-    public interface ConnectivityReceiverListener{
+
+    public interface ConnectivityReceiverListener {
         void onNetworkConnectionChanged(Boolean isConnected);
     }
 }

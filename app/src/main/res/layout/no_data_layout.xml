@@ -29,6 +29,7 @@
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
                 android:textSize="20sp"
+                android:textColor="@android:color/black"
                 android:text="@string/no_result_found"/>
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/no_data_permission_button"
@@ -37,7 +38,7 @@
                 android:textAllCaps="false"
                 android:layout_height="wrap_content"
                 android:background="@drawable/background_button_round_corner"
-                android:text="TAP me to allow location permission, then try again"/>
+                android:text="@string/perm_tap_to_allow_location"/>
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
