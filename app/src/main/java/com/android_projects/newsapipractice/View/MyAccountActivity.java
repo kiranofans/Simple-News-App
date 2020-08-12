@@ -57,13 +57,16 @@ public class MyAccountActivity extends BaseActivity {
     }
 
     private void logoutButton() {
-        accountBinding.accountAppBar.accountBtnLogout.setOnClickListener((View v) -> {
+        accountBinding.accountContent.accountBtnLogout.setOnClickListener((View v) -> {
             googleSignInClient.signOut().addOnCompleteListener((Task<Void> task) -> {
                 Intent intent = new Intent(MyAccountActivity.this, LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
             });
+        });
+        accountBinding.accountContent.accountBtnLogout.setOnClickListener((View v)->{
+            //logout facebook
         });
     }
 

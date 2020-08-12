@@ -31,9 +31,6 @@
         <activity
             android:name=".View.ImageActivity"
             android:theme="@style/ImageActivityTheme" />
-        <activity
-            android:name=".View.SettingsActivity"
-            android:label="@string/title_activity_settings" />
         <activity android:name=".View.ArticleActivity" />
         <activity android:name=".View.MainActivity">
             <intent-filter>

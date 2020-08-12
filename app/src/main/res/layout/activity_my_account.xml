@@ -5,12 +5,9 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
         tools:context=".View.MyAccountActivity"
         android:theme="@style/FullscreenTheme">
-
-        <include layout="@layout/app_bar_layout"
-            android:id="@+id/account_app_bar"/>
-
         <androidx.core.widget.NestedScrollView
             android:id="@+id/account_nested_scroll_view"
             android:layout_width="match_parent"
@@ -18,8 +15,17 @@
             android:clipToPadding="false"
             android:layout_gravity="fill_vertical"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <include layout="@layout/app_bar_layout"
+                android:id="@+id/account_app_bar"/>
 
-        <include layout="@layout/account_content_frame"
-            android:id="@+id/account_content"/>
+            <include layout="@layout/account_content_settings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/account_app_bar"
+                android:id="@+id/account_content"/>
+        </RelativeLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
