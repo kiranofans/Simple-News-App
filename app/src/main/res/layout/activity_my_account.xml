@@ -1,31 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout  xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorPrimary"
-        tools:context=".View.MyAccountActivity"
         android:theme="@style/FullscreenTheme">
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/account_nested_scroll_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:layout_gravity="fill_vertical"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <include layout="@layout/app_bar_layout"
-                android:id="@+id/account_app_bar"/>
 
-            <include layout="@layout/account_content_settings"
+        <include layout="@layout/app_bar_layout"
+            android:id="@+id/account_app_bar"/>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            <FrameLayout
+                android:id="@+id/account_setting_frame"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/account_app_bar"
-                android:id="@+id/account_content"/>
-        </RelativeLayout>
+                android:layout_height="match_parent" />
+        </androidx.core.widget.NestedScrollView>
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

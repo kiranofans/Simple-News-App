@@ -49,16 +49,6 @@
                         android:layout_alignParentEnd="true"
                         android:textStyle="bold"
                         android:textColor="@android:color/black"/>
-                    <!--<androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/account_btn_logout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="35dp"
-                        android:background="@drawable/background_button_round_corner"
-                        android:layout_margin="8dp"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
-                        android:textAllCaps="false"
-                        android:text="Log out"/>-->
                 </RelativeLayout>
 
             </FrameLayout>
@@ -70,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:layout_scrollFlags="enterAlways|scroll"
+                app:layout_scrollFlags="enterAlways|scroll|exitUntilCollapsed"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight"
                 app:menu="@menu/main_setting_menu"/>
 

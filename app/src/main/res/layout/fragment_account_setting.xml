@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:id="@+id/account_content_linearlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_height="0.5dp"
+            android:background="@android:color/darker_gray"/>
+
+        <include layout="@layout/preference_settings_switch"
+            android:id="@+id/settings_wifi"/>
+
+        <include layout="@layout/preference_settings_switch"
+            android:id="@+id/settings_mobile_data"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:background="#FFF5F5F5"/>
+
+        <include layout="@layout/preference_settings_tab"
+            android:id="@+id/setting_font_size"/>
+
+        <include layout="@layout/preference_settings_tab"
+            android:id="@+id/settings_text_font"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/preference_log_out_btn"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@android:color/holo_red_light"
+            android:layout_margin="16dp"
+            android:textColor="@color/colorPrimary"
+            android:text="Log out"/>
+    </LinearLayout>
+
+</layout>

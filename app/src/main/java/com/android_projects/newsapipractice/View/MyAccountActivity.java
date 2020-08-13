@@ -2,13 +2,18 @@ package com.android_projects.newsapipractice.View;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.android_projects.newsapipractice.R;
+import com.android_projects.newsapipractice.View.Fragments.MyAccountSettingsFragment;
 import com.android_projects.newsapipractice.databinding.ActivityMyAccountBinding;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -31,7 +36,8 @@ public class MyAccountActivity extends BaseActivity {
         googleSignInAccount = getIntent().getParcelableExtra("GOOGLE_CREDENTIALS");
         getGoogleAccountData(googleSignInAccount);
         setCollapsedToolbar();
-        logoutButton();
+        displayFragment(new MyAccountSettingsFragment());
+       // logoutButton();
     }
 
     private void setCollapsedToolbar() {
@@ -56,8 +62,9 @@ public class MyAccountActivity extends BaseActivity {
                 .into(accountBinding.accountAppBar.accountImgviewAvatar);
     }
 
-    private void logoutButton() {
-        accountBinding.accountContent.accountBtnLogout.setOnClickListener((View v) -> {
+   /* private void logoutButton() {
+        accountBinding.preferenceLogOutBtn.setOnClickListener((View v) -> {
+            Log.d(TAG,"Clicked");
             googleSignInClient.signOut().addOnCompleteListener((Task<Void> task) -> {
                 Intent intent = new Intent(MyAccountActivity.this, LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -65,11 +72,19 @@ public class MyAccountActivity extends BaseActivity {
                 finish();
             });
         });
-        accountBinding.accountContent.accountBtnLogout.setOnClickListener((View v)->{
+        accountBinding.preferenceLogOutBtn.setOnClickListener((View v)->{
             //logout facebook
         });
-    }
+    }*/
 
+    private void displayFragment(Fragment fragment){
+        if(fragment!=null){
+            FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.account_setting_frame,fragment);
+            fragTrans.commit();
+        }
+
+    }
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();//set the back arrow onClick event
