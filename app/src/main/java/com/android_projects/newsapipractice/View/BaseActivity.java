@@ -68,9 +68,9 @@ public class BaseActivity extends AppCompatActivity implements NetworkConnectivi
             case R.id.nav_local:
                 fragment = new LocalFragment();
                 break;
-            case R.id.nav_categories:
+          /*  case R.id.nav_categories:
                 fragment = new CategoriesFragment();
-                break;
+                break;*/
         }
         return setFragments(fragment);
 
@@ -88,9 +88,11 @@ public class BaseActivity extends AppCompatActivity implements NetworkConnectivi
             case R.id.top_setting:
                 startActivity(new Intent(this, LoginActivity.class));
                 return true;
-            case R.id.top_setting_language:
+           /* case R.id.top_setting_language:
                 return true;
             case R.id.top_setting_category:
+                return true;*/
+            case R.id.top_setting_search:
                 return true;
         }
         return super.onOptionsItemSelected(item);

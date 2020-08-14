@@ -29,7 +29,7 @@ public class MyAccountSettingsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         settingBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_account_setting, container, false);
-        return v = settingBinding.getRoot();
+        return settingBinding.getRoot();
     }
 
     @Override
@@ -51,22 +51,22 @@ public class MyAccountSettingsFragment extends Fragment {
     }
 
     private void setSettingsUI(){
-        settingBinding.settingsWifi.prefSettingTitle.setText("Use Wi-Fi (Default)");
-        settingBinding.settingsWifi.prefSettingDescription.setText("Default setting that allows user to enable Wi-Fi");
+        settingBinding.settingsWifi.prefSettingTitle.setText(getString(R.string.settings_title_wifi));
+        settingBinding.settingsWifi.prefSettingDescription.setText(getString(R.string.settings_description_wifi));
         settingBinding.settingsWifi.prefSettingSwitch.setEnabled(true);
         settingBinding.settingsWifi.prefSettingListImgView.setImageResource(R.mipmap.ic_wifi);
 
-        settingBinding.settingsMobileData.prefSettingTitle.setText("Use Cellular Data");
+        settingBinding.settingsMobileData.prefSettingTitle.setText(getString(R.string.settings_title_mobile_data));
         settingBinding.settingsMobileData.prefSettingListImgView.setImageResource(R.mipmap.ic_cellular_network);
-        settingBinding.settingsMobileData.prefSettingDescription.setText("Alow user to enable mobile network");
+        settingBinding.settingsMobileData.prefSettingDescription.setText(getString(R.string.settings_description_mobile_data));
 
-        //May change font size tab ui later
-        settingBinding.settingFontSize.prefSettingTitle.setText("Font Size");
-        settingBinding.settingFontSize.prefSettingDescription.setText("Allow user to change text size");
+        //May change font size tab UI
+        settingBinding.settingFontSize.prefSettingTitle.setText(getString(R.string.settings_title_font_size));
+        settingBinding.settingFontSize.prefSettingDescription.setText(getString(R.string.settings_description_font_size));
         settingBinding.settingFontSize.prefSettingListImgView.setImageResource(R.mipmap.ic_font_size);
 
-        settingBinding.settingsTextFont.prefSettingTitle.setText("Font");
-        settingBinding.settingsTextFont.prefSettingDescription.setText("Allow user to change text font");
+        settingBinding.settingsTextFont.prefSettingTitle.setText(getString(R.string.settings_title_font));
+        settingBinding.settingsTextFont.prefSettingDescription.setText(getString(R.string.settings_description_font));
         settingBinding.settingsTextFont.prefSettingListImgView.setImageResource(R.mipmap.ic_font);
 
     }

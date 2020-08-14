@@ -15,7 +15,7 @@
                 style="@style/Widget.MaterialComponents.BottomNavigationView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:elevation="16dp"
+                android:elevation="@dimen/preference_margin_large"
                 app:itemIconTint="@drawable/bottom_nav_selector"
                 app:itemTextColor="@android:color/darker_gray"
                 app:layout_constraintBottom_toBottomOf="parent"

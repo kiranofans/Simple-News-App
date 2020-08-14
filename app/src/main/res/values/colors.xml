@@ -7,4 +7,7 @@
     <color name="colorBlackHalfTransparent">#CC000000</color>
 
     <color name="black_overlay">#66000000</color>
+    <color name="color_gray">#808080</color>
+
+    <color name="color_settings_interval">#FFF5F5F5</color>
 </resources>

@@ -17,7 +17,7 @@
             android:id="@+id/alert_dialog_msg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:textSize="@dimen/preference_text_size_large"
             android:text="description"/>
         <RelativeLayout
             android:layout_width="match_parent"

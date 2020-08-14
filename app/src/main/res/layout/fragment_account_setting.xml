@@ -22,7 +22,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="20dp"
-            android:background="#FFF5F5F5"/>
+            android:background="@color/color_settings_interval"/>
 
         <include layout="@layout/preference_settings_tab"
             android:id="@+id/setting_font_size"/>

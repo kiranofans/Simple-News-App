@@ -17,9 +17,9 @@
         app:showAsAction="ifRoom"
         android:icon="@mipmap/ic_local_news"/>
 
-    <item android:id="@+id/nav_categories"
+   <!-- <item android:id="@+id/nav_categories"
     android:enabled="true"
     android:title="@string/bottom_nav_more"
     app:showAsAction="ifRoom"
-    android:icon="@mipmap/ic_more"/>
+    android:icon="@mipmap/ic_more"/>-->
 </menu>

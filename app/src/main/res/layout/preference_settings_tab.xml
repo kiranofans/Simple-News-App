@@ -10,7 +10,7 @@
             android:id="@+id/pref_setting_list_img_view"
             android:layout_width="0dp"
             android:layout_height="26dp"
-            android:layout_margin="16dp"
+            android:layout_margin="@dimen/preference_margin_large"
             android:src="@android:drawable/ic_dialog_alert"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_weight="0.8"
@@ -23,9 +23,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="8dp"
-            android:paddingEnd="8dp"
-            android:paddingBottom="8dp"
+            android:paddingTop="@dimen/preference_margin_small"
+            android:paddingEnd="@dimen/preference_margin_small"
+            android:paddingBottom="@dimen/preference_margin_small"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_weight="9"
             app:layout_constraintStart_toEndOf="@+id/pref_setting_list_img_view"
@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:text="Setting title"
                 android:textColor="@android:color/black"
-                android:textSize="18sp" />
+                android:textSize="@dimen/preference_text_size_title_small" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/pref_setting_description"

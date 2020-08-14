@@ -15,7 +15,7 @@
             android:id="@+id/full_image_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="8dp"
+            android:layout_margin="@dimen/preference_margin_small"
             android:layout_centerInParent="true"
             android:src="@drawable/ic_no_results_found"/>
 
@@ -26,7 +26,7 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/img_fragment_toolbar"
                 android:layout_width="match_parent"
-                android:elevation="8dp"
+                android:elevation="@dimen/preference_margin_small"
                 android:layout_height="?attr/actionBarSize"
                 android:theme="@style/ImageActivityActionBar"
                 app:titleTextColor="@color/colorPrimary"
