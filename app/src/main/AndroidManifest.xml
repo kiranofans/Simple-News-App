@@ -26,7 +26,13 @@
         </receiver>
         <activity android:name=".View.MyAccountActivity"
             android:label="@string/top_menu_setting"
-            android:theme="@style/FullscreenTheme"></activity>
+            android:theme="@style/FullscreenTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"/>
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                android:resource="@layout/activity_main"/>
+        </activity>
         <activity android:name=".View.LoginActivity" />
         <activity
             android:name=".View.ImageActivity"

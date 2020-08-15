@@ -1,7 +1,9 @@
 package com.android_projects.newsapipractice.View;
 
 import android.os.Bundle;
+import android.util.Log;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.databinding.DataBindingUtil;
@@ -14,7 +16,7 @@ import com.android_projects.newsapipractice.databinding.ActivityMyAccountBinding
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
-public class MyAccountActivity extends BaseActivity {
+public class MyAccountActivity extends AppCompatActivity {
     private final String TAG = MyAccountActivity.class.getSimpleName();
 
     private ActivityMyAccountBinding accountBinding;
@@ -29,6 +31,7 @@ public class MyAccountActivity extends BaseActivity {
         googleSignInAccount = getIntent().getParcelableExtra("GOOGLE_CREDENTIALS");
         getGoogleAccountData(googleSignInAccount);
         setCollapsedToolbar();
+
         displayFragment(new MyAccountSettingsFragment());
         // logoutButton();
     }

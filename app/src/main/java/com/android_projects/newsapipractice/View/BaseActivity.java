@@ -42,6 +42,8 @@ public class BaseActivity extends AppCompatActivity implements NetworkConnectivi
     //Others
     public Utility utility;
 
+    private boolean isNavigationAsHome = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,7 +127,6 @@ public class BaseActivity extends AppCompatActivity implements NetworkConnectivi
                 ActivityCompat.requestPermissions(this, permissionTypes, ALL_PERMISSIONS);
             }
         }
-
     }
 
     @Override
