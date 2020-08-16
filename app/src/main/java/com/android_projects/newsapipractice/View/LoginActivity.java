@@ -131,10 +131,9 @@ public class LoginActivity extends BaseActivity {
         try {
             GoogleSignInAccount googleAccount = completeTask.getResult(ApiException.class);
             if (googleAccount.getIdToken() != null) {
-                Toast.makeText(getApplicationContext(), "Result OK. Username: " +
-                        googleAccount.getDisplayName(), Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "Sign in result ok");
-                onLoggedInWithGoogle(googleAccount, true);
+               utility.showDebugLog(TAG,"Result OK. Username: " +
+                        googleAccount.getDisplayName());
+               onLoggedInWithGoogle(googleAccount, true);
                 //Update UI
             }
         } catch (ApiException e) {

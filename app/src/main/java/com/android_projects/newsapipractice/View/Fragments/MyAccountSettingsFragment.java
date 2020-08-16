@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.View.LoginActivity;
+import com.android_projects.newsapipractice.View.MyAccountActivity;
 import com.android_projects.newsapipractice.databinding.FragmentAccountSettingBinding;
 import com.google.android.gms.tasks.Task;
 
@@ -46,6 +47,7 @@ public class MyAccountSettingsFragment extends Fragment {
                 Intent intent = new Intent(v.getContext(), LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                getActivity().finish();
             });
         });
     }

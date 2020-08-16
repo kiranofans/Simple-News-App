@@ -19,5 +19,6 @@
         android:id="@+id/top_setting_search"
         android:orderInCategory="3"
         app:showAsAction="ifRoom"
-        android:icon="@mipmap/ic_search_30px"/>
+        android:icon="@mipmap/ic_search_30px"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"/>
 </menu>

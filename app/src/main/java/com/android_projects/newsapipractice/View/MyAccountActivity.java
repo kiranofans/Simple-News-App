@@ -16,7 +16,7 @@ import com.android_projects.newsapipractice.databinding.ActivityMyAccountBinding
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
-public class MyAccountActivity extends AppCompatActivity {
+public class MyAccountActivity extends BaseActivity {
     private final String TAG = MyAccountActivity.class.getSimpleName();
 
     private ActivityMyAccountBinding accountBinding;
@@ -33,7 +33,6 @@ public class MyAccountActivity extends AppCompatActivity {
         setCollapsedToolbar();
 
         displayFragment(new MyAccountSettingsFragment());
-        // logoutButton();
     }
 
     private void setCollapsedToolbar() {

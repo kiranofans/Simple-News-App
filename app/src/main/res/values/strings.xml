@@ -28,6 +28,9 @@
     <string name="settings_title_font">Font</string>
     <string name="settings_description_font">Allow user to change text font</string>
 
+    <!--Search bar-->
+    <string name="search_hint">Type in a keyword...</string>
+
     <!--Article Activity-->
     <string name="article_author">Author</string>
     <string name="article_button_continue_reading">Go to source page</string>

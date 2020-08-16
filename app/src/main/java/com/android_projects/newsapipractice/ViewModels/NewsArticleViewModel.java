@@ -1,6 +1,8 @@
 package com.android_projects.newsapipractice.ViewModels;
 
 import android.app.Application;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -22,7 +24,7 @@ import static com.android_projects.newsapipractice.data.AppConstants.LANGUAGE_EN
 import static com.android_projects.newsapipractice.data.AppConstants.PARAMS_DOMAINS;
 import static com.android_projects.newsapipractice.network.ApiConstants.API_KEY;
 
-public class NewsArticleViewModel extends AndroidViewModel {
+public class NewsArticleViewModel extends AndroidViewModel{
     private NewsArticleRepository repository;
     private Call<NewsArticleMod> callApiData;
 

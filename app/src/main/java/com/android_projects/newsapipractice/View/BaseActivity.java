@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -77,28 +76,6 @@ public class BaseActivity extends AppCompatActivity implements NetworkConnectivi
         return setFragments(fragment);
 
     };
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_setting_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.top_setting:
-                startActivity(new Intent(this, LoginActivity.class));
-                return true;
-           /* case R.id.top_setting_language:
-                return true;
-            case R.id.top_setting_category:
-                return true;*/
-            case R.id.top_setting_search:
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     public boolean setFragments(Fragment fragment) {
         if (fragment != null) {
