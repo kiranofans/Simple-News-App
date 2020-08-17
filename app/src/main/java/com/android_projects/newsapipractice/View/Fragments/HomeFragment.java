@@ -144,5 +144,4 @@ public class HomeFragment extends Fragment implements NetworkConnectivityReceive
             homeBinding.swipeRefreshLayout.setEnabled(false);
         }
     }
-
 }

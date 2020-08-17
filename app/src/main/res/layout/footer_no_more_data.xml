@@ -4,19 +4,18 @@
     <LinearLayout
         android:orientation="horizontal"
         android:gravity="center_horizontal"
-        android:layout_margin="8dp"
+        android:padding="4dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
+            android:id="@+id/footer_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="- End of articles -"
-            android:textSize="20dp"/>
-        <ImageView
+            android:textSize="@dimen/preference_text_size_title_small"/>
+        <!--<ImageView
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_margin="8dp"
-            android:src="@drawable/ic_no_results_found"/>
+            android:src="@drawable/ic_no_results_found"/>-->
     </LinearLayout>
 </layout>

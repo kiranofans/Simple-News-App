@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardElevation="4dp"
-    android:layout_margin="8dp"
+    android:layout_margin="@dimen/preference_margin_small"
     app:cardPreventCornerOverlap="true"
     app:cardCornerRadius="4dp">
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -27,7 +27,7 @@
                 android:layout_weight="1"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="@dimen/preference_margin_small"
                 android:paddingStart="3dp"
                 android:paddingEnd="3dp"
                 android:background="@drawable/background_round_bottom_left_corner_border"
@@ -43,9 +43,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Article Title"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="@dimen/preference_margin_small"
+            android:layout_marginStart="@dimen/preference_margin_small"
+            android:layout_marginEnd="@dimen/preference_margin_small"
             android:textColor="@android:color/black"
             android:textSize="25sp"
             android:textStyle="bold" />
@@ -53,8 +53,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="@dimen/preference_margin_small"
+            android:layout_marginEnd="@dimen/preference_margin_small"
             android:layout_marginBottom="6dp">
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -101,10 +101,6 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <include android:id="@+id/recycler_view_footer"
-            layout="@layout/load_more_layout"
-            android:visibility="gone"/>
 
         <include android:id="@+id/go_to_top_button"
             layout="@layout/button_return_to_top"

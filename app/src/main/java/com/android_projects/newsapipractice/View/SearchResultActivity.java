@@ -69,8 +69,8 @@ public class SearchResultActivity extends BaseActivity {
         // Assumes current activity is the searchable activity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setMaxWidth(Integer.MAX_VALUE);
-        //searchView.setIconifiedByDefault(false);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        searchView.setIconifiedByDefault(false);
+       /* searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // filter recycler view when query submitted
@@ -85,7 +85,7 @@ public class SearchResultActivity extends BaseActivity {
                 adapter.getFilter().filter(query);
                 return false;
             }
-        });
+        });*/
     }
     private void getObjectExtra() {
 

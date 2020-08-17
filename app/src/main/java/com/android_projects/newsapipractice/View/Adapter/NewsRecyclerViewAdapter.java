@@ -19,6 +19,8 @@ import com.android_projects.newsapipractice.Utils.Utility;
 import com.android_projects.newsapipractice.View.ArticleActivity;
 import com.android_projects.newsapipractice.View.ImageActivity;
 import com.android_projects.newsapipractice.data.Models.Article;
+import com.android_projects.newsapipractice.data.Models.NewsArticleMod;
+import com.android_projects.newsapipractice.databinding.FooterNoMoreDataBinding;
 import com.android_projects.newsapipractice.databinding.ListNewsBinding;
 import com.bumptech.glide.Glide;
 import com.facebook.share.model.ShareHashtag;
@@ -28,6 +30,8 @@ import com.facebook.share.widget.ShareDialog;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.internal.util.AppendOnlyLinkedArrayList;
+
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_ARTICLE;
 
 public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
@@ -36,13 +40,27 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
     private List<Article> articleList;
     private Context context;
 
-    public boolean isLoading = false;//To determine if loading the data or not
+    public boolean isFooterVisible = false;//To determine if loading the data or not
+
+    //Views
+    private final int FOOTER_VIEW=2;
+    private final int NORMAL_VIEW=0;
 
     @NonNull
     @Override
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ListNewsBinding newsBinding = ListNewsBinding.inflate(LayoutInflater.from(context), parent, false);
-        return new ArticleHolder(newsBinding);
+        //ListNewsBinding newsBinding = ListNewsBinding.inflate(LayoutInflater.from(context), parent, false);
+        switch (viewType){
+            case FOOTER_VIEW:
+                FooterNoMoreDataBinding footerViewBinding = FooterNoMoreDataBinding.inflate(LayoutInflater.from(context),parent,false);
+                return new FooterViewHolder(footerViewBinding);
+            case NORMAL_VIEW:
+                ListNewsBinding newsBinding = ListNewsBinding.inflate(LayoutInflater.from(context), parent, false);
+                return new ArticleHolder(newsBinding);
+            default:
+                return null;
+        }
+       // return null;
     }
 
     public NewsRecyclerViewAdapter(Context context, List<Article> list) {
@@ -53,23 +71,63 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
 
-        holder.bind(articleList.get(position));
+        try{
+            if(holder instanceof ArticleHolder){
+                ArticleHolder articleHolder = (ArticleHolder) holder;
+                articleHolder.bind(articleList.get(position));
+            }else if(holder instanceof FooterViewHolder){
+                FooterViewHolder footerViewHolder = (FooterViewHolder)holder;
+                //footerViewHolder.bind(articleList.get(position+1));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
     public int getItemViewType(int position) {
         //Remember to override getItemViewType if using MultiTypeRecyclerView
-        return articleList.get(position).getViewType();
+        if (position == articleList.size()) {
+            // This is where we'll add footer.
+            return FOOTER_VIEW;
+        }
+        //return articleList.get(position).getViewType();
+        return NORMAL_VIEW;
     }
 
     @Override
     public int getItemCount() {
-        return articleList.size();
+        if(articleList==null){
+            return 0;
+        }
+        if(articleList.size()==0){
+            return 1;
+        }
+        return articleList.size()+1;
     }
 
     public void clear() {
         articleList.clear();
         notifyDataSetChanged();
+    }
+
+    public class FooterViewHolder extends BaseViewHolder<Article>{
+        private FooterNoMoreDataBinding footerBinding;
+
+        public FooterViewHolder(@NonNull FooterNoMoreDataBinding footerBinding) {
+            super(footerBinding.getRoot());
+            this.footerBinding=footerBinding;
+            footerBinding.footerText.setText("- End of News Articles -");
+
+        }
+
+        @Override
+        protected void clearListData() {
+        }
+
+        @Override
+        public void bind(Article object) {
+        }
     }
 
     public class ArticleHolder extends BaseViewHolder<Article> {
@@ -85,7 +143,6 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
         /**
          * Set the article data
          **/
-
         public ArticleHolder(ListNewsBinding binding) {
             super(binding.getRoot());
             this.holderBinding = binding;
@@ -94,10 +151,6 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
 
         @Override
         protected void clearListData() {
-        }
-
-        public ListNewsBinding getBinding() {
-            return holderBinding;
         }
 
         @Override
@@ -113,11 +166,10 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
             setImgOnClick(object);
             Glide.with(context).load(object.getUrlToImage()).into(holderBinding.articleImageView);
             setCardBtnOnClicks(object);
-
         }
 
         private void itemOnClick(Article object) {
-            itemView.setOnClickListener((View v) -> {
+            holderBinding.getRoot().setOnClickListener((View v) -> {
                 position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
                     Log.d("TAG", position + " clicked");
@@ -126,7 +178,6 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
 
                     context.startActivity(articleIntent);
                 }
-
             });
         }
 
