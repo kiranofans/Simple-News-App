@@ -8,8 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,7 +17,6 @@ import com.android_projects.newsapipractice.Utils.Utility;
 import com.android_projects.newsapipractice.View.ArticleActivity;
 import com.android_projects.newsapipractice.View.ImageActivity;
 import com.android_projects.newsapipractice.data.Models.Article;
-import com.android_projects.newsapipractice.data.Models.NewsArticleMod;
 import com.android_projects.newsapipractice.databinding.FooterNoMoreDataBinding;
 import com.android_projects.newsapipractice.databinding.ListNewsBinding;
 import com.bumptech.glide.Glide;
@@ -27,11 +24,7 @@ import com.facebook.share.model.ShareHashtag;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import io.reactivex.internal.util.AppendOnlyLinkedArrayList;
-
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_ARTICLE;
 
 public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
@@ -40,8 +33,6 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
     private List<Article> articleList;
     private Context context;
 
-    public boolean isFooterVisible = false;//To determine if loading the data or not
-
     //Views
     private final int FOOTER_VIEW=2;
     private final int NORMAL_VIEW=0;
@@ -49,7 +40,6 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
     @NonNull
     @Override
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //ListNewsBinding newsBinding = ListNewsBinding.inflate(LayoutInflater.from(context), parent, false);
         switch (viewType){
             case FOOTER_VIEW:
                 FooterNoMoreDataBinding footerViewBinding = FooterNoMoreDataBinding.inflate(LayoutInflater.from(context),parent,false);
@@ -60,7 +50,6 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
             default:
                 return null;
         }
-       // return null;
     }
 
     public NewsRecyclerViewAdapter(Context context, List<Article> list) {
@@ -77,7 +66,6 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
                 articleHolder.bind(articleList.get(position));
             }else if(holder instanceof FooterViewHolder){
                 FooterViewHolder footerViewHolder = (FooterViewHolder)holder;
-                //footerViewHolder.bind(articleList.get(position+1));
             }
         }catch (Exception e){
             e.printStackTrace();

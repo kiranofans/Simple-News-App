@@ -35,7 +35,8 @@
             android:id="@+id/no_network_layout"
             android:visibility="gone"/>
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-    <!--Header and footers in recyclerView-->
+        <include layout="@layout/search_result_recycler"
+            android:id="@+id/search_recycler_list"/>
 
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

@@ -2,15 +2,16 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@color/color_settings_interval"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/search_recycler_view"
             android:padding="4dp"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"/>
-        <include layout="@layout/list_news_search_result"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
