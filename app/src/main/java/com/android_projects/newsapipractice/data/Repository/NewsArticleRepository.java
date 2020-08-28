@@ -45,7 +45,7 @@ public class NewsArticleRepository {
                 NewsArticleMod newsArticles= response.body();
                 if(newsArticles!= null){
                     //Callback to return data to live data
-                    Log.d(TAG, "onResponse: ");
+                    Log.d(TAG, "Ver 2.0 > onResponse: ");
                     dataReceivedCallback.onArticleDataReceived(newsArticles.getArticles());
                     //Convert the data source to mutable live data
                 }

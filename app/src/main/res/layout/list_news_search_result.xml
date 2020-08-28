@@ -3,6 +3,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/preference_margin_small"
         android:padding="3dp">
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/search_result_img"

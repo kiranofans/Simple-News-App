@@ -34,6 +34,7 @@ public class Article implements BaseModel, Serializable {
     private String content;
 
     public Article(){}
+
     public Source getSource() {
         return source;
     }
