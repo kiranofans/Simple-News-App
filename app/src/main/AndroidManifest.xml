@@ -25,6 +25,9 @@
             android:theme="@style/ImageActivityTheme" />
         <activity android:name=".View.ArticleActivity" />
 
+        <!-- set configChanges with orientation|screenSize so the activity will not be recreated,
+        but will receive a callback instead (which can be ignored).
+        Just a note to self: This works on API level 13 and up,use android:configChanges="orientation" for API level 12 and lower-->
         <activity android:name=".View.MainActivity"
             android:configChanges="orientation|screenSize">
             <intent-filter>
