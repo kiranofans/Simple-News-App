@@ -25,7 +25,8 @@
             android:theme="@style/ImageActivityTheme" />
         <activity android:name=".View.ArticleActivity" />
 
-        <activity android:name=".View.MainActivity">
+        <activity android:name=".View.MainActivity"
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
                 <action android:name="android.intent.action.MAIN" />
@@ -72,7 +73,6 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-
 
     </application>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
