@@ -1,12 +1,10 @@
 package com.android_projects.newsapipractice.View;
 
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -15,11 +13,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.Utils.Utility;
-import com.android_projects.newsapipractice.View.Fragments.CategoriesFragment;
 import com.android_projects.newsapipractice.View.Fragments.HomeFragment;
 import com.android_projects.newsapipractice.View.Fragments.LocalFragment;
 import com.android_projects.newsapipractice.View.Fragments.PopularFragment;
@@ -41,12 +39,17 @@ public class BaseActivity extends AppCompatActivity implements NetworkConnectivi
     //Others
     public Utility utility;
 
-    private boolean isNavigationAsHome = false;
+    //Fragments handling
+    private FragmentManager fragMgr = getSupportFragmentManager();
+    private FragmentTransaction fragTrans;
+    public final Fragment homeFragment = new HomeFragment();
+    public final Fragment popularFragment = new PopularFragment();
+    public final Fragment localFragment = new LocalFragment();
+    public Fragment activeFragment = homeFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         utility = new Utility();
         permMgr = new PermissionManager(this);
         connReceiver = new NetworkConnectivityReceiver();
@@ -58,33 +61,32 @@ public class BaseActivity extends AppCompatActivity implements NetworkConnectivi
 
     public BottomNavigationView.OnNavigationItemSelectedListener mNavItemSelectedListener
             = (@NonNull MenuItem item) -> {
-        Fragment fragment = null;
+        fragTrans = fragMgr.beginTransaction();
+        /* To switch fragments without loosing instance state, hide activeFragment and commit it,
+        then set the current fragment as the active fragment */
         switch (item.getItemId()) {
             case R.id.nav_home:
-                fragment = new HomeFragment();
-                break;
+                fragTrans.hide(activeFragment).show(homeFragment).commit();
+                activeFragment = homeFragment;
+                return true;
             case R.id.nav_popular:
-                fragment = new PopularFragment();
-                break;
+                fragTrans.hide(activeFragment).show(popularFragment).commit();
+                activeFragment = popularFragment;
+                return true;
             case R.id.nav_local:
-                fragment = new LocalFragment();
-                break;
-          /*  case R.id.nav_categories:
-                fragment = new CategoriesFragment();
-                break;*/
-        }
-        return setFragments(fragment);
-
-    };
-
-    public boolean setFragments(Fragment fragment) {
-        if (fragment != null) {
-            FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.main_fragment_container, fragment, "Bottom Nav Fragments");
-            fragTrans.commit();
-            return true;
+                fragTrans.hide(activeFragment).show(localFragment).commit();
+                activeFragment = localFragment;
+                return true;
         }
         return false;
+    };
+
+    public void setFragments() {
+        //Hide all fragments EXCEPT FOR the fragment that will serve as a home fragment, then commit
+        //This should be put below onCreate() in MainActivity in my case
+        fragMgr.beginTransaction().add(R.id.main_fragment_container, popularFragment).hide(popularFragment).commit();
+        fragMgr.beginTransaction().add(R.id.main_fragment_container, localFragment).hide(localFragment).commit();
+        fragMgr.beginTransaction().add(R.id.main_fragment_container, homeFragment).commit();
     }
 
     private void requestPermissions() {
