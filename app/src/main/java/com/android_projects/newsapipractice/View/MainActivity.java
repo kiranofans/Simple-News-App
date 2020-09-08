@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.View.Adapter.SearchResultRecyclerView;
-import com.android_projects.newsapipractice.View.Fragments.HomeFragment;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.ActivityMainBinding;
@@ -42,17 +41,16 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mainBinding.mainBottomNavigation.setOnNavigationItemSelectedListener(mNavItemSelectedListener);
-        viewModel = new ViewModelProvider(this).get(NewsArticleViewModel.class);
         searchResultRecycler = mainBinding.searchRecyclerList.searchRecyclerView;
 
+        viewModel = new ViewModelProvider(this).get(NewsArticleViewModel.class);
         articleList = new ArrayList<>();
         recyclerViewAdapter = new SearchResultRecyclerView(this, getArticleListData());
 
         setRecyclerView();
 
-        //loading default fragment
-        setFragments(new HomeFragment());
-
+        //Loading home (default) fragment
+        setFragments();
     }
 
     @Override
@@ -109,7 +107,7 @@ public class MainActivity extends BaseActivity {
     private void hideShowRecyclerView(String query) {
         if (query.isEmpty()) {
             searchResultRecycler.setVisibility(View.GONE);
-        }else{
+        } else {
             searchResultRecycler.setVisibility(View.VISIBLE);
         }
     }
