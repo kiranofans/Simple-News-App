@@ -18,7 +18,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
-        <androidx.appcompat.widget.LinearLayoutCompat
+        <RelativeLayout
             android:id="@+id/pref_settings_linear_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -44,19 +44,31 @@
                 android:id="@+id/pref_setting_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/pref_setting_title"
                 android:text="settings descriptions or status"
                 android:textColor="@android:color/darker_gray" />
 
             <androidx.appcompat.widget.AppCompatSeekBar
                 android:id="@+id/pref_setting_seekbar"
-                android:layout_width="300dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:max="30"
-                android:paddingLeft="0dp"
-                android:paddingRight="0dp"
+                android:layout_below="@+id/pref_setting_description"
+                android:max="50"
+                android:min="14"
+                android:paddingStart="@dimen/preference_margin_small"
+                android:paddingEnd="@dimen/preference_margin_small"
                 android:indeterminate="false"
                 android:layout_marginTop="@dimen/preference_margin_small" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/pref_progress_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="4dp"
+                android:textColor="@android:color/darker_gray"
+                android:layout_below="@+id/pref_setting_seekbar"
+                android:text="0"/>
+        </RelativeLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

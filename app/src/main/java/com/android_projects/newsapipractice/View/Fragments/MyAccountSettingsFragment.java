@@ -3,18 +3,23 @@ package com.android_projects.newsapipractice.View.Fragments;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.preference.SeekBarPreference;
 
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.View.LoginActivity;
@@ -35,6 +40,10 @@ public class MyAccountSettingsFragment extends Fragment {
     private DialogFontSizeBinding dialogBinding;
     private AlertDialog.Builder dialog;
 
+    private SeekBar seekBar;
+    private int maxValueX;
+    private TextView progressTxt;
+
     private View v;
     private RadioGroup fontSizeRadioGroup;
 
@@ -44,6 +53,8 @@ public class MyAccountSettingsFragment extends Fragment {
         settingBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_account_setting, container, false);
         dialogBinding = DataBindingUtil.inflate(inflater.from(getContext()), R.layout.dialog_font_size, null, false);
         fontSizeRadioGroup = dialogBinding.dialogRadioGroup;
+        seekBar=settingBinding.settingFontSize.prefSettingSeekbar;
+        progressTxt=settingBinding.settingFontSize.prefProgressTxt;
 
         return v = settingBinding.getRoot();
     }
@@ -57,10 +68,43 @@ public class MyAccountSettingsFragment extends Fragment {
     }
 
     private void settingsTabOnClick() {
-        settingBinding.settingFontSize.prefSettingsLinearLayout.setOnClickListener((View v) -> {
-           // showFontSizePopup();
+        settingBinding.settingsTextFont.prefSettingsLinearLayout.setOnClickListener((View v) -> {
             Log.d(TAG,"Font size tab clicked");
         });
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progressValue, boolean b) {
+                setProgressValueOverThumb(progressValue);
+
+                //Set progress value to TextView
+                settingBinding.settingFontSize.prefSettingDescription.setTextSize(progressValue+14);//begin with 14sp
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+    }
+
+    private void setProgressValueOverThumb(int progressValue){
+        //Get screen X coordinator size
+        Point maxSizePoint = new Point();
+        getActivity().getWindowManager().getDefaultDisplay().getSize(maxSizePoint);
+        maxValueX = maxSizePoint.x;
+
+        //Calculate dynamic progress value over the seek bar thumb
+        int value = (progressValue *(seekBar.getWidth()-2 * seekBar.getThumbOffset()))/ seekBar.getMax();
+        progressTxt.setText(progressValue+"");//Add "" to avoid Resources NOT FOUND EXCEPTION
+        int txtValueX = value - (progressTxt.getWidth() / 2);//X for x coordinator
+        int finalValueX= progressTxt.getWidth() + txtValueX > maxValueX ?
+                (maxValueX - progressTxt.getWidth()-16): txtValueX + 0/* marginStart value is 0 */;
+        progressTxt.setX(finalValueX< 0 ? 0/* 0 is the marginStart value */ : finalValueX);
     }
 
     private void onRadioButtonChecked() {
@@ -77,7 +121,7 @@ public class MyAccountSettingsFragment extends Fragment {
     }
 
     @SuppressLint("ResourceType")
-    private void showFontSizePopup() {
+    private void showFontStyleDialog() {
         String[] items = {"Small", "Medium", "Large", "Extra Large"};
         fontSizeRadioGroup.setVisibility(View.VISIBLE);
 
@@ -122,7 +166,7 @@ public class MyAccountSettingsFragment extends Fragment {
         settingBinding.settingFontSize.prefSettingTitle.setText(getString(R.string.settings_title_font_size));
         settingBinding.settingFontSize.prefSettingDescription.setText(getString(R.string.settings_description_font_size));
         settingBinding.settingFontSize.prefSettingListImgView.setImageResource(R.mipmap.ic_font_size);
-       // settingBinding.settingFontSize.prefSettingSeekbar.setPadding(0,0,0,0);
+        //settingBinding.settingFontSize.prefSettingSeekbar.setProgress(12);
 
         settingBinding.settingsTextFont.prefSettingTitle.setText(getString(R.string.settings_title_font));
         settingBinding.settingsTextFont.prefSettingDescription.setText(getString(R.string.settings_description_font));
