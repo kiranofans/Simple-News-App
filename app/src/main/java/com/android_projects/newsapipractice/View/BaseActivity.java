@@ -84,8 +84,8 @@ public class BaseActivity extends AppCompatActivity implements NetworkConnectivi
     public void setFragments() {
         //Hide all fragments EXCEPT FOR the fragment that will serve as a home fragment, then commit
         //This should be put below onCreate() in MainActivity in my case
-        fragMgr.beginTransaction().add(R.id.main_fragment_container, popularFragment).hide(popularFragment).commit();
-        fragMgr.beginTransaction().add(R.id.main_fragment_container, localFragment).hide(localFragment).commit();
+        fragMgr.beginTransaction().add(R.id.main_fragment_container, popularFragment).hide(localFragment).commit();
+        fragMgr.beginTransaction().add(R.id.main_fragment_container, localFragment).hide(popularFragment).commit();
         fragMgr.beginTransaction().add(R.id.main_fragment_container, homeFragment).commit();
     }
 
