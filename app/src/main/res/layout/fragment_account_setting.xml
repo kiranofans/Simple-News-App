@@ -24,7 +24,7 @@
             android:layout_height="20dp"
             android:background="@color/color_settings_interval"/>
 
-        <include layout="@layout/preference_settings_tab"
+        <include layout="@layout/preference_setting_tab_slider"
             android:id="@+id/setting_font_size"/>
 
         <include layout="@layout/preference_settings_tab"

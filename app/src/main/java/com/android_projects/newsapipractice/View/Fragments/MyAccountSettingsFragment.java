@@ -58,7 +58,8 @@ public class MyAccountSettingsFragment extends Fragment {
 
     private void settingsTabOnClick() {
         settingBinding.settingFontSize.prefSettingsLinearLayout.setOnClickListener((View v) -> {
-            showFontSizePopup();
+           // showFontSizePopup();
+            Log.d(TAG,"Font size tab clicked");
         });
     }
 
@@ -121,6 +122,7 @@ public class MyAccountSettingsFragment extends Fragment {
         settingBinding.settingFontSize.prefSettingTitle.setText(getString(R.string.settings_title_font_size));
         settingBinding.settingFontSize.prefSettingDescription.setText(getString(R.string.settings_description_font_size));
         settingBinding.settingFontSize.prefSettingListImgView.setImageResource(R.mipmap.ic_font_size);
+       // settingBinding.settingFontSize.prefSettingSeekbar.setPadding(0,0,0,0);
 
         settingBinding.settingsTextFont.prefSettingTitle.setText(getString(R.string.settings_title_font));
         settingBinding.settingsTextFont.prefSettingDescription.setText(getString(R.string.settings_description_font));
