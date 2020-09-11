@@ -16,10 +16,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.AppCompatTextView;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.preference.SeekBarPreference;
 
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.View.LoginActivity;
@@ -27,9 +25,6 @@ import com.android_projects.newsapipractice.databinding.DialogFontSizeBinding;
 import com.android_projects.newsapipractice.databinding.FragmentAccountSettingBinding;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.radiobutton.MaterialRadioButton;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.android_projects.newsapipractice.View.LoginActivity.googleSignInClient;
 
@@ -74,10 +69,11 @@ public class MyAccountSettingsFragment extends Fragment {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progressValue, boolean b) {
-                setProgressValueOverThumb(progressValue);
-
+                getTextSize(progressValue);
                 //Set progress value to TextView
                 settingBinding.settingFontSize.prefSettingDescription.setTextSize(progressValue+14);//begin with 14sp
+                Log.d(TAG,"TextSize: "+getTextSize(progressValue));
+
             }
 
             @Override
@@ -92,7 +88,7 @@ public class MyAccountSettingsFragment extends Fragment {
         });
     }
 
-    private void setProgressValueOverThumb(int progressValue){
+    private int getTextSize(int progressValue){
         //Get screen X coordinator size
         Point maxSizePoint = new Point();
         getActivity().getWindowManager().getDefaultDisplay().getSize(maxSizePoint);
@@ -105,6 +101,7 @@ public class MyAccountSettingsFragment extends Fragment {
         int finalValueX= progressTxt.getWidth() + txtValueX > maxValueX ?
                 (maxValueX - progressTxt.getWidth()-16): txtValueX + 0/* marginStart value is 0 */;
         progressTxt.setX(finalValueX< 0 ? 0/* 0 is the marginStart value */ : finalValueX);
+        return progressValue+14;
     }
 
     private void onRadioButtonChecked() {
