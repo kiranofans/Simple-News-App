@@ -41,7 +41,6 @@ public class BaseActivity extends AppCompatActivity implements NetworkConnectivi
 
     //Fragments handling
     private FragmentManager fragMgr = getSupportFragmentManager();
-    private FragmentTransaction fragTrans;
     public final Fragment homeFragment = new HomeFragment();
     public final Fragment popularFragment = new PopularFragment();
     public final Fragment localFragment = new LocalFragment();
@@ -61,7 +60,7 @@ public class BaseActivity extends AppCompatActivity implements NetworkConnectivi
 
     public BottomNavigationView.OnNavigationItemSelectedListener mNavItemSelectedListener
             = (@NonNull MenuItem item) -> {
-        fragTrans = fragMgr.beginTransaction();
+        FragmentTransaction fragTrans = fragMgr.beginTransaction();
         /* To switch fragments without loosing instance state, hide activeFragment and commit it,
         then set the current fragment as the active fragment */
         switch (item.getItemId()) {
@@ -84,9 +83,9 @@ public class BaseActivity extends AppCompatActivity implements NetworkConnectivi
     public void setFragments() {
         //Hide all fragments EXCEPT FOR the fragment that will serve as a home fragment, then commit
         //This should be put below onCreate() in MainActivity in my case
-        fragMgr.beginTransaction().add(R.id.main_fragment_container, popularFragment).hide(localFragment).commit();
-        fragMgr.beginTransaction().add(R.id.main_fragment_container, localFragment).hide(popularFragment).commit();
-        fragMgr.beginTransaction().add(R.id.main_fragment_container, homeFragment).commit();
+        fragMgr.beginTransaction().add(R.id.main_fragment_container, localFragment).hide(localFragment).commit();//fragment 3
+        fragMgr.beginTransaction().add(R.id.main_fragment_container, popularFragment).hide(popularFragment).commit();//fragment 2
+        fragMgr.beginTransaction().add(R.id.main_fragment_container, homeFragment).commit();//fragment 1
     }
 
     private void requestPermissions() {
