@@ -19,7 +19,7 @@
                 android:id="@+id/article_image_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher_background"/>
+                android:src="@drawable/ic_image_search"/>
             <TextView
                 android:id="@+id/article_tv_source"
                 android:layout_width="wrap_content"
@@ -34,7 +34,7 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
-                android:text="Secondary Text" />
+                android:text="Source" />
         </RelativeLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -42,7 +42,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Article Title"
             android:layout_marginBottom="@dimen/preference_margin_small"
             android:layout_marginStart="@dimen/preference_margin_small"
             android:layout_marginEnd="@dimen/preference_margin_small"
@@ -69,7 +68,7 @@
                 android:textAlignment="textStart"
                 android:textSize="17sp"
                 android:textColor="@android:color/darker_gray"
-                android:text="@string/app_name"/>
+                android:text="Publish date"/>
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/linear_share_buttons"
