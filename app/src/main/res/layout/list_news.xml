@@ -68,7 +68,7 @@
                 android:textAlignment="textStart"
                 android:textSize="17sp"
                 android:textColor="@android:color/darker_gray"
-                android:text="Publish date"/>
+                android:text="Date not available"/>
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/linear_share_buttons"

@@ -237,17 +237,27 @@ public class Utility {
 
     @SuppressLint("MissingPermission")
     public String getDeviceCountryCode(LocationManager locationMgr, Activity context) {
-        String locationResult = "";
+        String locationResult = ""; Location bestLocation=null;
         double latitude=0; double longitude=0;
-        locationMgr = (LocationManager) context.getSystemService(LOCATION_SERVICE);
-        Location location = locationMgr.getLastKnownLocation(locationMgr.getBestProvider
-                (new Criteria(), false));
 
-        if(location!=null){
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
-            Geocoder geocoder = new Geocoder(context);
-            if (geocoder != null) {
+        locationMgr = (LocationManager) context.getSystemService(LOCATION_SERVICE);
+
+        //getProviders() returns list of only "enabled" location providers
+        List<String> providers = (locationMgr!=null)? locationMgr.getProviders(true) : null;
+        if(locationMgr!=null) {
+            for(String provider: providers){
+                Location location = locationMgr.getLastKnownLocation(provider);
+                if(location==null){
+                    continue;
+                }
+                if(bestLocation==null || location.getAccuracy() < bestLocation.getAccuracy()){
+                    bestLocation=location;
+                }
+            }
+            if(bestLocation!=null){
+                latitude = bestLocation.getLatitude();
+                longitude = bestLocation.getLongitude();
+                Geocoder geocoder = new Geocoder(context);
                 try {
                     List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
                     Address address = addressList.get(0);
