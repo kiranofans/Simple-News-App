@@ -169,7 +169,6 @@ public class Utility {
         return currentFormat.format(parsedDate);
     }
 
-
     //Permission check
     public void openAppSettings(Context context) {
         Intent settingIntent = new Intent();
@@ -239,24 +238,30 @@ public class Utility {
     @SuppressLint("MissingPermission")
     public String getDeviceCountryCode(LocationManager locationMgr, Activity context) {
         String locationResult = "";
+        double latitude=0; double longitude=0;
         locationMgr = (LocationManager) context.getSystemService(LOCATION_SERVICE);
         Location location = locationMgr.getLastKnownLocation(locationMgr.getBestProvider
                 (new Criteria(), false));
 
-        double latitude = location.getLatitude();
-        double longitude = location.getLongitude();
-        Geocoder geocoder = new Geocoder(context);
-        if (geocoder != null) {
-            try {
-                List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
-                Address address = addressList.get(0);
-                locationResult = address.getCountryCode();//Testing purpose
+        if(location!=null){
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+            Geocoder geocoder = new Geocoder(context);
+            if (geocoder != null) {
+                try {
+                    List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
+                    Address address = addressList.get(0);
+                    locationResult = address.getCountryCode();//Testing purpose
 
-                Log.d(TAG, "Lat:" + latitude + "lon:" + longitude);
-            } catch (IOException e) {
-                e.printStackTrace();
+                    Log.d(TAG, "Lat:" + latitude + "lon:" + longitude);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }else{
+                Toast.makeText(context, "Can't get latitude or longitude", Toast.LENGTH_SHORT).show();
             }
         }
+
         return locationResult;
     }
 
@@ -271,7 +276,6 @@ public class Utility {
             noNetworkLayout.setVisibility(View.GONE);
         }
     }
-
 
     //Others
     public void showToastMsg(Context context, String message, int length) {
