@@ -5,7 +5,9 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -54,8 +56,6 @@ public class BaseActivity extends AppCompatActivity implements NetworkConnectivi
         connReceiver = new NetworkConnectivityReceiver();
         registerReceiver(new NetworkConnectivityReceiver(),
                 new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-
-        requestPermissions();
     }
 
     public BottomNavigationView.OnNavigationItemSelectedListener mNavItemSelectedListener
@@ -88,25 +88,26 @@ public class BaseActivity extends AppCompatActivity implements NetworkConnectivi
         fragMgr.beginTransaction().add(R.id.main_fragment_container, homeFragment).commit();//fragment 1
     }
 
-    private void requestPermissions() {
-        //Request permissions
-        String externalStoragePerm = permMgr.externalStoragePermission;
-        String[] permissionTypes = {externalStoragePerm, permMgr.coarseLocationPerm, permMgr.fineLocationPerm};
-
-        isLocationPermGranted = ContextCompat.checkSelfPermission(this, permMgr.coarseLocationPerm) == PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, permMgr.fineLocationPerm) == PackageManager.PERMISSION_GRANTED;
-        isWriteExternalPermGranted = ContextCompat.checkSelfPermission(this, externalStoragePerm)
-                == PackageManager.PERMISSION_GRANTED;
-
-        if (isLocationPermGranted && isWriteExternalPermGranted) {
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(hasAllPermissionsGranted(grantResults)){
             utility.showDebugLog(TAG, "All permissions granted!");
-        } else {
+        }else{
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                ActivityCompat.requestPermissions(this, permissionTypes, ALL_PERMISSIONS);
+                utility.showToastMsg(getApplicationContext(),permissions+" denied", Toast.LENGTH_LONG);
             }
         }
     }
 
+    public boolean hasAllPermissionsGranted(@NonNull int[] grantResults){
+        for(int grantResult: grantResults){
+            if(grantResult == PackageManager.PERMISSION_DENIED){
+                return false;
+            }
+        }
+        return true;
+    }
     @Override
     protected void onStart() {
         super.onStart();

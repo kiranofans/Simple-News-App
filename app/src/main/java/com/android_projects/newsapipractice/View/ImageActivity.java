@@ -1,11 +1,9 @@
 package com.android_projects.newsapipractice.View;
 
-import android.app.Activity;
 import android.app.AppOpsManager;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -17,14 +15,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
@@ -85,8 +79,8 @@ public class ImageActivity extends BaseActivity {
         articleMod = (Article) getIntent().getSerializableExtra(EXTRA_KEY_ARTICLE);
         fbShareDialog = new ShareDialog(this);
         imgURL = articleMod.getUrlToImage();
-        permMgr=new PermissionManager(this);
-        writeStoragePerm=new String[]{permMgr.externalStoragePermission};
+        permMgr = new PermissionManager(this);
+        writeStoragePerm = new String[]{permMgr.externalStoragePermission};
 
         getSerializable();
         imgBottomButtons();
@@ -112,10 +106,10 @@ public class ImageActivity extends BaseActivity {
         });
 
         imgBinding.imgBottomNav.imgBottomNavDownload.setOnClickListener((View v) -> {
-            if(isWriteExternalPermGranted){
+            if (isWriteExternalPermGranted) {
                 startDownloadingImg();
-            }else{
-                if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.M){
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     checkPermission(writeStoragePerm);
                 }
             }
@@ -124,8 +118,8 @@ public class ImageActivity extends BaseActivity {
 
     private void configActionBar() {
         SpannableStringBuilder strBuilder = new SpannableStringBuilder(articleMod.getTitle());
-        strBuilder.setSpan(new ForegroundColorSpan(Color.WHITE),0,
-                articleMod.getTitle().length()-1,Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        strBuilder.setSpan(new ForegroundColorSpan(Color.WHITE), 0,
+                articleMod.getTitle().length() - 1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         CharSequence actionBarTitleChar = strBuilder;
         setSupportActionBar(imgBinding.imgFragmentToolbar);
         getSupportActionBar().setTitle(actionBarTitleChar);
@@ -191,10 +185,10 @@ public class ImageActivity extends BaseActivity {
         }
     }
 
-    private void shareImage(){
+    private void shareImage() {
         Glide.with(this).asBitmap().skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).dontAnimate()
-                .load(imgURL).into(new CustomTarget<Bitmap>(){
+                .load(imgURL).into(new CustomTarget<Bitmap>() {
 
             @Override
             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
@@ -203,21 +197,22 @@ public class ImageActivity extends BaseActivity {
 
             @Override
             public void onLoadCleared(@Nullable Drawable placeholder) {
-                Log.d(TAG,placeholder.toString());
+                Log.d(TAG, placeholder.toString());
             }
         });
     }
+
     private void imgShareIntent(Bitmap bitmap) {
         Uri bmpUri = getLocalBitmapUri(bitmap);
 
         Intent imgShareIntent = new Intent(Intent.ACTION_SEND);//same as intent.setAction();
         imgShareIntent.putExtra(Intent.EXTRA_SUBJECT, articleMod.getPublishedAt());
         imgShareIntent.putExtra(Intent.EXTRA_TEXT, articleMod.getTitle() + "\n" + articleMod.getUrl());
-        imgShareIntent.putExtra(Intent.EXTRA_STREAM,bmpUri);
+        imgShareIntent.putExtra(Intent.EXTRA_STREAM, bmpUri);
         imgShareIntent.setType("image/*");
         imgShareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-        startActivity(Intent.createChooser(imgShareIntent,"Share Opportunity"));
+        startActivity(Intent.createChooser(imgShareIntent, "Share Opportunity"));
     }
 
     private void shareImgWithFB(ShareDialog shareDialog) {
@@ -247,14 +242,14 @@ public class ImageActivity extends BaseActivity {
 
         //store file to /storage/emulated/0/Android/data/...
         File localPath = new File(cachePath,
-                "share_img_" +System.currentTimeMillis()+".png");
+                "share_img_" + System.currentTimeMillis() + ".png");
         FileOutputStream outStream = null;
 
-        if (!localPath.exists()){
+        if (!localPath.exists()) {
             MediaScannerConnection.scanFile(this, new String[]{localPath.toString()}
-                    , null, (String s, Uri uri) ->{
-                        Log.i(TAG,"Scanned"+s+":");
-                        Log.i(TAG,"-> uri = "+uri);
+                    , null, (String s, Uri uri) -> {
+                        Log.i(TAG, "Scanned" + s + ":");
+                        Log.i(TAG, "-> uri = " + uri);
                         //In case some phones won't work
                     });
 
@@ -267,7 +262,7 @@ public class ImageActivity extends BaseActivity {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream);
             outStream.close();
             // PNG is a lossless format, the compression factor (100) is ignored
-            bmpUri=Uri.fromFile(localPath);
+            bmpUri = Uri.fromFile(localPath);
         } catch (IOException e) {
             Log.d(TAG, e.getMessage() + "\nCause: " + e.getCause());
         }
@@ -277,20 +272,20 @@ public class ImageActivity extends BaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.M && grantResults==null ||
-                grantResults[0] != PackageManager.PERMISSION_GRANTED){
-            utility.showDebugLog(TAG,"Write external storage permission denied.");
-        }else{
-            utility.showDebugLog(TAG,"Write external storage permission granted!");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && grantResults == null ||
+                grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+            utility.showDebugLog(TAG, "Write external storage permission not granted.");
+        } else {
+            utility.showDebugLog(TAG, "Write external storage permission granted!");
             startDownloadingImg();
         }
     }
 
-    private void checkPermission(String[] permissions){
+    private void checkPermission(String[] permissions) {
         permMgr.checkPermission(this, permissions[0], new PermissionManager.PermissionRequestListener() {
             @Override
             public void onNeedPermission() {
-                ActivityCompat.requestPermissions(ImageActivity.this,permissions,ALL_PERMISSIONS);
+                ActivityCompat.requestPermissions(ImageActivity.this, permissions, ALL_PERMISSIONS);
             }
 
             @Override
@@ -298,18 +293,18 @@ public class ImageActivity extends BaseActivity {
                 String title = getString(R.string.perm_write_external_storage_denied_title);
                 String message = getString(R.string.perm_rationale_external_storage_msg);
 
-                showCustomAlertDialog(title,message);
+                showCustomAlertDialog(title, message);
             }
 
             @Override
             public void onPermissionPreDeniedWithNeverAskAgain() {
-               openSetting(getString(R.string.perm_write_external_storage_denied_title),
-                       getString(R.string.perm_go_to_settings_msg));
+                openSetting(getString(R.string.perm_write_external_storage_denied_title),
+                        getString(R.string.perm_go_to_settings_msg));
             }
 
             @Override
             public void onPermissionGranted() {
-                utility.showDebugLog(TAG,"Write external storage permission granted!");
+                utility.showDebugLog(TAG, "Write external storage permission granted!");
                 imgBinding.imgBottomNav.imgBottomNavDownload.setOnClickListener((View v) -> {
                     startDownloadingImg();
                 });
@@ -333,47 +328,48 @@ public class ImageActivity extends BaseActivity {
         }
     }
 
-    private void showCustomAlertDialog(String title, String msg){
+    private void showCustomAlertDialog(String title, String msg) {
         final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         LayoutInflater inflater = LayoutInflater.from(this);
 
         alertDialogBinding = DataBindingUtil.inflate(inflater,
-                R.layout.alert_dialog_layout,null,false);
+                R.layout.alert_dialog_layout, null, false);
         alertDialogBinding.alertDialogTitle.setText(title);
         alertDialogBinding.alertDialogMsg.setText(msg);
-        alertDialogBinding.alertDialogPosBtn.setOnClickListener((View v)-> {
-            ActivityCompat.requestPermissions(ImageActivity.this,writeStoragePerm,ALL_PERMISSIONS);
-            if(isWriteExternalPermGranted){
+        alertDialogBinding.alertDialogPosBtn.setOnClickListener((View v) -> {
+            ActivityCompat.requestPermissions(ImageActivity.this, writeStoragePerm, ALL_PERMISSIONS);
+            if (isWriteExternalPermGranted) {
                 startDownloadingImg();
             }
             alertDialog.dismiss();
         });
-        alertDialogBinding.alertDialogNegBtn.setOnClickListener((View v)->{
+        alertDialogBinding.alertDialogNegBtn.setOnClickListener((View v) -> {
             alertDialog.dismiss();
         });
         alertDialog.setView(alertDialogBinding.getRoot());
         alertDialog.setCancelable(false);
         alertDialog.show();
     }
-    private void openSetting(String title, String msg){
+
+    private void openSetting(String title, String msg) {
         final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         LayoutInflater inflater = LayoutInflater.from(this);
 
         alertDialogBinding = DataBindingUtil.inflate(inflater,
-                R.layout.alert_dialog_layout,null,false);
+                R.layout.alert_dialog_layout, null, false);
         alertDialogBinding.alertDialogTitle.setText(title);
         alertDialogBinding.alertDialogMsg.setText(msg);
         alertDialogBinding.alertDialogPosBtn.setText(getString(R.string.perm_pos_setting));
         alertDialogBinding.alertDialogNegBtn.setText(getString(R.string.perms_neg_not_now));
 
-        alertDialogBinding.alertDialogPosBtn.setOnClickListener((View v)-> {
+        alertDialogBinding.alertDialogPosBtn.setOnClickListener((View v) -> {
             utility.openAppSettings(this);
             alertDialog.dismiss();
             if (utility.isSettingAccessEnabled(this, AppOpsManager.OPSTR_WRITE_EXTERNAL_STORAGE)) {
                 startDownloadingImg();
             }
         });
-        alertDialogBinding.alertDialogNegBtn.setOnClickListener((View v)->{
+        alertDialogBinding.alertDialogNegBtn.setOnClickListener((View v) -> {
             alertDialog.dismiss();
         });
         alertDialog.setView(alertDialogBinding.getRoot());

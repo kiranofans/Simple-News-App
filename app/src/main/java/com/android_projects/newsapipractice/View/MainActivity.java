@@ -51,6 +51,7 @@ public class MainActivity extends BaseActivity {
 
         //Loading home (default) fragment
         setFragments();
+
     }
 
     @Override
