@@ -34,9 +34,7 @@ public class BaseActivity extends AppCompatActivity implements NetworkConnectivi
     private NetworkConnectivityReceiver connReceiver;
 
     //Permission
-    private PermissionManager permMgr;
     public final int ALL_PERMISSIONS = 100;
-    public boolean isLocationPermGranted, isWriteExternalPermGranted;
 
     //Others
     public Utility utility;
@@ -52,7 +50,6 @@ public class BaseActivity extends AppCompatActivity implements NetworkConnectivi
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         utility = new Utility();
-        permMgr = new PermissionManager(this);
         connReceiver = new NetworkConnectivityReceiver();
         registerReceiver(new NetworkConnectivityReceiver(),
                 new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));

@@ -70,6 +70,7 @@ public class ImageActivity extends BaseActivity {
 
     private PermissionManager permMgr;
     private String[] writeStoragePerm;
+    private boolean isWriteExternalPermGranted;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
