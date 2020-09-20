@@ -9,6 +9,8 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.view.MenuCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -57,8 +59,6 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_setting_menu, menu);
-        MenuItem menuItem = menu.findItem(R.id.top_setting_search);
-        configSearchView(menuItem);
         return true;
     }
 
@@ -69,6 +69,7 @@ public class MainActivity extends BaseActivity {
                 startActivity(new Intent(this, LoginActivity.class));
                 return true;
             case R.id.top_setting_search:
+                configSearchView(item);
                 return true;
         }
         return super.onOptionsItemSelected(item);
