@@ -29,6 +29,7 @@ public class NewsArticleViewModel extends AndroidViewModel{
     private Call<NewsArticleMod> callApiData;
 
     private MutableLiveData<List<Article>> articleLiveData = new MutableLiveData<>();
+
     private RetrofitApiService apiService = Retrofit2Client.getRetrofitService();
     private Map<String, String> requestPramsMap = new HashMap<String, String>();
 
@@ -40,16 +41,18 @@ public class NewsArticleViewModel extends AndroidViewModel{
     }
 
     public void getArticleListEverything(int page, String sortBy) {
-        callApiData = apiService.getEverything("Bearer " +
-                API_KEY, requestPramsMap, 100, page);//100 is the maximum no matter how many pages
-        //so need to add a footer when news meets 100 articles
         requestPramsMap.put("sortBy", sortBy);
         requestPramsMap.put("domains", PARAMS_DOMAINS);
         requestPramsMap.put("language", LANGUAGE_ENGLISH);
+        callApiData = apiService.getEverything("Bearer " +
+                API_KEY, requestPramsMap, 100, page);//100 is the maximum no matter how many pages
+        //so need to add a footer when news meets 100 articles
+
         repository.getMutableLiveData(callApiData, data -> articleLiveData.setValue(data));
     }
 
     public void getArticleListTopHeadlines(int page, String sortBy, String countryCode) {
+        requestPramsMap.clear();
         requestPramsMap.put("sortBy", sortBy);
         requestPramsMap.put("country", countryCode);
         callApiData = apiService.getTopHeadlines("Bearer " +

@@ -1,7 +1,7 @@
 package com.android_projects.newsapipractice.View.Fragments;
 
-import android.annotation.SuppressLint;
 import android.app.AppOpsManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
@@ -18,7 +18,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -53,6 +53,7 @@ public class LocalFragment extends Fragment {
     private boolean isLastPage = false;
 
     private List<Article> localNewsList;
+    private String countryCode = "";
 
     public LocalFragment() {
         // Required empty public constructor
@@ -62,6 +63,7 @@ public class LocalFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         localBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_local, container, false);
+        locationMgr = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         utility = new Utility();
         permMgr = new PermissionManager(getContext());
         localNewsList = new ArrayList<>();
@@ -72,7 +74,7 @@ public class LocalFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        localNewsViewModel = ViewModelProviders.of(getActivity()).get(NewsArticleViewModel.class);
+        localNewsViewModel = new ViewModelProvider(this).get(NewsArticleViewModel.class);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(view.getContext()
                 .getString(R.string.title_local_news));
 
@@ -92,7 +94,7 @@ public class LocalFragment extends Fragment {
     }
 
     private void setObserver() {
-        localNewsViewModel.getArticleLiveData().observe(getActivity(),(List<Article> articles)-> {
+        localNewsViewModel.getArticleLiveData().observe(getViewLifecycleOwner(), (List<Article> articles) -> {
             isLoading = false;
             localNewsList.addAll(articles);
             utility.showDebugLog(TAG, "onChanged: " + localNewsList.size());
@@ -101,11 +103,9 @@ public class LocalFragment extends Fragment {
         });
     }
 
-    @SuppressLint("MissingPermission")
     private void loadPage(int page) {
         Log.d(TAG, "API called " + page);
-        localNewsViewModel.getArticleListTopHeadlines(page, SORT_BY_PUBLISHED_AT,
-                utility.getDeviceCountryCode(locationMgr, getActivity()));
+        localNewsViewModel.getArticleListTopHeadlines(page, SORT_BY_PUBLISHED_AT, countryCode);
     }
 
     private void onScrollListener() {
@@ -151,6 +151,7 @@ public class LocalFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        checkLocationPermissionResults(permissions);
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             /* If granted after rationale window popped up */
             localBinding.noDataFoundLayout.noDataFoundContent.setVisibility(View.GONE);
@@ -175,38 +176,42 @@ public class LocalFragment extends Fragment {
 
     private void checkLocationPermissionResults(String[] permissions) {
         //Deeply check permission results
-        permMgr.checkPermission(v.getContext(), permissions[0], new PermissionManager.PermissionRequestListener() {
-            @Override
-            public void onNeedPermission() {
-                requestPermissions(permissions, 100);
-            }
+        permMgr.checkPermission(v.getContext(), permissions[0],
+                new PermissionManager.PermissionRequestListener() {
+                    @Override
+                    public void onNeedPermission() {
+                        requestPermissions(permissions, 100);
+                    }
 
-            @Override
-            public void onPermissionPreDenied() {
-                localBinding.noDataFoundLayout.noDataFoundContent.setVisibility(View.VISIBLE);
-                showLocationRational(permissions, getString(R.string.local_rationale_title),
-                        getString(R.string.local_rationale_msg));
-                requestPermissionAgain();
-            }
+                    @Override
+                    public void onPermissionPreDenied() {
+                        localBinding.noDataFoundLayout.noDataFoundContent.setVisibility(View.VISIBLE);
+                        showLocationRational(permissions, getString(R.string.local_rationale_title),
+                                getString(R.string.local_rationale_msg));
+                        requestPermissionAgain();
+                    }
 
-            @Override
-            public void onPermissionPreDeniedWithNeverAskAgain() {
-                Button btn = localBinding.noDataFoundLayout.noDataPermissionButton;
-                localBinding.noDataFoundLayout.noDataPermissionButton.setText
-                        (getString(R.string.local_enable_access_from_settings));
-                utility.dialogToOpenSetting(v.getContext(), getString(R.string.local_permission_denied),
-                        getString(R.string.perm_go_to_settings_msg),
-                        AppOpsManager.OPSTR_COARSE_LOCATION, btn);
-            }
+                    @Override
+                    public void onPermissionPreDeniedWithNeverAskAgain() {
+                        Button btn = localBinding.noDataFoundLayout.noDataPermissionButton;
+                        localBinding.noDataFoundLayout.noDataPermissionButton.setText
+                                (getString(R.string.local_enable_access_from_settings));
+                        utility.dialogToOpenSetting(v.getContext(), getString(R.string.local_permission_denied),
+                                getString(R.string.perm_go_to_settings_msg),
+                                AppOpsManager.OPSTR_COARSE_LOCATION, btn);
+                    }
 
-            @Override
-            public void onPermissionGranted() {
-                setObserver();
-                loadPage(currentPageNum);
-                swipeToRefreshListener();
-                localBinding.noDataFoundLayout.noDataFoundContent.setVisibility(View.GONE);
-            }
-        });
+                    @Override
+                    public void onPermissionGranted() {
+                        setObserver();
+
+                        //Got location data after location permission granted
+                        countryCode = utility.getDeviceCountryCode(locationMgr, getActivity());
+                        loadPage(currentPageNum);
+                        swipeToRefreshListener();
+                        localBinding.noDataFoundLayout.noDataFoundContent.setVisibility(View.GONE);
+                    }
+                });
     }
 
     private void showLocationRational(String[] permissions, String title, String message) {

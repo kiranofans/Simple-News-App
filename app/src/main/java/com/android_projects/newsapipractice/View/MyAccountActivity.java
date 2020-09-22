@@ -63,12 +63,5 @@ public class MyAccountActivity extends BaseActivity {
                     .replace(R.id.account_setting_frame, fragment);
             fragTrans.commit();
         }
-
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();//set the back arrow onClick event
-        return true;
     }
 }

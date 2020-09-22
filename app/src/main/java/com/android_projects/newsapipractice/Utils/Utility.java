@@ -3,6 +3,7 @@ package com.android_projects.newsapipractice.Utils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AppOpsManager;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -178,6 +179,11 @@ public class Utility {
         settingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(settingIntent);
     }
+    public void openSystemSettings(Context context){
+        Intent settingIntent = new Intent(Settings.ACTION_SETTINGS);
+        settingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(settingIntent);
+    }
 
     public void dialogToOpenSetting(Context context, String title, String message,
                                     String settingPerms, Button btn) {
@@ -235,12 +241,19 @@ public class Utility {
         }).show();
     }
 
+    public void showAlertDialog(Activity activityContext,String title,String msg){
+        new AlertDialog.Builder(activityContext).setTitle(title).setMessage(msg).setCancelable(false)
+          .setPositiveButton("GO TO SETTINGS",(DialogInterface dialogInterface, int i)->{
+              openSystemSettings(activityContext);
+        }).setNegativeButton("CANCEL",(DialogInterface dialogInterface, int i)->{
+            dialogInterface.dismiss();
+        }).show();
+    }
+
     @SuppressLint("MissingPermission")
     public String getDeviceCountryCode(LocationManager locationMgr, Activity context) {
         String locationResult = ""; Location bestLocation=null;
         double latitude=0; double longitude=0;
-
-        locationMgr = (LocationManager) context.getSystemService(LOCATION_SERVICE);
 
         //getProviders() returns list of only "enabled" location providers
         List<String> providers = (locationMgr!=null)? locationMgr.getProviders(true) : null;
@@ -268,7 +281,9 @@ public class Utility {
                     e.printStackTrace();
                 }
             }else{
-                Toast.makeText(context, "Can't get latitude or longitude", Toast.LENGTH_SHORT).show();
+                showAlertDialog(context,"Cannot Get Location Data",
+                        "Please try to change your settings");
+
             }
         }
 

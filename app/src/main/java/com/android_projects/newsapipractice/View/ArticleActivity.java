@@ -84,12 +84,6 @@ public class ArticleActivity extends BaseActivity {
     }
 
     @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();//set the back arrow onClick event
-        return true;
-    }
-
-    @Override
     public void onNetworkConnectionChanged(Boolean isConnected) {
         utility.showNoNetworkUI(isConnected, mBinding.articleRootView,
                 mBinding.noNetworkLayout.noNetworkContent);

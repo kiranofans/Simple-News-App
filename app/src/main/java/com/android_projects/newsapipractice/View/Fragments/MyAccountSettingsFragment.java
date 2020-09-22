@@ -47,9 +47,6 @@ public class MyAccountSettingsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         settingBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_account_setting, container, false);
         dialogBinding = DataBindingUtil.inflate(inflater.from(getContext()), R.layout.dialog_font_size, null, false);
-        fontSizeRadioGroup = dialogBinding.dialogRadioGroup;
-        seekBar=settingBinding.settingFontSize.prefSettingSeekbar;
-        progressTxt=settingBinding.settingFontSize.prefProgressTxt;
 
         return v = settingBinding.getRoot();
     }
@@ -57,6 +54,10 @@ public class MyAccountSettingsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        fontSizeRadioGroup = dialogBinding.dialogRadioGroup;
+        seekBar = settingBinding.settingFontSize.prefSettingSeekbar;
+        progressTxt = settingBinding.settingFontSize.prefProgressTxt;
+
         setSettingsUI();
         settingsTabOnClick();
         logoutBtn();
@@ -64,15 +65,15 @@ public class MyAccountSettingsFragment extends Fragment {
 
     private void settingsTabOnClick() {
         settingBinding.settingsTextFont.prefSettingsLinearLayout.setOnClickListener((View v) -> {
-            Log.d(TAG,"Font size tab clicked");
+            Log.d(TAG, "Font size tab clicked");
         });
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progressValue, boolean b) {
                 getTextSize(progressValue);
                 //Set progress value to TextView
-                settingBinding.settingFontSize.prefSettingDescription.setTextSize(progressValue+14);//begin with 14sp
-                Log.d(TAG,"TextSize: "+getTextSize(progressValue));
+                settingBinding.settingFontSize.prefSettingDescription.setTextSize(progressValue + 14);//begin with 14sp
+                Log.d(TAG, "TextSize: " + getTextSize(progressValue));
 
             }
 
@@ -88,20 +89,20 @@ public class MyAccountSettingsFragment extends Fragment {
         });
     }
 
-    private int getTextSize(int progressValue){
+    private int getTextSize(int progressValue) {
         //Get screen X coordinator size
         Point maxSizePoint = new Point();
         getActivity().getWindowManager().getDefaultDisplay().getSize(maxSizePoint);
         maxValueX = maxSizePoint.x;
 
         //Calculate dynamic progress value over the seek bar thumb
-        int value = (progressValue *(seekBar.getWidth()-2 * seekBar.getThumbOffset()))/ seekBar.getMax();
-        progressTxt.setText(progressValue+"");//Add "" to avoid Resources NOT FOUND EXCEPTION
+        int value = (progressValue * (seekBar.getWidth() - 2 * seekBar.getThumbOffset())) / seekBar.getMax();
+        progressTxt.setText(progressValue + "");//Add "" to avoid Resources NOT FOUND EXCEPTION
         int txtValueX = value - (progressTxt.getWidth() / 2);//X for x coordinator
-        int finalValueX= progressTxt.getWidth() + txtValueX > maxValueX ?
-                (maxValueX - progressTxt.getWidth()-16): txtValueX + 0/* marginStart value is 0 */;
-        progressTxt.setX(finalValueX< 0 ? 0/* 0 is the marginStart value */ : finalValueX);
-        return progressValue+14;
+        int finalValueX = progressTxt.getWidth() + txtValueX > maxValueX ?
+                (maxValueX - progressTxt.getWidth() - 16) : txtValueX + 0/* marginStart value is 0 */;
+        progressTxt.setX(finalValueX < 0 ? 0/* 0 is the marginStart value */ : finalValueX);
+        return progressValue + 14;
     }
 
     private void onRadioButtonChecked() {

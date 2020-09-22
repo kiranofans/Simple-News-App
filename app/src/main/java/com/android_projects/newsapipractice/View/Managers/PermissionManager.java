@@ -19,7 +19,8 @@ public class PermissionManager {
     public String externalStoragePermission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     public String coarseLocationPerm = android.Manifest.permission.ACCESS_COARSE_LOCATION;
     public String fineLocationPerm = android.Manifest.permission.ACCESS_FINE_LOCATION;
-    public String[] locationPermissions={coarseLocationPerm,fineLocationPerm};
+    public String backgroundLocationPerm = Manifest.permission.ACCESS_BACKGROUND_LOCATION;
+    public String[] locationPermissions={coarseLocationPerm,fineLocationPerm,backgroundLocationPerm};
 
     private Context _context;
     private SharedPrefManager sharedPrefMgr;

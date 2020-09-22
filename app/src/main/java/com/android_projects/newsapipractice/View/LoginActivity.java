@@ -58,6 +58,8 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         loginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
         fbLoginViewModel = new ViewModelProvider(this).get(FacebookLoginViewModel.class);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         googleLogin();
         facebookLogin();
@@ -97,7 +99,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void googleLogin() {
-        googleClientID= BuildConfig.GOOGLE_SERVER_CLIENT_ID_DEBUG;
+        googleClientID = BuildConfig.GOOGLE_SERVER_CLIENT_ID_DEBUG;
         //If requestServerAuthCode() is called, you don't have to call requestIdToken
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(googleClientID)/*.requestServerAuthCode(googleClientID)*/
@@ -131,9 +133,9 @@ public class LoginActivity extends BaseActivity {
         try {
             GoogleSignInAccount googleAccount = completeTask.getResult(ApiException.class);
             if (googleAccount.getIdToken() != null) {
-               utility.showDebugLog(TAG,"Result OK. Username: " +
+                utility.showDebugLog(TAG, "Result OK. Username: " +
                         googleAccount.getDisplayName());
-               onLoggedInWithGoogle(googleAccount, true);
+                onLoggedInWithGoogle(googleAccount, true);
                 //Update UI
             }
         } catch (ApiException e) {
@@ -194,7 +196,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void onNetworkConnectionChanged(Boolean isConnected) {
-        if(!isConnected){
+        if (!isConnected) {
             utility.showToastMsg(getApplicationContext(),
                     "No Internet connection", Toast.LENGTH_LONG);
         }

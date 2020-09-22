@@ -1,20 +1,15 @@
 package com.android_projects.newsapipractice.View.Fragments;
 
 import android.annotation.SuppressLint;
-import android.app.SearchManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -90,7 +85,7 @@ public class HomeFragment extends Fragment implements NetworkConnectivityReceive
     //Observer only refresh
     @SuppressLint("FragmentLiveDataObserve")
     private void setObserver() {
-        viewModel.getArticleLiveData().observe(this, (List<Article> articles) -> {
+        viewModel.getArticleLiveData().observe(getViewLifecycleOwner(), (List<Article> articles) -> {
             isLoading = false;
             articleList.addAll(articles);
             Log.d(TAG, "onChanged: " + articleList.size());

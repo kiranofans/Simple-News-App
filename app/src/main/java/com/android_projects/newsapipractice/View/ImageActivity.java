@@ -314,12 +314,6 @@ public class ImageActivity extends BaseActivity {
     }
 
     @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();//set the back arrow onClick event
-        return true;
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         try {

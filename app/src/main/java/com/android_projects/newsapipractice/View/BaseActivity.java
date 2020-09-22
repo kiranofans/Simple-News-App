@@ -86,26 +86,6 @@ public class BaseActivity extends AppCompatActivity implements NetworkConnectivi
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(hasAllPermissionsGranted(grantResults)){
-            utility.showDebugLog(TAG, "All permissions granted!");
-        }else{
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                utility.showToastMsg(getApplicationContext(),permissions+" denied", Toast.LENGTH_LONG);
-            }
-        }
-    }
-
-    public boolean hasAllPermissionsGranted(@NonNull int[] grantResults){
-        for(int grantResult: grantResults){
-            if(grantResult == PackageManager.PERMISSION_DENIED){
-                return false;
-            }
-        }
-        return true;
-    }
-    @Override
     protected void onStart() {
         super.onStart();
         utility.isLoggedInWithGoogle(getApplicationContext());
@@ -120,5 +100,11 @@ public class BaseActivity extends AppCompatActivity implements NetworkConnectivi
     protected void onResume() {
         super.onResume();
         connReceiver.connectivityReceiverListener = this;
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();//set the back arrow onClick event
+        return true;
     }
 }
