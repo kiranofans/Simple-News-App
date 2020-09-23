@@ -75,8 +75,6 @@ public class LocalFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         localNewsViewModel = new ViewModelProvider(this).get(NewsArticleViewModel.class);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(view.getContext()
-                .getString(R.string.title_local_news));
 
         setRecyclerView(view);
         checkLocationPermissionResults(permMgr.locationPermissions);//Permission granted,display content

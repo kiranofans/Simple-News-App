@@ -62,7 +62,6 @@ public class HomeFragment extends Fragment implements NetworkConnectivityReceive
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(this).get(NewsArticleViewModel.class);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(view.getContext().getString(R.string.title_latest_news));
         layoutManager = new LinearLayoutManager(view.getContext());
         recyclerViewAdapter = new NewsRecyclerViewAdapter(v.getContext(), articleList);
 

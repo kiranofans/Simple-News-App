@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -59,8 +60,7 @@ public class PopularFragment extends Fragment{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        newsViewModel= ViewModelProviders.of(this).get(NewsArticleViewModel.class);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(v.getContext().getString(R.string.title_popular_news));
+        newsViewModel= new ViewModelProvider(this).get(NewsArticleViewModel.class);
 
         setPopularRecyclerView();
         setPopObserver();
