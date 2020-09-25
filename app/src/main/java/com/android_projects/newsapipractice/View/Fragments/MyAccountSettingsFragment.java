@@ -64,12 +64,13 @@ public class MyAccountSettingsFragment extends Fragment {
     }
 
     private void settingsTabOnClick() {
-        settingBinding.settingsTextFont.prefSettingsLinearLayout.setOnClickListener((View v) -> {
+        /*settingBinding.settingsTextFont.prefSettingsLinearLayout.setOnClickListener((View v) -> {
             Log.d(TAG, "Font size tab clicked");
-        });
+        });*/
         settingBinding.settingsSwitchTheme.prefSettingsLinearLayout.setOnClickListener((View v)->{
             Log.d(TAG,"Change App Theme");
             showThemeDialog();
+            onRadioButtonChecked();
         });
     }
 
@@ -115,7 +116,6 @@ public class MyAccountSettingsFragment extends Fragment {
             radioGroup.addView(radioBtn);
         }
         dialog.show();
-        onRadioButtonChecked();
         Log.d(TAG, "Clicked");
     }
 
@@ -146,9 +146,9 @@ public class MyAccountSettingsFragment extends Fragment {
         settingBinding.settingsSwitchTheme.prefSettingDescription.setText("Allow user to change app theme");
         settingBinding.settingsSwitchTheme.prefSettingListImgView.setImageResource(R.mipmap.ic_change_theme);
 
-        settingBinding.settingsTextFont.prefSettingTitle.setText(getString(R.string.settings_title_font));
+       /* settingBinding.settingsTextFont.prefSettingTitle.setText(getString(R.string.settings_title_font));
         settingBinding.settingsTextFont.prefSettingDescription.setText(getString(R.string.settings_description_font));
-        settingBinding.settingsTextFont.prefSettingListImgView.setImageResource(R.mipmap.ic_font);
+        settingBinding.settingsTextFont.prefSettingListImgView.setImageResource(R.mipmap.ic_font);*/
 
     }
 }
