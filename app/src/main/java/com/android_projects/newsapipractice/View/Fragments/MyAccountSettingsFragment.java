@@ -64,9 +64,9 @@ public class MyAccountSettingsFragment extends Fragment {
     }
 
     private void settingsTabOnClick() {
-        settingBinding.settingsTextFont.prefSettingsLinearLayout.setOnClickListener((View v) -> {
+        /*settingBinding.settingsTextFont.prefSettingsLinearLayout.setOnClickListener((View v) -> {
             Log.d(TAG, "Font size tab clicked");
-        });
+        });*/
     }
 
     private void onRadioButtonChecked() {
@@ -124,9 +124,9 @@ public class MyAccountSettingsFragment extends Fragment {
         settingBinding.settingsMobileData.prefSettingListImgView.setImageResource(R.mipmap.ic_cellular_network);
         settingBinding.settingsMobileData.prefSettingDescription.setText(getString(R.string.settings_description_mobile_data));
 
-        settingBinding.settingsTextFont.prefSettingTitle.setText(getString(R.string.settings_title_font));
+        /*settingBinding.settingsTextFont.prefSettingTitle.setText(getString(R.string.settings_title_font));
         settingBinding.settingsTextFont.prefSettingDescription.setText(getString(R.string.settings_description_font));
-        settingBinding.settingsTextFont.prefSettingListImgView.setImageResource(R.mipmap.ic_font);
+        settingBinding.settingsTextFont.prefSettingListImgView.setImageResource(R.mipmap.ic_font);*/
 
     }
 }

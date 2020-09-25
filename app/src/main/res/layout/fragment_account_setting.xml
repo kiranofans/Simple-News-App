@@ -20,8 +20,8 @@
        <!-- <include layout="@layout/preference_setting_tab_slider"
             android:id="@+id/setting_font_size"/>-->
 
-        <include layout="@layout/preference_settings_tab"
-            android:id="@+id/settings_text_font"/>
+       <!-- <include layout="@layout/preference_settings_tab"
+            android:id="@+id/settings_text_font"/>-->
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/preference_log_out_btn"
