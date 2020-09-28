@@ -8,19 +8,10 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.android_projects.newsapipractice.BuildConfig;
 import com.android_projects.newsapipractice.R;
-import com.android_projects.newsapipractice.ViewModels.FacebookLoginViewModel;
 import com.android_projects.newsapipractice.databinding.ActivityLoginBinding;
-import com.facebook.AccessToken;
-import com.facebook.AccessTokenTracker;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -28,8 +19,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.Task;
-
-import java.util.Arrays;
 
 import static com.google.android.gms.common.Scopes.DRIVE_APPFOLDER;
 
@@ -43,62 +32,19 @@ public class LoginActivity extends BaseActivity {
     public static GoogleSignInClient googleSignInClient;
     private String googleClientID;
     private final int RC_GOOGLE_SIGN_IN = 202;
-    public static String googleIdToken;
-
-    //Facebook log in
-    private final int RC_FACEBOOK_LOG_IN = 201;
-    private boolean isLoggedInToFB = false;
-    private AccessToken fbAccessToken;
-    private FacebookLoginViewModel fbLoginViewModel;
-    private final String PARAM_EMAIL = "email";
-    private CallbackManager fbCallbackMgr;
+    public String googleIdToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         loginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
-        fbLoginViewModel = new ViewModelProvider(this).get(FacebookLoginViewModel.class);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        googleLogin();
-        facebookLogin();
+        googleLoginOnclick();
     }
 
-    private void facebookLogin() {
-        fbAccessToken = AccessToken.getCurrentAccessToken();
-
-        fbCallbackMgr = CallbackManager.Factory.create();
-
-        //Facebook login callback
-        LoginManager.getInstance().registerCallback(fbCallbackMgr, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Log.d(TAG, "Logged in to Facebook ic_account");
-                fbAccessToken = loginResult.getAccessToken();
-            }
-
-            @Override
-            public void onCancel() {
-                Toast.makeText(LoginActivity.this, "Login with Facebook canceled",
-                        Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Toast.makeText(LoginActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-
-        loginBinding.buttonFacebookLogin.setOnClickListener((View v) -> {
-            //Intent fbIntent = ;
-            LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this,
-                    Arrays.asList("public_profile", "user_friends"));
-            //startActivityForResult(fbIntent,RC_FACEBOOK_LOG_IN);
-        });
-    }
-
-    private void googleLogin() {
+    private void googleLoginOnclick() {
         googleClientID = BuildConfig.GOOGLE_SERVER_CLIENT_ID_DEBUG;
         //If requestServerAuthCode() is called, you don't have to call requestIdToken
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -113,6 +59,7 @@ public class LoginActivity extends BaseActivity {
             Intent signInIntent = googleSignInClient.getSignInIntent();
             startActivityForResult(signInIntent, RC_GOOGLE_SIGN_IN);
         });
+
     }
 
     @Override
@@ -122,10 +69,6 @@ public class LoginActivity extends BaseActivity {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleGoogleSignInResult(task);
             utility.showDebugLog(TAG, "Logged in succeed");
-
-        }
-        if (fbCallbackMgr.onActivityResult(requestCode, resultCode, data)) {
-            return;
         }
     }
 
@@ -152,17 +95,6 @@ public class LoginActivity extends BaseActivity {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         onLoggedInWithGoogle(account, true);
 
-        isLoggedInToFB = fbAccessToken != null && !fbAccessToken.isExpired();
-
-        if (isLoggedInToFB) {
-            onLoggedInWithFacebook(isLoggedInToFB);
-            utility.showToastMsg(getApplicationContext(),
-                    "Already logged in with Facebook", Toast.LENGTH_SHORT);
-        } else {
-            utility.showToastMsg(getApplicationContext(),
-                    "Not logged in with Facebook ", Toast.LENGTH_SHORT);
-        }
-
     }
 
     private void onLoggedInWithGoogle(GoogleSignInAccount account, boolean isSignedIn) {
@@ -172,25 +104,6 @@ public class LoginActivity extends BaseActivity {
 
             startActivity(googleCredentialIntent);
             this.finish();
-        }
-    }
-
-    private void onLoggedInWithFacebook(boolean isLoggedIn) {
-        AccessTokenTracker accessTokenTracker = new AccessTokenTracker() {
-            @Override
-            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
-                if (currentAccessToken == null) {
-                    //update ui: logged out from facebook
-
-                } else {
-                    //ui visibility: Visible
-                }
-            }
-        };
-        accessTokenTracker.startTracking();
-        if (isLoggedIn) {
-            Intent fbLoggedInIntent = new Intent(this, MyAccountActivity.class);
-            startActivity(fbLoggedInIntent);
         }
     }
 

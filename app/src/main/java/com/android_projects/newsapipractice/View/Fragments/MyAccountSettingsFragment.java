@@ -1,9 +1,7 @@
 package com.android_projects.newsapipractice.View.Fragments;
 
-import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Point;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -62,11 +60,11 @@ public class MyAccountSettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         fontSizeRadioGroup = dialogBinding.dialogRadioGroup;
-        wifiSwitch=settingBinding.settingsWifi.prefSettingSwitch;
-        mobileDataSwitch=settingBinding.settingsMobileData.prefSettingSwitch;
+        wifiSwitch = settingBinding.settingsWifi.prefSettingSwitch;
+        mobileDataSwitch = settingBinding.settingsMobileData.prefSettingSwitch;
 
-        wifiMgr = (WifiManager)getActivity().getApplicationContext().getSystemService(v.getContext().WIFI_SERVICE);
-        utility=new Utility();
+        wifiMgr = (WifiManager) getActivity().getApplicationContext().getSystemService(v.getContext().WIFI_SERVICE);
+        utility = new Utility();
 
         setSettingsUI();
         wifiSwitch.setChecked(true);
@@ -93,40 +91,41 @@ public class MyAccountSettingsFragment extends Fragment {
         });
     }
 
-    private void enableDisableWifi(){
+    private void enableDisableWifi() {
         //WifiManager.setWifiEnable(boolean) is deprecated in Android 10, API level 29
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             wifiSwitch.setVisibility(View.GONE);
-            settingBinding.settingsWifi.prefSettingsLinearLayout.setOnClickListener((View v)-> {
+            settingBinding.settingsWifi.prefSettingsLinearLayout.setOnClickListener((View v) -> {
                 Intent panelIntent = new Intent(Settings.Panel.ACTION_INTERNET_CONNECTIVITY);
-                startActivityForResult(panelIntent,REQUEST_CODE_WIFI_SETTING);
+                startActivityForResult(panelIntent, REQUEST_CODE_WIFI_SETTING);
             });
-        }else{
+        } else {
             wifiSwitch.setChecked(true);
             toggleWifi();
         }
     }
-    private void toggleWifi(){
-        if(wifiMgr!=null){
-            wifiSwitch.setOnClickListener((View v)->{
-                if(wifiSwitch.isChecked()){
-                    Log.d(TAG,"Checked");
+
+    private void toggleWifi() {
+        if (wifiMgr != null) {
+            wifiSwitch.setOnClickListener((View v) -> {
+                if (wifiSwitch.isChecked()) {
+                    Log.d(TAG, "Checked");
                     wifiMgr.setWifiEnabled(true);
                     mobileDataSwitch.setChecked(false);
-                }else if(wifiSwitch.isChecked() && !wifiMgr.isWifiEnabled()){
+                } else if (wifiSwitch.isChecked() && !wifiMgr.isWifiEnabled()) {
                     wifiMgr.setWifiEnabled(true);
-                    Log.d(TAG,getWifiStateStr());
-                }else if(!wifiSwitch.isChecked()){
-                    Log.d(TAG,"Unchecked ");
+                    Log.d(TAG, getWifiStateStr());
+                } else if (!wifiSwitch.isChecked()) {
+                    Log.d(TAG, "Unchecked ");
                     wifiMgr.setWifiEnabled(false);
                 }
             });
         }
     }
 
-    private String getWifiStateStr(){
-        String wifiState="";
-        switch (wifiMgr.getWifiState()){
+    private String getWifiStateStr() {
+        String wifiState = "";
+        switch (wifiMgr.getWifiState()) {
             case 0:
                 wifiState = "WiFi is disabling...";
                 break;
@@ -134,36 +133,36 @@ public class MyAccountSettingsFragment extends Fragment {
                 wifiState = "WiFi is disabled";
                 break;
             case 2:
-                wifiState="WiFi is enabling...";
+                wifiState = "WiFi is enabling...";
                 break;
             case 3:
                 wifiState = "WiFi is enabled";
                 break;
             case 4:
-                wifiState="Unknown WiFi state";
+                wifiState = "Unknown WiFi state";
                 break;
         }
         return wifiState;
     }
 
-    private void setMobileDataSwitch(){
+    private void setMobileDataSwitch() {
         //Basically the logic is to disable WiFi connection
-        mobileDataSwitch.setOnClickListener((View v)->{
-            if(mobileDataSwitch.isChecked()){
+        mobileDataSwitch.setOnClickListener((View v) -> {
+            if (mobileDataSwitch.isChecked()) {
                 wifiSwitch.setChecked(false);
                 wifiMgr.setWifiEnabled(false);
                 Intent panelIntent = new Intent();
                 panelIntent.setAction(Settings.ACTION_SETTINGS);
                 panelIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 v.getContext().startActivity(panelIntent);
-                Log.d(TAG,"Is Wifi On: "+wifiMgr.isWifiEnabled());
-            }else {
+                Log.d(TAG, "Is Wifi On: " + wifiMgr.isWifiEnabled());
+            } else {
                 wifiSwitch.setChecked(true);
-                Log.d(TAG,"Is Wifi Off: "+wifiMgr.isWifiEnabled());
+                Log.d(TAG, "Is Wifi Off: " + wifiMgr.isWifiEnabled());
             }
         });
     }
-    @SuppressLint("ResourceType")
+
     private void showFontStyleDialog() {
         String[] items = {"Small", "Medium", "Large", "Extra Large"};
         fontSizeRadioGroup.setVisibility(View.VISIBLE);
@@ -186,13 +185,15 @@ public class MyAccountSettingsFragment extends Fragment {
     private void logoutBtn() {
         settingBinding.preferenceLogOutBtn.setOnClickListener((View v) -> {
             Log.d(TAG, "Clicked");
+            Intent intent = new Intent(v.getContext(), LoginActivity.class);
             googleSignInClient.signOut().addOnCompleteListener((Task<Void> task) -> {
-                Intent intent = new Intent(v.getContext(), LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 getActivity().finish();
             });
+
         });
+
     }
 
     private void setSettingsUI() {

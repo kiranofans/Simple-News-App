@@ -3,7 +3,6 @@ package com.android_projects.newsapipractice.View;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.databinding.DataBindingUtil;
@@ -30,6 +29,8 @@ public class MyAccountActivity extends BaseActivity {
         //Google Account extra
         googleSignInAccount = getIntent().getParcelableExtra("GOOGLE_CREDENTIALS");
         getGoogleAccountData(googleSignInAccount);
+
+        //loadFacebookProfile();
         setCollapsedToolbar();
 
         displayFragment(new MyAccountSettingsFragment());
@@ -49,12 +50,16 @@ public class MyAccountActivity extends BaseActivity {
     }
 
     private void getGoogleAccountData(GoogleSignInAccount account) {
-        String username = account.getDisplayName();
-        //String email = account.getEmail();
+        if (account != null) {
+            String username = account.getDisplayName();
+            //String email = account.getEmail();
+            accountBinding.accountAppBar.accountDisplayName.setText(username);
+            Glide.with(this).load(account.getPhotoUrl()).override(220, 220).circleCrop()
+                    .into(accountBinding.accountAppBar.accountImgviewAvatar);
+        } else {
+            Log.d(TAG, "Not logged in with Google");
+        }
 
-        accountBinding.accountAppBar.accountDisplayName.setText(username);
-        Glide.with(this).load(account.getPhotoUrl()).override(220, 220).circleCrop()
-                .into(accountBinding.accountAppBar.accountImgviewAvatar);
     }
 
     private void displayFragment(Fragment fragment) {
