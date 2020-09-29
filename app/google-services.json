@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "927157329080",
+    "firebase_url": "https://simplenewsapp-1590184961240.firebaseio.com",
+    "project_id": "simplenewsapp-1590184961240",
+    "storage_bucket": "simplenewsapp-1590184961240.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:927157329080:android:4e979d1c3a641482d8684d",
+        "android_client_info": {
+          "package_name": "com.android_projects.newsapipractice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "927157329080-o22t74fbg5lf03ffapi0ktbufk1hibgc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.android_projects.newsapipractice",
+            "certificate_hash": "53e71cf13cbe4723f6a1414fcfb98cb9887aed60"
+          }
+        },
+        {
+          "client_id": "927157329080-74gd2bbhvjm5rkoqsr7n5p4578348dtt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSkfCuBIotXW1tes2RVMlYVhoIW6i6a0Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "927157329080-74gd2bbhvjm5rkoqsr7n5p4578348dtt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
