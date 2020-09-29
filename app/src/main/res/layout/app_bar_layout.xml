@@ -60,7 +60,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-
                 app:layout_scrollFlags="enterAlways|scroll|exitUntilCollapsed"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight"
                 app:menu="@menu/main_setting_menu"/>

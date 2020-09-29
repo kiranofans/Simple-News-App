@@ -5,6 +5,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:theme="@style/FullscreenTheme"
         tools:context="com.android_projects.GoogleLoginActivity">
         <ImageView
             android:id="@+id/login_logo"
@@ -21,7 +22,7 @@
             android:id="@+id/button_google_login"
             android:layout_marginStart="@dimen/preference_margin_large"
             android:layout_marginEnd="@dimen/preference_margin_large"
-            android:layout_width="350dp"
+            android:layout_width="320dp"
             app:layout_constraintVertical_chainStyle="packed"
             android:background="@drawable/background_button_round_corner"
             android:drawableStart="@drawable/googleg_standard_color_18"

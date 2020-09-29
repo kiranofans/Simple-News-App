@@ -39,6 +39,7 @@
 
     <!--Login Activity-->
     <string name="login_with_google">Sign in with Google</string>
+    <string name="login_title">User Sign In</string>
     <string name="login_with_facebook">Login with Facebook</string>
 
     <!--No content layout-->
