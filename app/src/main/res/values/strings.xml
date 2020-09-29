@@ -29,7 +29,7 @@
     <string name="settings_description_font">Allow user to change text font</string>
 
     <!--Search bar-->
-    <string name="search_hint">Type in a keyword...</string>
+    <string name="search_hint">Please type in a keyword...</string>
 
     <!--Article Activity-->
     <string name="article_author">Author</string>

@@ -40,6 +40,7 @@ public class LoginActivity extends BaseActivity {
         loginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("User Sign In");
 
         googleLoginOnclick();
     }
