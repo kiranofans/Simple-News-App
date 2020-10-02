@@ -2,6 +2,7 @@ package com.android_projects.newsapipractice.View.Managers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.wifi.WifiManager;
 import android.util.Log;
 
 public class SharedPrefManager {
@@ -45,7 +46,19 @@ public class SharedPrefManager {
         editor = null;
     }
 
-    public boolean getSwitchState(String switchKey) {
+    public boolean getWifiSwitchState(String switchKey, WifiManager wifiManager) {
+        sharedPrefs = _context.getSharedPreferences(KEY_SWITCH_PREF, Context.MODE_PRIVATE);
+        boolean result = sharedPrefs.getBoolean(switchKey, true);
+
+        if (result) {
+            //In case if Wi-Fi is disabled and the switch is on, enable the Wi-Fi
+            wifiManager.setWifiEnabled(true);
+        }
+        Log.d(TAG, "Load value: " + sharedPrefs.getBoolean(switchKey, true));
+        return result;
+    }
+
+    public boolean getMobileDataSwitchState(String switchKey) {
         sharedPrefs = _context.getSharedPreferences(KEY_SWITCH_PREF, Context.MODE_PRIVATE);
 
         boolean result = sharedPrefs.getBoolean(switchKey, false);

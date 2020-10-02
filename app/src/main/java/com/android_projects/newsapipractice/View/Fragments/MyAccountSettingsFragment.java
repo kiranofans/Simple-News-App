@@ -101,41 +101,38 @@ public class MyAccountSettingsFragment extends Fragment {
                 startActivityForResult(panelIntent, REQUEST_CODE_WIFI_SETTING);
             });
         } else {
-            wifiSwitch.setChecked(true);
             toggleWifi();
         }
     }
 
     private void toggleWifi() {
         if (wifiMgr != null) {
-            wifiSwitch.setChecked(sharedPrefMgr.getSwitchState(KEY_WIFI_SWITCH_PREF));
             wifiSwitch.setOnCheckedChangeListener((CompoundButton compoundBtn, boolean isChecked) -> {
                 if (isChecked) {
                     Log.d(TAG, "Checked");
                     wifiMgr.setWifiEnabled(true);
                     mobileDataSwitch.setChecked(false);
-                } else if (isChecked && !wifiMgr.isWifiEnabled()) {
-                    wifiMgr.setWifiEnabled(true);
-                } else if (!isChecked) {
+                }else{
                     Log.d(TAG, "Unchecked ");
                     wifiMgr.setWifiEnabled(false);
                 }
                 sharedPrefMgr.saveSwitchState(KEY_WIFI_SWITCH_PREF, isChecked);
             });
+            wifiSwitch.setChecked(sharedPrefMgr.getWifiSwitchState(KEY_WIFI_SWITCH_PREF,wifiMgr));
         }
     }
 
     private void setMobileDataSwitch() {
-        mobileDataSwitch.setChecked(sharedPrefMgr.getSwitchState(KEY_MOBILE_DATA_PREF));
+        mobileDataSwitch.setChecked(sharedPrefMgr.getMobileDataSwitchState(KEY_MOBILE_DATA_PREF));
         mobileDataSwitch.setOnCheckedChangeListener((CompoundButton compoundBtn, boolean isChecked) -> {
             if (isChecked) {
                 wifiSwitch.setChecked(false);
                 wifiMgr.setWifiEnabled(false);
-
                 Log.d(TAG, "Is Wifi On: " + wifiMgr.isWifiEnabled());
             } else {
                 wifiSwitch.setChecked(true);
                 Log.d(TAG, "Is Wifi Off: " + wifiMgr.isWifiEnabled());
+
             }
             sharedPrefMgr.saveSwitchState(KEY_MOBILE_DATA_PREF, isChecked);
 
