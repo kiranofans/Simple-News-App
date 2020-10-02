@@ -20,10 +20,10 @@
     <string name="top_menu_search">Search</string>
 
     <string name="settings_title_wifi">Use Wi-Fi (Default)</string>
-    <string name="settings_description_wifi">Default setting that allows user to enable and use Wi-Fi</string>
+    <string name="settings_description_wifi">Allow user to enable or disable Wi-Fi</string>
     <string name="settings_title_mobile_data">Use Cellular Data</string>
-    <string name="settings_description_mobile_data">Alow user to enable mobile network</string>
-    <string name="settings_title_font_size">Font Size</string>
+    <string name="settings_description_mobile_data">Allow user to enable or disable mobile network</string>
+    <!--<string name="settings_title_font_size">Font Size</string>-->
     <string name="settings_description_font_size">Allow user to change text size</string>
     <string name="settings_title_font">Font</string>
     <string name="settings_description_font">Allow user to change text font</string>

@@ -2,6 +2,7 @@ package com.android_projects.newsapipractice.View.Managers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 public class SharedPrefManager {
     private final String TAG = SharedPrefManager.class.getSimpleName();
@@ -12,6 +13,7 @@ public class SharedPrefManager {
 
     private final String KEY_PREF = "key_preferences";
     private final String KEY_PERMISSION_PREF = "key_permission_pref";
+    private final String KEY_SWITCH_PREF = "key_switch_pref";
 
     public SharedPrefManager(Context context) {
         sharedPrefs = context.getSharedPreferences(KEY_PREF, Context.MODE_PRIVATE);
@@ -32,4 +34,22 @@ public class SharedPrefManager {
         return sharedPrefs.getBoolean(permission, true);
     }
 
+    public void saveSwitchState(String switchKey, boolean isSwitchedOn) {
+        sharedPrefs = _context.getSharedPreferences(KEY_SWITCH_PREF, Context.MODE_PRIVATE);
+        if (editor == null) {
+            editor = sharedPrefs.edit();
+        }
+        editor.putBoolean(switchKey, isSwitchedOn);
+        editor.apply();
+        Log.d(TAG, "Saved value: " + isSwitchedOn);
+        editor = null;
+    }
+
+    public boolean getSwitchState(String switchKey) {
+        sharedPrefs = _context.getSharedPreferences(KEY_SWITCH_PREF, Context.MODE_PRIVATE);
+
+        boolean result = sharedPrefs.getBoolean(switchKey, false);
+        Log.d(TAG, "Load value: " + sharedPrefs.getBoolean(switchKey, false));
+        return result;
+    }
 }

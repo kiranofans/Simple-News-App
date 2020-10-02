@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.Utils.Utility;
 import com.android_projects.newsapipractice.View.LoginActivity;
+import com.android_projects.newsapipractice.View.Managers.SharedPrefManager;
 import com.android_projects.newsapipractice.databinding.DialogFontSizeBinding;
 import com.android_projects.newsapipractice.databinding.FragmentAccountSettingBinding;
 import com.google.android.gms.tasks.Task;
@@ -35,7 +37,6 @@ public class MyAccountSettingsFragment extends Fragment {
 
     private FragmentAccountSettingBinding settingBinding;
     private DialogFontSizeBinding dialogBinding;
-    private AlertDialog.Builder dialog;
 
     private View v;
     private RadioGroup fontSizeRadioGroup;
@@ -43,9 +44,10 @@ public class MyAccountSettingsFragment extends Fragment {
     private SwitchMaterial wifiSwitch, mobileDataSwitch;
     private WifiManager wifiMgr;
     private final int REQUEST_CODE_WIFI_SETTING = 110;
-    private final int REQUEST_CODE_MOBILE_DATA_SETTING = 111;
-    private boolean isSwitchChecked = false;
-    private boolean isWifiSwitchOn = true;
+
+    private SharedPrefManager sharedPrefMgr;
+    private final String KEY_MOBILE_DATA_PREF = "key_mobile_data_pref";
+    private final String KEY_WIFI_SWITCH_PREF = "key_wifi_switch_pref";
 
     @Nullable
     @Override
@@ -65,6 +67,7 @@ public class MyAccountSettingsFragment extends Fragment {
 
         wifiMgr = (WifiManager) getActivity().getApplicationContext().getSystemService(v.getContext().WIFI_SERVICE);
         utility = new Utility();
+        sharedPrefMgr = new SharedPrefManager(v.getContext());
 
         setSettingsUI();
         wifiSwitch.setChecked(true);
@@ -107,63 +110,41 @@ public class MyAccountSettingsFragment extends Fragment {
 
     private void toggleWifi() {
         if (wifiMgr != null) {
-            wifiSwitch.setOnClickListener((View v) -> {
-                if (wifiSwitch.isChecked()) {
+            wifiSwitch.setChecked(sharedPrefMgr.getSwitchState(KEY_WIFI_SWITCH_PREF));
+            wifiSwitch.setOnCheckedChangeListener((CompoundButton compoundBtn, boolean isChecked) -> {
+                if (isChecked) {
                     Log.d(TAG, "Checked");
                     wifiMgr.setWifiEnabled(true);
                     mobileDataSwitch.setChecked(false);
-                } else if (wifiSwitch.isChecked() && !wifiMgr.isWifiEnabled()) {
+                } else if (isChecked && !wifiMgr.isWifiEnabled()) {
                     wifiMgr.setWifiEnabled(true);
-                    Log.d(TAG, getWifiStateStr());
-                } else if (!wifiSwitch.isChecked()) {
+                } else if (!isChecked) {
                     Log.d(TAG, "Unchecked ");
                     wifiMgr.setWifiEnabled(false);
                 }
+                sharedPrefMgr.saveSwitchState(KEY_WIFI_SWITCH_PREF, isChecked);
             });
         }
     }
 
-    private String getWifiStateStr() {
-        String wifiState = "";
-        switch (wifiMgr.getWifiState()) {
-            case 0:
-                wifiState = "WiFi is disabling...";
-                break;
-            case 1:
-                wifiState = "WiFi is disabled";
-                break;
-            case 2:
-                wifiState = "WiFi is enabling...";
-                break;
-            case 3:
-                wifiState = "WiFi is enabled";
-                break;
-            case 4:
-                wifiState = "Unknown WiFi state";
-                break;
-        }
-        return wifiState;
-    }
-
     private void setMobileDataSwitch() {
-        //Basically the logic is to disable WiFi connection
-        mobileDataSwitch.setOnClickListener((View v) -> {
-            if (mobileDataSwitch.isChecked()) {
+        mobileDataSwitch.setChecked(sharedPrefMgr.getSwitchState(KEY_MOBILE_DATA_PREF));
+        mobileDataSwitch.setOnCheckedChangeListener((CompoundButton compoundBtn, boolean isChecked) -> {
+            if (isChecked) {
                 wifiSwitch.setChecked(false);
                 wifiMgr.setWifiEnabled(false);
-                Intent panelIntent = new Intent();
-                panelIntent.setAction(Settings.ACTION_SETTINGS);
-                panelIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                v.getContext().startActivity(panelIntent);
+
                 Log.d(TAG, "Is Wifi On: " + wifiMgr.isWifiEnabled());
             } else {
                 wifiSwitch.setChecked(true);
                 Log.d(TAG, "Is Wifi Off: " + wifiMgr.isWifiEnabled());
             }
+            sharedPrefMgr.saveSwitchState(KEY_MOBILE_DATA_PREF, isChecked);
+
         });
     }
 
-    private void showFontStyleDialog() {
+    /*private void showFontStyleDialog() {
         String[] items = {"Small", "Medium", "Large", "Extra Large"};
         fontSizeRadioGroup.setVisibility(View.VISIBLE);
 
@@ -180,7 +161,7 @@ public class MyAccountSettingsFragment extends Fragment {
         dialog.show();
 
         Log.d(TAG, "Clicked");
-    }
+    }*/
 
     private void logoutBtn() {
         settingBinding.preferenceLogOutBtn.setOnClickListener((View v) -> {
