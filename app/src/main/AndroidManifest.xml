@@ -31,6 +31,7 @@
         Use singleTop launchMode to avoid new activity instance recreation when screen is NOT rotated-->
         <activity
             android:name=".View.MainActivity"
+            android:windowSoftInputMode="adjustPan"
             android:configChanges="orientation|screenSize"
             android:launchMode="singleTop">
             <intent-filter>
