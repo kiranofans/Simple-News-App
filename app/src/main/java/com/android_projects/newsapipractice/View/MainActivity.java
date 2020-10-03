@@ -2,6 +2,7 @@ package com.android_projects.newsapipractice.View;
 
 import android.app.SearchManager;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,8 +10,6 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
-import androidx.core.view.MenuCompat;
-import androidx.core.view.MenuItemCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -38,6 +37,8 @@ public class MainActivity extends BaseActivity {
     private NewsArticleViewModel viewModel;
     private int currentPage = 1;
 
+    private LocationManager locationManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +46,7 @@ public class MainActivity extends BaseActivity {
         mainBinding.mainBottomNavigation.setOnNavigationItemSelectedListener(mNavItemSelectedListener);
         searchResultRecycler = mainBinding.searchRecyclerList.searchRecyclerView;
 
+        locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
         viewModel = new ViewModelProvider(this).get(NewsArticleViewModel.class);
         articleList = new ArrayList<>();
         recyclerViewAdapter = new SearchResultRecyclerView(this, getArticleListData());
@@ -116,12 +118,13 @@ public class MainActivity extends BaseActivity {
 
     private List<Article> getArticleListData() {
         viewModel.getArticleLiveData().observe(MainActivity.this, (List<Article> articles) -> {
-            articleList.addAll(articles);
-            recyclerViewAdapter.notifyDataSetChanged();
+            recyclerViewAdapter.addAllDataToList(articles);
         });
-        viewModel.getArticleListEverything(currentPage, "");
+        viewModel.getAllArticles(currentPage, "publishedAt",
+                utility.getDeviceCountryCode(locationManager, this));
         return articleList;
     }
+
 
     @Override
     public void onBackPressed() {

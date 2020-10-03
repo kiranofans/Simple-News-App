@@ -25,6 +25,7 @@ import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 
 import java.util.List;
+
 import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_ARTICLE;
 
 public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
@@ -34,15 +35,15 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
     private Context context;
 
     //Views
-    private final int FOOTER_VIEW=2;
-    private final int NORMAL_VIEW=0;
+    private final int FOOTER_VIEW = 2;
+    private final int NORMAL_VIEW = 0;
 
     @NonNull
     @Override
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        switch (viewType){
+        switch (viewType) {
             case FOOTER_VIEW:
-                FooterNoMoreDataBinding footerViewBinding = FooterNoMoreDataBinding.inflate(LayoutInflater.from(context),parent,false);
+                FooterNoMoreDataBinding footerViewBinding = FooterNoMoreDataBinding.inflate(LayoutInflater.from(context), parent, false);
                 return new FooterViewHolder(footerViewBinding);
             case NORMAL_VIEW:
                 ListNewsBinding newsBinding = ListNewsBinding.inflate(LayoutInflater.from(context), parent, false);
@@ -60,14 +61,14 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
 
-        try{
-            if(holder instanceof ArticleHolder){
+        try {
+            if (holder instanceof ArticleHolder) {
                 ArticleHolder articleHolder = (ArticleHolder) holder;
                 articleHolder.bind(articleList.get(position));
-            }else if(holder instanceof FooterViewHolder){
-                FooterViewHolder footerViewHolder = (FooterViewHolder)holder;
+            } else if (holder instanceof FooterViewHolder) {
+                FooterViewHolder footerViewHolder = (FooterViewHolder) holder;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -85,13 +86,18 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
 
     @Override
     public int getItemCount() {
-        if(articleList==null){
+        if (articleList == null) {
             return 0;
         }
-        if(articleList.size()==0){
+        if (articleList.size() == 0) {
             return 1;
         }
-        return articleList.size()+1;
+        return articleList.size() + 1;
+    }
+
+    public void addAllDataToList(List<Article> articles) {
+        articleList.addAll(articles);
+        notifyDataSetChanged();
     }
 
     public void clear() {
@@ -99,12 +105,12 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
         notifyDataSetChanged();
     }
 
-    public class FooterViewHolder extends BaseViewHolder<Article>{
+    public class FooterViewHolder extends BaseViewHolder<Article> {
         private FooterNoMoreDataBinding footerBinding;
 
         public FooterViewHolder(@NonNull FooterNoMoreDataBinding footerBinding) {
             super(footerBinding.getRoot());
-            this.footerBinding=footerBinding;
+            this.footerBinding = footerBinding;
             footerBinding.footerText.setText("- End of News Articles -");
 
         }
@@ -145,7 +151,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
         public void bind(Article object) {
             //Convert UTC+0 to local time zone and switched to "MMM d, yyyy KK:mm a" 12 hours format
             String newDateFormat = utility.getFinalTimeStamp
-                    (context,"MMM d, yyyy KK:mm a", object.getPublishedAt());
+                    (context, "MMM d, yyyy KK:mm a", object.getPublishedAt());
 
             holderBinding.articleTvSource.setText(object.getSource().getName());
             holderBinding.articleTvPublishDate.setText(newDateFormat);
@@ -202,7 +208,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
             });
 
             holderBinding.btnShareTwitter.setOnClickListener((View v) -> {
-                utility.twitterShare(itemView.getContext(),obj);
+                utility.twitterShare(itemView.getContext(), obj);
 
             });
         }

@@ -28,15 +28,15 @@ import static com.android_projects.newsapipractice.data.AppConstants.EXTRA_KEY_A
 public class SearchResultRecyclerView extends RecyclerView.Adapter<SearchResultRecyclerView.SearchArticleViewHolder> implements Filterable {
     private final String TAG = SearchResultRecyclerView.class.getSimpleName();
 
-    private Utility utility=new Utility();
+    private Utility utility = new Utility();
 
     private List<Article> articleList;
     private List<Article> articleFilteredList;
     private Context _context;
 
-    public SearchResultRecyclerView(Context context, List<Article> articleList){
-        _context=context;
-        this.articleList=articleList;
+    public SearchResultRecyclerView(Context context, List<Article> articleList) {
+        _context = context;
+        this.articleList = articleList;
         articleFilteredList = new ArrayList<>(articleList);
     }
 
@@ -67,8 +67,8 @@ public class SearchResultRecyclerView extends RecyclerView.Adapter<SearchResultR
 
     @Override
     public int getItemCount() {
-        Log.d(TAG,"list size: "+articleFilteredList.size());
-        return articleFilteredList==null || articleFilteredList.isEmpty() ? 0 : articleFilteredList.size();
+        Log.d(TAG, "list size: " + articleFilteredList.size());
+        return articleFilteredList == null || articleFilteredList.isEmpty() ? 0 : articleFilteredList.size();
     }
 
     public class SearchArticleViewHolder extends RecyclerView.ViewHolder {
@@ -76,23 +76,24 @@ public class SearchResultRecyclerView extends RecyclerView.Adapter<SearchResultR
         private int position;
         private Intent articleIntent;
 
-        TextView titleTxt,timeStamp;
+        TextView titleTxt, timeStamp;
         ImageView resultImgView;
+
         public SearchArticleViewHolder(@NonNull ListNewsSearchResultBinding binding) {
             super(binding.getRoot());
-            searchHolderBinding=binding;
+            searchHolderBinding = binding;
 
-            titleTxt=searchHolderBinding.searchResultTitle;
-            timeStamp=searchHolderBinding.searchResultTimeStamp;
-            resultImgView=searchHolderBinding.searchResultImg;
+            titleTxt = searchHolderBinding.searchResultTitle;
+            timeStamp = searchHolderBinding.searchResultTimeStamp;
+            resultImgView = searchHolderBinding.searchResultImg;
         }
 
-        public void onItemClicked(Article obj){
-            itemView.setOnClickListener((View v)->{
-                position=getAdapterPosition();
-                if(position!= RecyclerView.NO_POSITION){
-                    articleIntent=new Intent(_context, ArticleActivity.class);
-                    articleIntent.putExtra(EXTRA_KEY_ARTICLE,obj);
+        public void onItemClicked(Article obj) {
+            itemView.setOnClickListener((View v) -> {
+                position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    articleIntent = new Intent(_context, ArticleActivity.class);
+                    articleIntent.putExtra(EXTRA_KEY_ARTICLE, obj);
 
                     _context.startActivity(articleIntent);
                 }
@@ -100,19 +101,25 @@ public class SearchResultRecyclerView extends RecyclerView.Adapter<SearchResultR
 
         }
     }
+
+    public void addAllDataToList(List<Article> list) {
+        articleList.addAll(list);
+        notifyDataSetChanged();
+    }
+
     @Override
     public Filter getFilter() {
         return searchFilter;
     }
 
-    private Filter searchFilter=new Filter(){
+    private Filter searchFilter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
             List<Article> filteredList = new ArrayList<>();
             FilterResults results = new FilterResults();
             if (charSequence.toString().isEmpty()) {
-                articleFilteredList=articleList;
-                Log.d(TAG,"ArticleFilteredList size: "+articleFilteredList.size());
+                articleFilteredList = articleList;
+                Log.d(TAG, "ArticleFilteredList size: " + articleFilteredList.size());
             } else {
                 String filterPattern = charSequence.toString().toLowerCase().trim();
                 for (Article item : articleList) {
@@ -120,22 +127,22 @@ public class SearchResultRecyclerView extends RecyclerView.Adapter<SearchResultR
                         filteredList.add(item);
                     }
                 }
-                Log.d(TAG,"Main filteredList size: "+filteredList.size());
-                articleFilteredList=filteredList;
+                Log.d(TAG, "Main filteredList size: " + filteredList.size());
+                articleFilteredList = filteredList;
             }
             results.values = articleFilteredList;
             results.count = articleFilteredList.size();
-            Log.d(TAG,"filtered results: "+results.count);
+            Log.d(TAG, "filtered results: " + results.count);
             return results;
         }
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            articleFilteredList=(List<Article>) results.values;
-            if(articleFilteredList==null){
-                Log.d(TAG,"Null");
+            articleFilteredList = (List<Article>) results.values;
+            if (articleFilteredList == null) {
+                Log.d(TAG, "Null");
             }
-            Log.d(TAG,"final result: "+articleFilteredList.size());
+            Log.d(TAG, "final result: " + articleFilteredList.size());
             notifyDataSetChanged();
         }
     };

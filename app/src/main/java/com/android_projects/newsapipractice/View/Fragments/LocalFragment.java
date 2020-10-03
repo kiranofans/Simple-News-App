@@ -15,7 +15,6 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -94,10 +93,9 @@ public class LocalFragment extends Fragment {
     private void setObserver() {
         localNewsViewModel.getArticleLiveData().observe(getViewLifecycleOwner(), (List<Article> articles) -> {
             isLoading = false;
-            localNewsList.addAll(articles);
+            recViewAdapter.addAllDataToList(articles);
             utility.showDebugLog(TAG, "onChanged: " + localNewsList.size());
             localBinding.localSwipeRefreshLayout.setRefreshing(false);
-            recViewAdapter.notifyDataSetChanged();
         });
     }
 

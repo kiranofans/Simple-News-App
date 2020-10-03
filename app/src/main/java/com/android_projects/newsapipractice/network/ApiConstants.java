@@ -4,7 +4,6 @@ import com.android_projects.newsapipractice.BuildConfig;
 
 public class ApiConstants {
     public static String BASE_URL = "https://newsapi.org/";
-    public static final String API_KEY = BuildConfig.NEWS_API_KEY;
 
     public static final String ENDPOINT_EVERYTHING="v2/everything";
     public static final String ENDPOINT_TOP_HEADLINES = "v2/top-headlines";

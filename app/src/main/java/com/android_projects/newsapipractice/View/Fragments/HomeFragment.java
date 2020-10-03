@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -86,11 +85,10 @@ public class HomeFragment extends Fragment implements NetworkConnectivityReceive
     private void setObserver() {
         viewModel.getArticleLiveData().observe(getViewLifecycleOwner(), (List<Article> articles) -> {
             isLoading = false;
-            articleList.addAll(articles);
+            recyclerViewAdapter.addAllDataToList(articles);
             Log.d(TAG, "onChanged: " + articleList.size());
 
             homeBinding.swipeRefreshLayout.setRefreshing(false);
-            recyclerViewAdapter.notifyDataSetChanged();
         });
     }
 
