@@ -29,6 +29,7 @@
                 android:background="@color/browser_actions_bg_grey"
                 app:layout_constraintBottom_toTopOf="@+id/main_bottom_navigation" />
 
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <include layout="@layout/no_network_layout"
@@ -37,6 +38,13 @@
 
         <include layout="@layout/search_result_recycler"
             android:id="@+id/search_recycler_list"/>
-
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/go_to_top_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="66dp"
+            android:layout_marginEnd="@dimen/preference_margin_large"
+            android:layout_gravity="end|bottom"
+            android:src="@drawable/ic_arrow_up_36"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
