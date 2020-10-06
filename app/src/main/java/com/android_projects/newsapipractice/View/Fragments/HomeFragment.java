@@ -53,15 +53,14 @@ public class HomeFragment extends Fragment implements NetworkConnectivityReceive
     private final String SORT_BY_PUBLISHED_AT = "publishedAt";
     private final String SORT_BY_RELEVANCY = "relevancy";
 
-    private MainActivity main;;
+    private MainActivity main;
+    ;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         homeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home,
                 container, false);
-        main = (MainActivity)getActivity();
-        toTopBtn= main.toTopBtn;
 
         setHasOptionsMenu(true);
         return v = homeBinding.getRoot();
@@ -73,6 +72,8 @@ public class HomeFragment extends Fragment implements NetworkConnectivityReceive
         viewModel = new ViewModelProvider(this).get(NewsArticleViewModel.class);
         layoutManager = new LinearLayoutManager(view.getContext());
         recyclerViewAdapter = new NewsRecyclerViewAdapter(v.getContext(), articleList);
+        main = (MainActivity) getActivity();
+        toTopBtn = main.toTopBtn;
 
         setRecyclerView(view);
         setObserver();//Observer has to be separated from loadPage()
@@ -117,29 +118,29 @@ public class HomeFragment extends Fragment implements NetworkConnectivityReceive
 
     private void onScrollListener() {
         homeBinding.mainHomeRecyclerView.addOnScrollListener
-                (new PaginationListener(layoutManager,toTopBtn) {
-            @Override
-            protected void loadMoreItems() {
-                isLoading = true;
-                currentPageNum++;
-                loadPage(currentPageNum);
-            }
+                (new PaginationListener(layoutManager, toTopBtn) {
+                    @Override
+                    protected void loadMoreItems() {
+                        isLoading = true;
+                        currentPageNum++;
+                        loadPage(currentPageNum);
+                    }
 
-            @Override
-            public boolean isLastPage() {
-                return isLastPage;
-            }
+                    @Override
+                    public boolean isLastPage() {
+                        return isLastPage;
+                    }
 
-            @Override
-            public boolean isLoading() {
-                return isLoading;
-            }
+                    @Override
+                    public boolean isLoading() {
+                        return isLoading;
+                    }
 
-            @Override
-            public void toTopBtnOnclick() {
-                main.setToTopBtnOnclick(homeBinding.mainHomeRecyclerView);
-            }
-        });
+                    @Override
+                    public void toTopBtnOnclick() {
+                        main.setToTopBtnOnclick(homeBinding.mainHomeRecyclerView);
+                    }
+                });
         recyclerViewAdapter.notifyDataSetChanged();
     }
 
