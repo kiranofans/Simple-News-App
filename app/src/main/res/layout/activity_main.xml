@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="66dp"
-            android:layout_marginEnd="@dimen/preference_margin_large"
+            android:layout_marginEnd="@dimen/preference_margin_small"
             android:layout_gravity="end|bottom"
             android:src="@drawable/ic_arrow_up_36"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

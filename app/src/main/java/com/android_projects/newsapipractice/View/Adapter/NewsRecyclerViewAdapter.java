@@ -128,7 +128,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
         private ListNewsBinding holderBinding;
         private Utility utility = new Utility();
 
-        ShareDialog shareDialog = new ShareDialog((Activity) context);
+        private ShareDialog shareDialog;
 
         private int position;
 
@@ -189,6 +189,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
 
         private void facebookLinkShare(Article obj) {
             String newsSource = obj.getSource().getName();
+            shareDialog = new ShareDialog((Activity) context);
             ShareLinkContent shareLinkContent = new ShareLinkContent.Builder().setShareHashtag(
                     new ShareHashtag.Builder().setHashtag("#" + newsSource).build())
                     .setQuote(obj.getDescription())
@@ -209,7 +210,6 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder
 
             holderBinding.btnShareTwitter.setOnClickListener((View v) -> {
                 utility.twitterShare(itemView.getContext(), obj);
-
             });
         }
     }
