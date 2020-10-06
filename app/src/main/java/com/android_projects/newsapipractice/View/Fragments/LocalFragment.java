@@ -24,11 +24,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.Utils.Utility;
 import com.android_projects.newsapipractice.View.Adapter.NewsRecyclerViewAdapter;
+import com.android_projects.newsapipractice.View.MainActivity;
 import com.android_projects.newsapipractice.View.Managers.PermissionManager;
 import com.android_projects.newsapipractice.View.PaginationListener;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.FragmentLocalBinding;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +42,7 @@ public class LocalFragment extends Fragment {
     private FragmentLocalBinding localBinding;
     private NewsArticleViewModel localNewsViewModel;
     private NewsRecyclerViewAdapter recViewAdapter;
+    private FloatingActionButton toTopBtn;
     private LinearLayoutManager layoutManager;
 
     private Utility utility;
@@ -53,7 +56,7 @@ public class LocalFragment extends Fragment {
 
     private List<Article> localNewsList;
     private String countryCode = "";
-
+    private MainActivity main;
     public LocalFragment() {
         // Required empty public constructor
     }
@@ -66,6 +69,7 @@ public class LocalFragment extends Fragment {
         utility = new Utility();
         permMgr = new PermissionManager(getContext());
         localNewsList = new ArrayList<>();
+        main = (MainActivity)getActivity();
 
         return v = localBinding.getRoot();
     }
@@ -74,6 +78,7 @@ public class LocalFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         localNewsViewModel = new ViewModelProvider(this).get(NewsArticleViewModel.class);
+
 
         setRecyclerView(view);
         checkLocationPermissionResults(permMgr.locationPermissions);//Permission granted,display content
@@ -105,7 +110,7 @@ public class LocalFragment extends Fragment {
     }
 
     private void onScrollListener() {
-        localBinding.mainLocalRecyclerView.addOnScrollListener(new PaginationListener(layoutManager) {
+        localBinding.mainLocalRecyclerView.addOnScrollListener(new PaginationListener(layoutManager,main.toTopBtn) {
             @Override
             protected void loadMoreItems() {
                 isLoading = true;//make the isLoading true again, so it is false
@@ -121,6 +126,11 @@ public class LocalFragment extends Fragment {
             @Override
             public boolean isLoading() {
                 return isLoading;
+            }
+
+            @Override
+            public void toTopBtnOnclick() {
+                main.setToTopBtnOnclick(localBinding.mainLocalRecyclerView);
             }
         });
         recViewAdapter.notifyDataSetChanged();

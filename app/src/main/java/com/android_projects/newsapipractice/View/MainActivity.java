@@ -21,6 +21,7 @@ import com.android_projects.newsapipractice.View.Adapter.SearchResultRecyclerVie
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.ActivityMainBinding;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ public class MainActivity extends BaseActivity {
     private final String TAG = MainActivity.class.getSimpleName();
 
     private ActivityMainBinding mainBinding;
-
+    public FloatingActionButton toTopBtn;
     private SearchResultRecyclerView recyclerViewAdapter;
     private RecyclerView searchResultRecycler;
     private List<Article> articleList;
@@ -45,6 +46,7 @@ public class MainActivity extends BaseActivity {
         mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mainBinding.mainBottomNavigation.setOnNavigationItemSelectedListener(mNavItemSelectedListener);
         searchResultRecycler = mainBinding.searchRecyclerList.searchRecyclerView;
+        toTopBtn=mainBinding.goToTopButton;
 
         locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
         viewModel = new ViewModelProvider(this).get(NewsArticleViewModel.class);
@@ -75,6 +77,13 @@ public class MainActivity extends BaseActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setToTopBtnOnclick(RecyclerView recyclerView){
+        toTopBtn.setOnClickListener((View v)->{
+            recyclerView.smoothScrollToPosition(0);
+            toTopBtn.setVisibility(View.GONE);
+        });
     }
 
     private void setRecyclerView() {

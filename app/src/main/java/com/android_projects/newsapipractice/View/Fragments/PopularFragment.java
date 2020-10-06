@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.View.Adapter.NewsRecyclerViewAdapter;
+import com.android_projects.newsapipractice.View.MainActivity;
 import com.android_projects.newsapipractice.View.PaginationListener;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
@@ -29,6 +30,7 @@ public class PopularFragment extends Fragment {
 
     private View v;
     private LinearLayoutManager layoutManager;
+    private MainActivity main;
 
     private FragmentPopularBinding popBinding;
     private NewsArticleViewModel newsViewModel;
@@ -43,7 +45,8 @@ public class PopularFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        popBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_popular, container, false);
+        popBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_popular,container,false);
+        main = (MainActivity)getActivity();
         return v = popBinding.getRoot();
     }
 
@@ -92,7 +95,7 @@ public class PopularFragment extends Fragment {
     }
 
     private void onScrollListener() {
-        popBinding.mainPopularRecyclerView.addOnScrollListener(new PaginationListener(layoutManager) {
+        popBinding.mainPopularRecyclerView.addOnScrollListener(new PaginationListener(layoutManager,main.toTopBtn) {
             @Override
             protected void loadMoreItems() {
                 isLoading = true;
@@ -108,6 +111,11 @@ public class PopularFragment extends Fragment {
             @Override
             public boolean isLoading() {
                 return isLoading;
+            }
+
+            @Override
+            public void toTopBtnOnclick() {
+                main.setToTopBtnOnclick(popBinding.mainPopularRecyclerView);
             }
         });
         recyclerViewAdapter.notifyDataSetChanged();

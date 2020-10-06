@@ -17,11 +17,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.View.Adapter.NewsRecyclerViewAdapter;
+import com.android_projects.newsapipractice.View.MainActivity;
 import com.android_projects.newsapipractice.View.PaginationListener;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
+import com.android_projects.newsapipractice.databinding.ActivityMainBinding;
 import com.android_projects.newsapipractice.databinding.FragmentHomeBinding;
 import com.android_projects.newsapipractice.network.NetworkConnectivityReceiver;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,10 +37,12 @@ public class HomeFragment extends Fragment implements NetworkConnectivityReceive
 
     //UI
     private FragmentHomeBinding homeBinding;
+    private ActivityMainBinding toTopBtnBinding;
     private NewsArticleViewModel viewModel;
     private View v;
     private NewsRecyclerViewAdapter recyclerViewAdapter;
     private LinearLayoutManager layoutManager;
+    private FloatingActionButton toTopBtn;
 
     private int currentPageNum = 1;
     private boolean isLastPage = false;
@@ -48,11 +53,16 @@ public class HomeFragment extends Fragment implements NetworkConnectivityReceive
     private final String SORT_BY_PUBLISHED_AT = "publishedAt";
     private final String SORT_BY_RELEVANCY = "relevancy";
 
+    private MainActivity main;;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         homeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home,
                 container, false);
+        main = (MainActivity)getActivity();
+        toTopBtn= main.toTopBtn;
+
         setHasOptionsMenu(true);
         return v = homeBinding.getRoot();
     }
@@ -106,7 +116,8 @@ public class HomeFragment extends Fragment implements NetworkConnectivityReceive
     }
 
     private void onScrollListener() {
-        homeBinding.mainHomeRecyclerView.addOnScrollListener(new PaginationListener(layoutManager) {
+        homeBinding.mainHomeRecyclerView.addOnScrollListener
+                (new PaginationListener(layoutManager,toTopBtn) {
             @Override
             protected void loadMoreItems() {
                 isLoading = true;
@@ -122,6 +133,11 @@ public class HomeFragment extends Fragment implements NetworkConnectivityReceive
             @Override
             public boolean isLoading() {
                 return isLoading;
+            }
+
+            @Override
+            public void toTopBtnOnclick() {
+                main.setToTopBtnOnclick(homeBinding.mainHomeRecyclerView);
             }
         });
         recyclerViewAdapter.notifyDataSetChanged();

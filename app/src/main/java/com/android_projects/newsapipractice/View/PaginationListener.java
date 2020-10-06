@@ -1,8 +1,13 @@
 package com.android_projects.newsapipractice.View;
 
+import android.view.View;
+import android.widget.Button;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public abstract class PaginationListener extends RecyclerView.OnScrollListener {
     private final String TAG = PaginationListener.class.getSimpleName();
@@ -13,9 +18,11 @@ public abstract class PaginationListener extends RecyclerView.OnScrollListener {
 
     @NonNull
     private LinearLayoutManager layoutManager;
+    private FloatingActionButton toTopButton;
 
-    public PaginationListener(@NonNull LinearLayoutManager layoutManager) {
+    public PaginationListener(@NonNull LinearLayoutManager layoutManager, FloatingActionButton toTopButton) {
         this.layoutManager = layoutManager;
+        this.toTopButton= toTopButton;
     }
 
     @Override
@@ -35,9 +42,17 @@ public abstract class PaginationListener extends RecyclerView.OnScrollListener {
 
             }
         }
+        if(layoutManager.findFirstCompletelyVisibleItemPosition()==0){
+            toTopButton.setVisibility(View.GONE);
+        }
+        if(layoutManager.findLastCompletelyVisibleItemPosition()==PAGE_SIZE-89){
+            toTopButton.setVisibility(View.VISIBLE);
+            toTopBtnOnclick();
+        }
     }
 
     protected abstract void loadMoreItems();
     public abstract boolean isLastPage();
     public abstract boolean isLoading();
+    public abstract void toTopBtnOnclick();
 }
