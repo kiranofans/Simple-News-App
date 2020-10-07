@@ -1,9 +1,12 @@
 package com.android_projects.newsapipractice.View.Fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,12 +19,13 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.android_projects.newsapipractice.R;
+import com.android_projects.newsapipractice.Utils.FragmentListener;
+import com.android_projects.newsapipractice.Utils.Utility;
 import com.android_projects.newsapipractice.View.Adapter.NewsRecyclerViewAdapter;
 import com.android_projects.newsapipractice.View.MainActivity;
 import com.android_projects.newsapipractice.View.PaginationListener;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
-import com.android_projects.newsapipractice.databinding.ActivityMainBinding;
 import com.android_projects.newsapipractice.databinding.FragmentHomeBinding;
 import com.android_projects.newsapipractice.network.NetworkConnectivityReceiver;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -32,12 +36,8 @@ import java.util.List;
 public class HomeFragment extends Fragment implements NetworkConnectivityReceiver.ConnectivityReceiverListener {
     private final String TAG = HomeFragment.class.getSimpleName();
 
-    //Network
-    private NetworkConnectivityReceiver connReceiver;
-
     //UI
     private FragmentHomeBinding homeBinding;
-    private ActivityMainBinding toTopBtnBinding;
     private NewsArticleViewModel viewModel;
     private View v;
     private NewsRecyclerViewAdapter recyclerViewAdapter;
@@ -53,15 +53,13 @@ public class HomeFragment extends Fragment implements NetworkConnectivityReceive
     private final String SORT_BY_PUBLISHED_AT = "publishedAt";
     private final String SORT_BY_RELEVANCY = "relevancy";
 
-    private MainActivity main;
-    ;
+    private FragmentListener fragListener;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         homeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home,
                 container, false);
-
         setHasOptionsMenu(true);
         return v = homeBinding.getRoot();
     }
@@ -72,8 +70,6 @@ public class HomeFragment extends Fragment implements NetworkConnectivityReceive
         viewModel = new ViewModelProvider(this).get(NewsArticleViewModel.class);
         layoutManager = new LinearLayoutManager(view.getContext());
         recyclerViewAdapter = new NewsRecyclerViewAdapter(v.getContext(), articleList);
-        main = (MainActivity) getActivity();
-        toTopBtn = main.toTopBtn;
 
         setRecyclerView(view);
         setObserver();//Observer has to be separated from loadPage()
@@ -118,7 +114,7 @@ public class HomeFragment extends Fragment implements NetworkConnectivityReceive
 
     private void onScrollListener() {
         homeBinding.mainHomeRecyclerView.addOnScrollListener
-                (new PaginationListener(layoutManager, toTopBtn) {
+                (new PaginationListener(layoutManager, fragListener.getToTopBtn()) {
                     @Override
                     protected void loadMoreItems() {
                         isLoading = true;
@@ -138,10 +134,31 @@ public class HomeFragment extends Fragment implements NetworkConnectivityReceive
 
                     @Override
                     public void toTopBtnOnclick() {
-                        main.setToTopBtnOnclick(homeBinding.mainHomeRecyclerView);
+                        fragListener.setToTopBtnOnclick(homeBinding.mainHomeRecyclerView);
                     }
                 });
         recyclerViewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.main_setting_menu,menu);
+        fragListener.configSearchView(menu.findItem(R.id.top_setting_search));
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        fragListener = (FragmentListener) context;
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        fragListener =null;
     }
 
     @Override

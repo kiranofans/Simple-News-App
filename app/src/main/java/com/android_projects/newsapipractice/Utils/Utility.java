@@ -3,14 +3,12 @@ package com.android_projects.newsapipractice.Utils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AppOpsManager;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.location.Address;
-import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
@@ -27,6 +25,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.android_projects.newsapipractice.BuildConfig;
 import com.android_projects.newsapipractice.R;
+import com.android_projects.newsapipractice.View.MainActivity;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.facebook.AccessToken;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -49,8 +48,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import static android.content.Context.LOCATION_SERVICE;
-
 public class Utility {
     private final String TAG = Utility.class.getSimpleName();
 
@@ -65,7 +62,12 @@ public class Utility {
             return false;
         }
     }
-
+    public MainActivity initMainActivityObj(Activity activity, MainActivity mainActivity){
+        if(activity instanceof MainActivity){
+            mainActivity=(MainActivity) activity;
+        }
+        return mainActivity;
+    }
     public void handleGoogleSignInResult(Task<GoogleSignInAccount> completeTask) {
         try {
             GoogleSignInAccount googleAccount = completeTask.getResult(ApiException.class);
@@ -81,14 +83,6 @@ public class Utility {
         }
     }
 
-    public boolean isLoggedInWithFB(AccessToken accessToken) {
-        if (accessToken == null) {
-            return false;
-        }
-        Log.d(TAG, "Already logged in with Facebook");
-        return true;
-    }
-
     //Share content methods
     public void shareText(Article obj, Context context, String shareStr) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
@@ -100,13 +94,14 @@ public class Utility {
         context.startActivity(Intent.createChooser(shareIntent, shareStr));
     }
 
-    public void twitterShare(Context context,Article obj) {
+    public void twitterShare(Context context, Article obj) {
         //May apply webView later
         String twitterUrl = "https://twitter.com/intent/tweet?text=" +
                 obj.getTitle() + "&url=" + obj.getUrl();
         Uri twitterUri = Uri.parse(twitterUrl);
         context.startActivity(new Intent(Intent.ACTION_VIEW, twitterUri));
     }
+
     /**
      * @param dateTimePattern
      * @return a new instance of SimpleDateFormat with a new Date()
@@ -179,7 +174,8 @@ public class Utility {
         settingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(settingIntent);
     }
-    public void openSystemSettings(Context context){
+
+    public void openSystemSettings(Context context) {
         Intent settingIntent = new Intent(Settings.ACTION_SETTINGS);
         settingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(settingIntent);
@@ -226,9 +222,9 @@ public class Utility {
         }
     }
 
-    public void showActivityPermissionRationale(Activity activityContext,String title, String msg, String[] permissionArray) {
-      /*  final View v = LayoutInflater.from(activityContext).inflate(R.layout.alert_dialog_layout, null);
-        final AlertDialog alertDialog = new AlertDialog.Builder(activityContext).create();*/
+    /*public void showActivityPermissionRationale(Activity activityContext, String title, String msg, String[] permissionArray) {
+      *//*  final View v = LayoutInflater.from(activityContext).inflate(R.layout.alert_dialog_layout, null);
+        final AlertDialog alertDialog = new AlertDialog.Builder(activityContext).create();*//*
         new AlertDialog.Builder(activityContext).setTitle(title)
                 .setMessage(msg).setCancelable(false)
                 .setNegativeButton("STILL DENY", (DialogInterface dialogInterface, int i) ->
@@ -239,35 +235,37 @@ public class Utility {
             ActivityCompat.requestPermissions(activityContext, permissionArray, 100);
             dialogInterface.dismiss();
         }).show();
-    }
+    }*/
 
-    public void showAlertDialog(Activity activityContext,String title,String msg){
+    public void showAlertDialog(Activity activityContext, String title, String msg) {
         new AlertDialog.Builder(activityContext).setTitle(title).setMessage(msg).setCancelable(false)
-          .setPositiveButton("GO TO SETTINGS",(DialogInterface dialogInterface, int i)->{
-              openSystemSettings(activityContext);
-        }).setNegativeButton("CANCEL",(DialogInterface dialogInterface, int i)->{
+                .setPositiveButton("GO TO SETTINGS", (DialogInterface dialogInterface, int i) -> {
+                    openSystemSettings(activityContext);
+                }).setNegativeButton("CANCEL", (DialogInterface dialogInterface, int i) -> {
             dialogInterface.dismiss();
         }).show();
     }
 
     @SuppressLint("MissingPermission")
     public String getDeviceCountryCode(LocationManager locationMgr, Activity context) {
-        String locationResult = ""; Location bestLocation=null;
-        double latitude=0; double longitude=0;
+        String locationResult = "";
+        Location bestLocation = null;
+        double latitude = 0;
+        double longitude = 0;
 
         //getProviders() returns list of only "enabled" location providers
-        List<String> providers = (locationMgr!=null)? locationMgr.getProviders(true) : null;
-        if(locationMgr!=null) {
-            for(String provider: providers){
+        List<String> providers = (locationMgr != null) ? locationMgr.getProviders(true) : null;
+        if (locationMgr != null) {
+            for (String provider : providers) {
                 Location location = locationMgr.getLastKnownLocation(provider);
-                if(location==null){
+                if (location == null) {
                     continue;
                 }
-                if(bestLocation==null || location.getAccuracy() < bestLocation.getAccuracy()){
-                    bestLocation=location;
+                if (bestLocation == null || location.getAccuracy() < bestLocation.getAccuracy()) {
+                    bestLocation = location;
                 }
             }
-            if(bestLocation!=null){
+            if (bestLocation != null) {
                 latitude = bestLocation.getLatitude();
                 longitude = bestLocation.getLongitude();
                 Geocoder geocoder = new Geocoder(context);
@@ -280,8 +278,8 @@ public class Utility {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }else{
-                showAlertDialog(context,"Cannot Get Location Data",
+            } else {
+                showAlertDialog(context, "Cannot Get Location Data",
                         "Please try to change your settings");
 
             }
@@ -291,7 +289,7 @@ public class Utility {
     }
 
     //Network handling
-    public void showNoNetworkUI(Boolean isConnected, View activityMain,View noNetworkLayout){
+    public void showNoNetworkUI(Boolean isConnected, View activityMain, View noNetworkLayout) {
         if (!isConnected) {
             activityMain.setVisibility(View.GONE);
             noNetworkLayout.setVisibility(View.VISIBLE);
@@ -311,16 +309,15 @@ public class Utility {
         Log.d(LOG_TAG, message);
     }
 
-    public void showLongerToastMsg(Context context, String msg){
+    /*public void showLongerToastMsg(Context context, String msg) {
         int durationInMilliSecs = 10000;
-        Toast mToast = Toast.makeText(context,msg,Toast.LENGTH_LONG);
+        Toast mToast = Toast.makeText(context, msg, Toast.LENGTH_LONG);
 
-        CountDownTimer toastCountDown;
-        new CountDownTimer(Math.max(durationInMilliSecs,1000),100/* Tick duration */) {
+        new CountDownTimer(Math.max(durationInMilliSecs, 1000), 100*//* Tick duration *//*) {
             @Override
             public void onTick(long l) {
                 mToast.show();
-                mToast.getView().setOnClickListener((View v)->{
+                mToast.getView().setOnClickListener((View v) -> {
                     mToast.cancel();
                 });
             }
@@ -329,6 +326,6 @@ public class Utility {
             public void onFinish() {
             }
         }.start();
-    }
+    }*/
 
 }

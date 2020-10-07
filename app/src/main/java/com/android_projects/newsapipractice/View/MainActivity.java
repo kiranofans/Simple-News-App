@@ -1,12 +1,15 @@
 package com.android_projects.newsapipractice.View;
 
+import android.app.Activity;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
@@ -17,7 +20,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android_projects.newsapipractice.R;
+import com.android_projects.newsapipractice.Utils.FragmentListener;
 import com.android_projects.newsapipractice.View.Adapter.SearchResultRecyclerView;
+import com.android_projects.newsapipractice.View.Fragments.HomeFragment;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.ActivityMainBinding;
@@ -26,11 +31,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements FragmentListener {
     private final String TAG = MainActivity.class.getSimpleName();
 
     private ActivityMainBinding mainBinding;
     public FloatingActionButton toTopBtn;
+    private SearchView searchView;
+
     private SearchResultRecyclerView recyclerViewAdapter;
     private RecyclerView searchResultRecycler;
     private List<Article> articleList;
@@ -57,7 +64,6 @@ public class MainActivity extends BaseActivity {
 
         //Loading home (default) fragment
         setFragments();
-
     }
 
     @Override
@@ -79,6 +85,7 @@ public class MainActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
     public void setToTopBtnOnclick(RecyclerView recyclerView){
         toTopBtn.setOnClickListener((View v)->{
             recyclerView.smoothScrollToPosition(0);
@@ -94,9 +101,10 @@ public class MainActivity extends BaseActivity {
         searchResultRecycler.setAdapter(recyclerViewAdapter);
     }
 
-    private void configSearchView(MenuItem menuItem) {
-        SearchView searchView = (SearchView) menuItem.getActionView();
+    @Override
+    public void configSearchView(MenuItem menuItem) {
         SearchManager searchMgr = (SearchManager) getSystemService(SEARCH_SERVICE);
+        searchView = (SearchView) menuItem.getActionView();
 
         searchView.setSearchableInfo(searchMgr.getSearchableInfo(getComponentName()));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -115,6 +123,14 @@ public class MainActivity extends BaseActivity {
             }
 
         });
+        searchView.setOnQueryTextFocusChangeListener((View v,boolean queryTextFocused)->{
+            hideSoftKeyboard();
+        });
+    }
+
+    @Override
+    public FloatingActionButton getToTopBtn() {
+        return toTopBtn;
     }
 
     private void hideShowRecyclerView(String query) {
@@ -134,7 +150,6 @@ public class MainActivity extends BaseActivity {
         return articleList;
     }
 
-
     @Override
     public void onBackPressed() {
         int count = getSupportFragmentManager().getBackStackEntryCount();
@@ -143,6 +158,12 @@ public class MainActivity extends BaseActivity {
         } else {
             getSupportFragmentManager().popBackStack();
         }
+    }
+
+    public void hideSoftKeyboard(){
+        InputMethodManager inputMethodMgr = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if(inputMethodMgr!=null) inputMethodMgr.hideSoftInputFromWindow
+                (mainBinding.getRoot().getWindowToken(),0);
     }
 
     @Override

@@ -8,6 +8,8 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -22,6 +24,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.android_projects.newsapipractice.R;
+import com.android_projects.newsapipractice.Utils.FragmentListener;
 import com.android_projects.newsapipractice.Utils.Utility;
 import com.android_projects.newsapipractice.View.Adapter.NewsRecyclerViewAdapter;
 import com.android_projects.newsapipractice.View.MainActivity;
@@ -30,7 +33,6 @@ import com.android_projects.newsapipractice.View.PaginationListener;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.FragmentLocalBinding;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,12 +44,12 @@ public class LocalFragment extends Fragment {
     private FragmentLocalBinding localBinding;
     private NewsArticleViewModel localNewsViewModel;
     private NewsRecyclerViewAdapter recViewAdapter;
-    private FloatingActionButton toTopBtn;
     private LinearLayoutManager layoutManager;
 
     private Utility utility;
     private LocationManager locationMgr;
     private PermissionManager permMgr;
+    private FragmentListener fragListener;
 
     private final String SORT_BY_PUBLISHED_AT = "publishedAt";
     private int currentPageNum = 1;
@@ -56,7 +58,7 @@ public class LocalFragment extends Fragment {
 
     private List<Article> localNewsList;
     private String countryCode = "";
-    private MainActivity main;
+
     public LocalFragment() {
         // Required empty public constructor
     }
@@ -69,7 +71,6 @@ public class LocalFragment extends Fragment {
         utility = new Utility();
         permMgr = new PermissionManager(getContext());
         localNewsList = new ArrayList<>();
-        main = (MainActivity)getActivity();
 
         return v = localBinding.getRoot();
     }
@@ -78,11 +79,20 @@ public class LocalFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         localNewsViewModel = new ViewModelProvider(this).get(NewsArticleViewModel.class);
-
+        setHasOptionsMenu(true);
 
         setRecyclerView(view);
         checkLocationPermissionResults(permMgr.locationPermissions);//Permission granted,display content
         onScrollListener();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.main_setting_menu, menu);
+        fragListener.configSearchView(menu.findItem(R.id.top_setting_search));
     }
 
     private void swipeToRefreshListener() {
@@ -110,7 +120,7 @@ public class LocalFragment extends Fragment {
     }
 
     private void onScrollListener() {
-        localBinding.mainLocalRecyclerView.addOnScrollListener(new PaginationListener(layoutManager,main.toTopBtn) {
+        localBinding.mainLocalRecyclerView.addOnScrollListener(new PaginationListener(layoutManager, fragListener.getToTopBtn()) {
             @Override
             protected void loadMoreItems() {
                 isLoading = true;//make the isLoading true again, so it is false
@@ -130,7 +140,7 @@ public class LocalFragment extends Fragment {
 
             @Override
             public void toTopBtnOnclick() {
-                main.setToTopBtnOnclick(localBinding.mainLocalRecyclerView);
+                fragListener.setToTopBtnOnclick(localBinding.mainLocalRecyclerView);
             }
         });
         recViewAdapter.notifyDataSetChanged();
@@ -218,6 +228,18 @@ public class LocalFragment extends Fragment {
                         localBinding.noDataFoundLayout.noDataFoundContent.setVisibility(View.GONE);
                     }
                 });
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        fragListener=(FragmentListener)context;
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        fragListener=null;
     }
 
     private void showLocationRational(String[] permissions, String title, String message) {

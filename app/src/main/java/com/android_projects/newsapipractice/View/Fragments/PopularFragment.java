@@ -1,8 +1,11 @@
 package com.android_projects.newsapipractice.View.Fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,6 +18,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.android_projects.newsapipractice.R;
+import com.android_projects.newsapipractice.Utils.FragmentListener;
+import com.android_projects.newsapipractice.Utils.Utility;
 import com.android_projects.newsapipractice.View.Adapter.NewsRecyclerViewAdapter;
 import com.android_projects.newsapipractice.View.MainActivity;
 import com.android_projects.newsapipractice.View.PaginationListener;
@@ -29,13 +34,15 @@ public class PopularFragment extends Fragment {
     private final String TAG = PopularFragment.class.getSimpleName();
 
     private View v;
-    private LinearLayoutManager layoutManager;
-    private MainActivity main;
-
     private FragmentPopularBinding popBinding;
-    private NewsArticleViewModel newsViewModel;
 
+    private LinearLayoutManager layoutManager;
+    private NewsArticleViewModel newsViewModel;
     private NewsRecyclerViewAdapter recyclerViewAdapter;
+
+    //private MainActivity mainActivity;
+    private FragmentListener fragListener;
+
     private int currentPageNum = 1;
     private boolean isLastPage = false;
     private boolean isLoading = false;
@@ -45,8 +52,7 @@ public class PopularFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        popBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_popular,container,false);
-        main = (MainActivity)getActivity();
+        popBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_popular, container, false);
         return v = popBinding.getRoot();
     }
 
@@ -54,12 +60,22 @@ public class PopularFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         newsViewModel = new ViewModelProvider(this).get(NewsArticleViewModel.class);
+        setHasOptionsMenu(true);
 
         setPopularRecyclerView();
         setPopObserver();
         loadPage(currentPageNum);
         swipeToRefreshListener();
         onScrollListener();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.main_setting_menu, menu);
+        fragListener.configSearchView(menu.findItem(R.id.top_setting_search));
     }
 
     private void setPopularRecyclerView() {
@@ -95,7 +111,8 @@ public class PopularFragment extends Fragment {
     }
 
     private void onScrollListener() {
-        popBinding.mainPopularRecyclerView.addOnScrollListener(new PaginationListener(layoutManager,main.toTopBtn) {
+        popBinding.mainPopularRecyclerView.addOnScrollListener(new PaginationListener
+                (layoutManager, fragListener.getToTopBtn()) {
             @Override
             protected void loadMoreItems() {
                 isLoading = true;
@@ -115,9 +132,21 @@ public class PopularFragment extends Fragment {
 
             @Override
             public void toTopBtnOnclick() {
-                main.setToTopBtnOnclick(popBinding.mainPopularRecyclerView);
+                fragListener.setToTopBtnOnclick(popBinding.mainPopularRecyclerView);
             }
         });
         recyclerViewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        fragListener = (FragmentListener) context;
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        fragListener=null;
     }
 }
