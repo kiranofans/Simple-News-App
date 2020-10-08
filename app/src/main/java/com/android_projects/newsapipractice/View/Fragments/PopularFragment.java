@@ -19,9 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.Utils.FragmentListener;
-import com.android_projects.newsapipractice.Utils.Utility;
 import com.android_projects.newsapipractice.View.Adapter.NewsRecyclerViewAdapter;
-import com.android_projects.newsapipractice.View.MainActivity;
 import com.android_projects.newsapipractice.View.PaginationListener;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
@@ -40,7 +38,6 @@ public class PopularFragment extends Fragment {
     private NewsArticleViewModel newsViewModel;
     private NewsRecyclerViewAdapter recyclerViewAdapter;
 
-    //private MainActivity mainActivity;
     private FragmentListener fragListener;
 
     private int currentPageNum = 1;
@@ -147,6 +144,6 @@ public class PopularFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        fragListener=null;
+        fragListener = null;
     }
 }

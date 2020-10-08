@@ -20,15 +20,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.Utils.FragmentListener;
-import com.android_projects.newsapipractice.Utils.Utility;
 import com.android_projects.newsapipractice.View.Adapter.NewsRecyclerViewAdapter;
-import com.android_projects.newsapipractice.View.MainActivity;
 import com.android_projects.newsapipractice.View.PaginationListener;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.FragmentHomeBinding;
 import com.android_projects.newsapipractice.network.NetworkConnectivityReceiver;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +39,6 @@ public class HomeFragment extends Fragment implements NetworkConnectivityReceive
     private View v;
     private NewsRecyclerViewAdapter recyclerViewAdapter;
     private LinearLayoutManager layoutManager;
-    private FloatingActionButton toTopBtn;
 
     private int currentPageNum = 1;
     private boolean isLastPage = false;
@@ -145,7 +141,7 @@ public class HomeFragment extends Fragment implements NetworkConnectivityReceive
 
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
-        inflater.inflate(R.menu.main_setting_menu,menu);
+        inflater.inflate(R.menu.main_setting_menu, menu);
         fragListener.configSearchView(menu.findItem(R.id.top_setting_search));
     }
 
@@ -158,7 +154,7 @@ public class HomeFragment extends Fragment implements NetworkConnectivityReceive
     @Override
     public void onDetach() {
         super.onDetach();
-        fragListener =null;
+        fragListener = null;
     }
 
     @Override

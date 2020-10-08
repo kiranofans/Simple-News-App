@@ -27,7 +27,6 @@ import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.Utils.FragmentListener;
 import com.android_projects.newsapipractice.Utils.Utility;
 import com.android_projects.newsapipractice.View.Adapter.NewsRecyclerViewAdapter;
-import com.android_projects.newsapipractice.View.MainActivity;
 import com.android_projects.newsapipractice.View.Managers.PermissionManager;
 import com.android_projects.newsapipractice.View.PaginationListener;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
@@ -232,14 +231,14 @@ public class LocalFragment extends Fragment {
 
     @Override
     public void onAttach(@NonNull Context context) {
-        fragListener=(FragmentListener)context;
+        fragListener = (FragmentListener) context;
         super.onAttach(context);
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        fragListener=null;
+        fragListener = null;
     }
 
     private void showLocationRational(String[] permissions, String title, String message) {

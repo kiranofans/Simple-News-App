@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android_projects.newsapipractice.R;
 import com.android_projects.newsapipractice.Utils.FragmentListener;
 import com.android_projects.newsapipractice.View.Adapter.SearchResultRecyclerView;
-import com.android_projects.newsapipractice.View.Fragments.HomeFragment;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.ActivityMainBinding;
@@ -52,7 +51,7 @@ public class MainActivity extends BaseActivity implements FragmentListener {
         mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mainBinding.mainBottomNavigation.setOnNavigationItemSelectedListener(mNavItemSelectedListener);
         searchResultRecycler = mainBinding.searchRecyclerList.searchRecyclerView;
-        toTopBtn=mainBinding.goToTopButton;
+        toTopBtn = mainBinding.goToTopButton;
 
         locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
         viewModel = new ViewModelProvider(this).get(NewsArticleViewModel.class);
@@ -85,8 +84,8 @@ public class MainActivity extends BaseActivity implements FragmentListener {
     }
 
     @Override
-    public void setToTopBtnOnclick(RecyclerView recyclerView){
-        toTopBtn.setOnClickListener((View v)->{
+    public void setToTopBtnOnclick(RecyclerView recyclerView) {
+        toTopBtn.setOnClickListener((View v) -> {
             recyclerView.smoothScrollToPosition(0);
             toTopBtn.setVisibility(View.GONE);
         });
@@ -122,7 +121,7 @@ public class MainActivity extends BaseActivity implements FragmentListener {
             }
 
         });
-        searchView.setOnQueryTextFocusChangeListener((View v,boolean queryTextFocused)->{
+        searchView.setOnQueryTextFocusChangeListener((View v, boolean queryTextFocused) -> {
             hideSoftKeyboard();
         });
     }
@@ -159,10 +158,10 @@ public class MainActivity extends BaseActivity implements FragmentListener {
         }
     }
 
-    public void hideSoftKeyboard(){
+    public void hideSoftKeyboard() {
         InputMethodManager inputMethodMgr = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-        if(inputMethodMgr!=null) inputMethodMgr.hideSoftInputFromWindow
-                (mainBinding.getRoot().getWindowToken(),0);
+        if (inputMethodMgr != null) inputMethodMgr.hideSoftInputFromWindow
+                (mainBinding.getRoot().getWindowToken(), 0);
     }
 
     @Override
