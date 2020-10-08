@@ -2,7 +2,6 @@ package com.android_projects.newsapipractice.View;
 
 import android.app.Activity;
 import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Bundle;
