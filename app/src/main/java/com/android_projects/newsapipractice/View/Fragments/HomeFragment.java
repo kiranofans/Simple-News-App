@@ -25,12 +25,12 @@ import com.android_projects.newsapipractice.View.PaginationListener;
 import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.FragmentHomeBinding;
-import com.android_projects.newsapipractice.network.NetworkConnectivityReceiver;
+import com.android_projects.newsapipractice.network.ConnectivityReceiverListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment implements NetworkConnectivityReceiver.ConnectivityReceiverListener {
+public class HomeFragment extends Fragment implements ConnectivityReceiverListener {
     private final String TAG = HomeFragment.class.getSimpleName();
 
     //UI

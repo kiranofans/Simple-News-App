@@ -1,19 +1,14 @@
 package com.android_projects.newsapipractice.View;
 
+import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -23,11 +18,11 @@ import com.android_projects.newsapipractice.Utils.Utility;
 import com.android_projects.newsapipractice.View.Fragments.HomeFragment;
 import com.android_projects.newsapipractice.View.Fragments.LocalFragment;
 import com.android_projects.newsapipractice.View.Fragments.PopularFragment;
-import com.android_projects.newsapipractice.View.Managers.PermissionManager;
+import com.android_projects.newsapipractice.network.ConnectivityReceiverListener;
 import com.android_projects.newsapipractice.network.NetworkConnectivityReceiver;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class BaseActivity extends AppCompatActivity implements NetworkConnectivityReceiver.ConnectivityReceiverListener {
+public class BaseActivity extends AppCompatActivity implements ConnectivityReceiverListener {
     private final String TAG = BaseActivity.class.getSimpleName();
 
     //Network
@@ -51,8 +46,7 @@ public class BaseActivity extends AppCompatActivity implements NetworkConnectivi
         super.onCreate(savedInstanceState);
         utility = new Utility();
         connReceiver = new NetworkConnectivityReceiver();
-        registerReceiver(new NetworkConnectivityReceiver(),
-                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        registerReceiver();
     }
 
     public BottomNavigationView.OnNavigationItemSelectedListener mNavItemSelectedListener
@@ -83,6 +77,14 @@ public class BaseActivity extends AppCompatActivity implements NetworkConnectivi
         fragMgr.beginTransaction().add(R.id.main_fragment_container, localFragment).hide(localFragment).commit();//fragment 3
         fragMgr.beginTransaction().add(R.id.main_fragment_container, popularFragment).hide(popularFragment).commit();//fragment 2
         fragMgr.beginTransaction().add(R.id.main_fragment_container, homeFragment).commit();//fragment 1
+    }
+
+    private void registerReceiver() {
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        intentFilter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+        intentFilter.addAction(Intent.ACTION_BATTERY_CHANGED);
+        registerReceiver(new NetworkConnectivityReceiver(),
+                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     @Override

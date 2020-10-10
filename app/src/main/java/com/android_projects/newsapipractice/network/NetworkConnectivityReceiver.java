@@ -52,8 +52,4 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
         Log.i(TAG, "Network availability: FALSE ");
         return false;
     }
-
-    public interface ConnectivityReceiverListener {
-        void onNetworkConnectionChanged(Boolean isConnected);
-    }
 }
