@@ -49,6 +49,13 @@ public class MainActivity extends BaseActivity implements FragmentListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        initContent();
+        setRecyclerView();
+
+        //Loading home (default) fragment
+        setFragments();
+    }
+    private void initContent(){
         mainBinding.mainBottomNavigation.setOnNavigationItemSelectedListener(mNavItemSelectedListener);
         searchResultRecycler = mainBinding.searchRecyclerList.searchRecyclerView;
         toTopBtn = mainBinding.goToTopButton;
@@ -57,11 +64,6 @@ public class MainActivity extends BaseActivity implements FragmentListener {
         viewModel = new ViewModelProvider(this).get(NewsArticleViewModel.class);
         articleList = new ArrayList<>();
         recyclerViewAdapter = new SearchResultRecyclerView(this, getArticleListData());
-
-        setRecyclerView();
-
-        //Loading home (default) fragment
-        setFragments();
     }
 
     @Override
@@ -168,5 +170,6 @@ public class MainActivity extends BaseActivity implements FragmentListener {
     public void onNetworkConnectionChanged(Boolean isConnected) {
         utility.showNoNetworkUI(isConnected, mainBinding.activityMainContent,
                 mainBinding.noNetworkLayout.noNetworkContent);
+        toTopBtn.setVisibility(View.GONE);
     }
 }
