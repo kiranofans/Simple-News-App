@@ -76,6 +76,7 @@ public class BaseActivity extends AppCompatActivity implements ConnectivityRecei
         connReceiver = new NetworkConnectivityReceiver();
         appUpdateMgr = AppUpdateManagerFactory.create(BaseActivity.this);
         updateInfoTask = appUpdateMgr.getAppUpdateInfo();
+        updateListener=flexibleUpdateListen();
 
         //Before starting an update, register a listener for updates
         appUpdateMgr.registerListener(updateListener);
@@ -113,6 +114,31 @@ public class BaseActivity extends AppCompatActivity implements ConnectivityRecei
         }
     }
 
+    public InstallStateUpdatedListener flexibleUpdateListen(){
+        updateListener = (InstallState state)-> {
+            if(state.installStatus()== InstallStatus.DOWNLOADED){
+                //After the update is downloaded show a notification
+                utility.showDebugLog(TAG,"Update has been download");
+            }
+            if(state.installStatus()==InstallStatus.DOWNLOADING){
+                long byteDownloaded = state.bytesDownloaded();
+                long totalBytesToDownload = state.totalBytesToDownload();
+
+                //Can implement progress bar here
+                utility.showDebugLog(TAG,"Update is downloading "+byteDownloaded+
+                        "\nTotal bytes to download: "+totalBytesToDownload);
+            }
+            if(state.installStatus()==InstallStatus.INSTALLING){
+                utility.showDebugLog(TAG,"Update is installing...");
+            }
+            if(state.installStatus() == InstallStatus.INSTALLED){
+                //This line triggers full-screen UI which restart the app in the background
+                appUpdateMgr.completeUpdate();
+                utility.showDebugLog(TAG,"Update has been installed");
+            }
+        };
+        return updateListener;
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(requestCode==APP_UPDATE_RC){

@@ -170,33 +170,6 @@ public class MainActivity extends BaseActivity implements FragmentListener {
                 (mainBinding.getRoot().getWindowToken(), 0);
     }
 
-    private InstallStateUpdatedListener flexibleUpdateListen(){
-        updateListener = (InstallState state)-> {
-            if(state.installStatus()== InstallStatus.DOWNLOADED){
-                //After the update is downloaded show a notification
-                showCompleteUpdateSnackBar();
-                utility.showDebugLog(TAG,"Update has been download");
-            }
-            if(state.installStatus()==InstallStatus.DOWNLOADING){
-                long byteDownloaded = state.bytesDownloaded();
-                long totalBytesToDownload = state.totalBytesToDownload();
-
-                //Can implement progress bar here
-                utility.showDebugLog(TAG,"Update is downloading "+byteDownloaded+
-                        "\nTotal bytes to download: "+totalBytesToDownload);
-            }
-            if(state.installStatus()==InstallStatus.INSTALLING){
-                utility.showDebugLog(TAG,"Update is installing...");
-            }
-            if(state.installStatus() == InstallStatus.INSTALLED){
-                //This line triggers full-screen UI which restart the app in the background
-                appUpdateMgr.completeUpdate();
-                utility.showDebugLog(TAG,"Update has been installed");
-            }
-        };
-        return updateListener;
-    }
-
     public void showCompleteUpdateSnackBar(){
         Snackbar snackbar = Snackbar.make(mainBinding.activityMainContent,
                 "An update has been just downloaded", Snackbar.LENGTH_INDEFINITE);
