@@ -25,6 +25,10 @@ import com.android_projects.newsapipractice.ViewModels.NewsArticleViewModel;
 import com.android_projects.newsapipractice.data.Models.Article;
 import com.android_projects.newsapipractice.databinding.ActivityMainBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.play.core.install.InstallState;
+import com.google.android.play.core.install.InstallStateUpdatedListener;
+import com.google.android.play.core.install.model.InstallStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -166,10 +170,64 @@ public class MainActivity extends BaseActivity implements FragmentListener {
                 (mainBinding.getRoot().getWindowToken(), 0);
     }
 
+    private InstallStateUpdatedListener flexibleUpdateListen(){
+        updateListener = (InstallState state)-> {
+            if(state.installStatus()== InstallStatus.DOWNLOADED){
+                //After the update is downloaded show a notification
+                showCompleteUpdateSnackBar();
+                utility.showDebugLog(TAG,"Update has been download");
+            }
+            if(state.installStatus()==InstallStatus.DOWNLOADING){
+                long byteDownloaded = state.bytesDownloaded();
+                long totalBytesToDownload = state.totalBytesToDownload();
+
+                //Can implement progress bar here
+                utility.showDebugLog(TAG,"Update is downloading "+byteDownloaded+
+                        "\nTotal bytes to download: "+totalBytesToDownload);
+            }
+            if(state.installStatus()==InstallStatus.INSTALLING){
+                utility.showDebugLog(TAG,"Update is installing...");
+            }
+            if(state.installStatus() == InstallStatus.INSTALLED){
+                //This line triggers full-screen UI which restart the app in the background
+                appUpdateMgr.completeUpdate();
+                utility.showDebugLog(TAG,"Update has been installed");
+            }
+        };
+        return updateListener;
+    }
+
+    public void showCompleteUpdateSnackBar(){
+        Snackbar snackbar = Snackbar.make(mainBinding.activityMainContent,
+                "An update has been just downloaded", Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction("RESTART",view -> appUpdateMgr.completeUpdate());
+        snackbar.setActionTextColor(getResources().getColor(R.color.color_gray,null));
+        snackbar.show();
+    }
+
     @Override
     public void onNetworkConnectionChanged(Boolean isConnected) {
         utility.showNoNetworkUI(isConnected, mainBinding.activityMainContent,
                 mainBinding.noNetworkLayout.noNetworkContent);
         toTopBtn.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        appUpdateMgr.registerListener(flexibleUpdateListen());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        appUpdateMgr.unregisterListener(flexibleUpdateListen());
+        updateListener=null;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        flexibleUpdateListen();
     }
 }

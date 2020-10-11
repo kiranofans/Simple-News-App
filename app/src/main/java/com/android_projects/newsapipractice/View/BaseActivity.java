@@ -2,9 +2,13 @@ package com.android_projects.newsapipractice.View;
 
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +25,16 @@ import com.android_projects.newsapipractice.View.Fragments.PopularFragment;
 import com.android_projects.newsapipractice.network.ConnectivityReceiverListener;
 import com.android_projects.newsapipractice.network.NetworkConnectivityReceiver;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.play.core.appupdate.AppUpdateInfo;
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.install.InstallState;
+import com.google.android.play.core.install.InstallStateUpdatedListener;
+import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.install.model.InstallStatus;
+import com.google.android.play.core.install.model.UpdateAvailability;
+import com.google.android.play.core.tasks.Task;
 
 public class BaseActivity extends AppCompatActivity implements ConnectivityReceiverListener {
     private final String TAG = BaseActivity.class.getSimpleName();
@@ -41,12 +55,73 @@ public class BaseActivity extends AppCompatActivity implements ConnectivityRecei
     public final Fragment localFragment = new LocalFragment();
     public Fragment activeFragment = homeFragment;
 
+    //App update
+    private final int APP_UPDATE_RC=120;
+    public AppUpdateManager appUpdateMgr;
+    public Task<AppUpdateInfo> updateInfoTask;
+    public InstallStateUpdatedListener updateListener;
+    private final int DAYS_FOR_FLEXIBLE_UPDATE =3;
+    private final int MEDIUM_PRIORITY_UPDATE = 3;//update priority scaled 0 to 5
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initContent();
+        registerReceiver();
+        handleUpdate();
+    }
+
+    private void initContent(){
         utility = new Utility();
         connReceiver = new NetworkConnectivityReceiver();
-        registerReceiver();
+        appUpdateMgr = AppUpdateManagerFactory.create(BaseActivity.this);
+        updateInfoTask = appUpdateMgr.getAppUpdateInfo();
+
+        //Before starting an update, register a listener for updates
+        appUpdateMgr.registerListener(updateListener);
+    }
+
+    private void handleUpdate(){
+        utility.showDebugLog(TAG,"Checking for updates");
+        checkUpdate(updateInfoTask);
+    }
+
+    private void requestFlexibleUpdate(AppUpdateManager appUpdateManager){
+        try {
+            AppUpdateInfo appUpdateInfo=appUpdateManager.getAppUpdateInfo().getResult();
+            appUpdateManager.startUpdateFlowForResult(appUpdateInfo,
+                    AppUpdateType.FLEXIBLE,this, APP_UPDATE_RC);
+        } catch (IntentSender.SendIntentException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void checkUpdate(Task<AppUpdateInfo> appUpdateInfoTask){
+        if(appUpdateInfoTask!=null){
+            appUpdateInfoTask.addOnSuccessListener((AppUpdateInfo appUpdateInfo)->{
+                if(appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                        && appUpdateInfo.clientVersionStalenessDays() != null
+                        && appUpdateInfo.updatePriority()<= MEDIUM_PRIORITY_UPDATE
+                        && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
+                    requestFlexibleUpdate(appUpdateMgr);
+                    utility.showToastMsg(BaseActivity.this, "Update available",
+                            Toast.LENGTH_LONG);
+                }else{
+                    Log.d(TAG,"No update available");
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode==APP_UPDATE_RC){
+            if(requestCode!= RESULT_OK){
+                utility.showDebugLog(TAG,"Update flow failed! Result code: "+resultCode);
+                requestFlexibleUpdate(appUpdateMgr);
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public BottomNavigationView.OnNavigationItemSelectedListener mNavItemSelectedListener
